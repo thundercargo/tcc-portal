@@ -66,16 +66,18 @@ export default function App() {
 
   const calculateRate = (w: number) => {
     if (!w || w <= 0) return 0;
-    if (w <= 10) return selectedTariff.slabs[0];
-    if (w <= 25) return selectedTariff.slabs[1];
-    if (w <= 50) return selectedTariff.slabs[2];
-    if (w <= 100) return selectedTariff.slabs[3];
-    if (w <= 250) return selectedTariff.slabs[4];
-    if (w <= 500) return selectedTariff.slabs[5];
-
-    const baseCost = selectedTariff.slabs[5];
-    const excessWeight = w - 500;
-    return baseCost + excessWeight * selectedTariff.excess;
+    let base = 0;
+    if (w <= 10) base = selectedTariff.slabs[0];
+    else if (w <= 25) base = selectedTariff.slabs[1];
+    else if (w <= 50) base = selectedTariff.slabs[2];
+    else if (w <= 100) base = selectedTariff.slabs[3];
+    else if (w <= 250) base = selectedTariff.slabs[4];
+    else if (w <= 500) base = selectedTariff.slabs[5];
+    else {
+      base = selectedTariff.slabs[5] + (w - 500) * selectedTariff.excess;
+    }
+    // Include automated Green Logistics / ESG levy (₹20 fixed per waybill: Welfare ₹10 + Afforestation ₹5 + Audit ₹5)
+    return base + 20;
   };
 
   const estimatedCost = calculateRate(weight);
@@ -91,7 +93,7 @@ export default function App() {
   };
 
   const handleShareQuote = () => {
-    const text = `TCC B2B Freight Quote\nCorridor: ${selectedTariff.name}\nWeight: ${weight} KG\nEst. Tariff: ₹${estimatedCost.toLocaleString('en-IN')}\nSAC: 9965 RCM Compliant`;
+    const text = `TCC B2B Green Freight Quote\nCorridor: ${selectedTariff.name}\nWeight: ${weight} KG\nEst. Tariff: ₹${estimatedCost.toLocaleString('en-IN')} (Incl. ₹20 ESG Green Levy)\nSAC: 9965 RCM Compliant`;
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -119,7 +121,7 @@ export default function App() {
 
       <div style={{ maxWidth: '1150px', margin: '0 auto' }}>
         
-        {/* Header Section */}
+        {/* Header Section - Clean & Non-Repetitive */}
         <header style={{
           background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.6) 100%)',
           border: '1px solid rgba(56, 189, 248, 0.25)',
@@ -139,7 +141,7 @@ export default function App() {
                     backgroundColor: 'rgba(16, 185, 129, 0.15)', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.3)'
                   }}>
                     <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#34d399', display: 'inline-block' }} />
-                    SOUTH INDIA B2B LAST-MILE LOGISTICS
+                    ENTERPRISE B2B LOGISTICS NETWORK
                   </span>
                   <span style={{
                     padding: '6px 14px', borderRadius: '50px', fontSize: '11px', fontWeight: 700,
@@ -152,7 +154,7 @@ export default function App() {
                   THUNDER CARGO <span style={{ background: 'linear-gradient(to right, #22d3ee, #34d399)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>CORRIDOR</span>
                 </h1>
                 <p style={{ color: '#94a3b8', fontSize: '14px', margin: '8px 0 0 0', fontWeight: 500 }}>
-                  South India Last-Mile Integration & Digital Terminal Dispatch Network
+                  Automated Terminal Dispatch & Sustainable Freight Infrastructure
                 </p>
               </div>
 
@@ -219,7 +221,7 @@ export default function App() {
                   <h2 style={{ fontSize: '20px', fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: '10px', color: '#fff' }}>
                     <BarChart3 size={20} color="#22d3ee" /> Master B2B Freight Rate Engine
                   </h2>
-                  <p style={{ color: '#94a3b8', fontSize: '13px', margin: '4px 0 0 0' }}>Instant contract quote calculation based on South India distance corridors & weight slabs.</p>
+                  <p style={{ color: '#94a3b8', fontSize: '13px', margin: '4px 0 0 0' }}>Instant contract quote calculation with integrated ESG Green Logistics contribution.</p>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 12px', borderRadius: '10px', backgroundColor: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.25)', color: '#34d399', fontSize: '12px', fontWeight: 700 }}>
                   <ShieldCheck size={14} /> SAC 9965 RCM Compliant
@@ -290,29 +292,31 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div style={{ padding: '14px', borderRadius: '14px', backgroundColor: 'rgba(2, 6, 23, 0.6)', border: '1px solid rgba(51, 65, 85, 0.6)', fontSize: '12px', color: '#94a3b8' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#cbd5e1', fontWeight: 700, marginBottom: '6px' }}>
-                      <Sparkles size={14} color="#22d3ee" /> Dynamic Weight Slab Rules
+                  {/* ESG Highlight Box */}
+                  <div style={{ padding: '14px', borderRadius: '14px', backgroundColor: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.3)', fontSize: '12px', color: '#94a3b8' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#34d399', fontWeight: 700, marginBottom: '6px' }}>
+                      <Leaf size={14} color="#34d399" /> Integrated Green Logistics & ESG Levy
                     </div>
-                    Slabs covered: 1-10kg, 11-25kg, 26-50kg, 51-100kg, 101-250kg, 251-500kg. Surcharges apply past 500kg (+₹{selectedTariff.excess.toFixed(2)}/kg).
+                    Every quote automatically allocates ₹20.00/waybill (₹10 Hub Welfare, ₹5 Urban Afforestation, ₹5 Climate Auditing) to ensure zero net carbon last-mile compliance.
                   </div>
                 </div>
 
-                {/* Right Result Card */}
+                {/* Right Result Card with ESG breakdown */}
                 <div>
                   <div style={{
                     background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(2, 6, 23, 0.95) 100%)',
-                    border: '1px solid rgba(34, 211, 238, 0.4)', borderRadius: '20px', padding: '24px', boxShadow: '0 15px 35px rgba(6, 182, 212, 0.15)'
+                    border: '1px solid rgba(16, 185, 129, 0.4)', borderRadius: '20px', padding: '24px', boxShadow: '0 15px 35px rgba(16, 185, 129, 0.15)'
                   }}>
-                    <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#94a3b8', fontWeight: 700, marginBottom: '6px' }}>
-                      Exact Tariff Quote
+                    <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#34d399', fontWeight: 700, marginBottom: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span>Exact Tariff Quote</span>
+                      <span style={{ backgroundColor: 'rgba(16, 185, 129, 0.15)', padding: '2px 8px', borderRadius: '6px', fontSize: '10px' }}>ESG Certified</span>
                     </div>
                     <div style={{ margin: '12px 0' }}>
                       <div style={{ fontSize: 'clamp(32px, 5vw, 44px)', fontWeight: 900, fontFamily: 'monospace', color: '#ffffff', letterSpacing: '-0.02em' }}>
                         ₹{estimatedCost.toLocaleString('en-IN')}
                       </div>
                       <div style={{ fontSize: '12px', color: '#34d399', display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px', fontWeight: 700 }}>
-                        <CheckCircle2 size={14} /> Guaranteed Commercial Rate (All Inclusive)
+                        <CheckCircle2 size={14} /> Includes ₹20.00 Green Logistics Offset
                       </div>
                     </div>
 
@@ -325,26 +329,30 @@ export default function App() {
                         <span style={{ color: '#94a3b8' }}>Weight Bracket:</span>
                         <span style={{ fontFamily: 'monospace', color: '#22d3ee', fontWeight: 700 }}>{getSlabLabel(weight)}</span>
                       </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px dashed rgba(51, 65, 85, 0.6)', paddingTop: '8px' }}>
+                        <span style={{ color: '#34d399', display: 'flex', alignItems: 'center', gap: '4px' }}><Leaf size={12}/> ESG Contribution:</span>
+                        <span style={{ fontFamily: 'monospace', color: '#34d399', fontWeight: 700 }}>₹20.00 (Included)</span>
+                      </div>
                     </div>
 
                     <button
                       onClick={handleShareQuote}
                       style={{
                         width: '100%', padding: '14px', borderRadius: '12px', fontWeight: 800, fontSize: '11px',
-                        textTransform: 'uppercase', letterSpacing: '0.05em', border: '1px solid #334155',
-                        backgroundColor: '#1e293b', color: '#ffffff', cursor: 'pointer', display: 'flex',
+                        textTransform: 'uppercase', letterSpacing: '0.05em', border: '1px solid rgba(16, 185, 129, 0.4)',
+                        backgroundColor: 'rgba(16, 185, 129, 0.15)', color: '#34d399', cursor: 'pointer', display: 'flex',
                         alignItems: 'center', justifyContent: 'center', gap: '8px', transition: 'all 0.2s'
                       }}
                     >
                       {copied ? (
                         <>
                           <CheckCircle2 size={16} color="#34d399" />
-                          <span>Quote Copied to Clipboard!</span>
+                          <span>Green Quote Copied!</span>
                         </>
                       ) : (
                         <>
-                          <Layers size={16} color="#22d3ee" />
-                          <span>Copy Quote Summary</span>
+                          <Layers size={16} color="#34d399" />
+                          <span>Copy Green Quote Summary</span>
                         </>
                       )}
                     </button>
@@ -386,17 +394,20 @@ export default function App() {
                 <Leaf size={20} color="#34d399" /> ESG & Green Last-Mile Pledge
               </h2>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
-                <div style={{ backgroundColor: '#020617', border: '1px solid #334155', padding: '20px', borderRadius: '16px' }}>
-                  <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>Hub Welfare Fund</div>
+                <div style={{ backgroundColor: '#020617', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '20px', borderRadius: '16px' }}>
+                  <div style={{ fontSize: '11px', color: '#34d399', fontWeight: 700, textTransform: 'uppercase' }}>Hub Welfare Fund</div>
                   <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', margin: '8px 0' }}>₹10 <span style={{ fontSize: '12px', color: '#34d399' }}>/waybill</span></div>
+                  <div style={{ fontSize: '11px', color: '#94a3b8' }}>Direct driver & loader medical/accident cover</div>
                 </div>
-                <div style={{ backgroundColor: '#020617', border: '1px solid #334155', padding: '20px', borderRadius: '16px' }}>
-                  <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>Urban Afforestation</div>
+                <div style={{ backgroundColor: '#020617', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '20px', borderRadius: '16px' }}>
+                  <div style={{ fontSize: '11px', color: '#34d399', fontWeight: 700, textTransform: 'uppercase' }}>Urban Afforestation</div>
                   <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', margin: '8px 0' }}>₹5 <span style={{ fontSize: '12px', color: '#34d399' }}>/waybill</span></div>
+                  <div style={{ fontSize: '11px', color: '#94a3b8' }}>Tree plantation near district terminal hubs</div>
                 </div>
-                <div style={{ backgroundColor: '#020617', border: '1px solid #334155', padding: '20px', borderRadius: '16px' }}>
-                  <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>Climate Auditing</div>
+                <div style={{ backgroundColor: '#020617', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '20px', borderRadius: '16px' }}>
+                  <div style={{ fontSize: '11px', color: '#34d399', fontWeight: 700, textTransform: 'uppercase' }}>Climate Auditing</div>
                   <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', margin: '8px 0' }}>₹5 <span style={{ fontSize: '12px', color: '#34d399' }}>/waybill</span></div>
+                  <div style={{ fontSize: '11px', color: '#64748b' }}>Quarterly carbon footprint verification</div>
                 </div>
               </div>
             </div>
