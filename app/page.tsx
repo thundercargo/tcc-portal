@@ -15,7 +15,7 @@ import {
   CheckCircle2,
   PackageCheck,
   Building2,
-  Sparkles
+  Timer
 } from 'lucide-react';
 
 const TARIFF_MATRIX: Record<string, { name: string; slabs: number[]; excess: number }> = {
@@ -166,7 +166,7 @@ export default function App() {
     else {
       base = selectedTariff.slabs[5] + (w - 500) * selectedTariff.excess;
     }
-    return base + 20; // ₹20 Green ESG Offset
+    return base + 20;
   };
 
   const estimatedCost = calculateRate(weight);
@@ -182,7 +182,7 @@ export default function App() {
   };
 
   const handleShareQuote = () => {
-    const text = `TCC B2B Green Freight Quote\nCorridor: ${selectedTariff.name}\nWeight: ${weight} KG\nEst. Tariff: ₹${estimatedCost.toLocaleString('en-IN')} (Incl. ₹20 ESG Green Offset)\nSAC: 9965 RCM Compliant`;
+    const text = `TCC B2B Green Freight Quote (${weight <= 100 ? '24H Same-Day Express' : 'Priority Corridor'})\nCorridor: ${selectedTariff.name}\nWeight: ${weight} KG\nEst. Tariff: ₹${estimatedCost.toLocaleString('en-IN')} (Incl. ₹20 ESG Green Offset)\nSAC: 9965 RCM Compliant`;
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -202,7 +202,7 @@ export default function App() {
 
       <div style={{ maxWidth: '1150px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         
-        {/* Header Section */}
+        {/* Header Section with Eye-Catchy 24H Same-Day Express Badge */}
         <header style={{
           background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.7) 100%)',
           border: '1px solid rgba(56, 189, 248, 0.3)',
@@ -227,6 +227,17 @@ export default function App() {
                   <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#34d399', display: 'inline-block' }} />
                   ENTERPRISE B2B LOGISTICS NETWORK
                 </span>
+                
+                {/* Eye-Catchy 24H Same-Day Transit Badge */}
+                <span style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 12px',
+                  borderRadius: '50px', fontSize: '11px', fontWeight: 800,
+                  backgroundColor: 'rgba(250, 204, 21, 0.15)', color: '#facc15', border: '1px solid rgba(250, 204, 21, 0.4)',
+                  boxShadow: '0 0 15px rgba(250, 204, 21, 0.2)'
+                }}>
+                  <Timer size={13} color="#facc15" /> 24H SAME-DAY EXPRESS TRANSIT
+                </span>
+
                 <span style={{
                   padding: '4px 12px', borderRadius: '50px', fontSize: '11px', fontWeight: 700,
                   backgroundColor: 'rgba(6, 182, 212, 0.15)', color: '#22d3ee', border: '1px solid rgba(6, 182, 212, 0.3)', fontFamily: 'monospace'
@@ -394,7 +405,7 @@ export default function App() {
                   }}>
                     <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#34d399', fontWeight: 700, marginBottom: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span>Exact Tariff Quote</span>
-                      <span style={{ backgroundColor: 'rgba(16, 185, 129, 0.15)', padding: '2px 8px', borderRadius: '6px', fontSize: '10px' }}>ESG Certified</span>
+                      <span style={{ backgroundColor: 'rgba(250, 204, 21, 0.15)', color: '#facc15', padding: '2px 8px', borderRadius: '6px', fontSize: '10px', fontWeight: 700 }}>24H Transit Ready</span>
                     </div>
                     <div style={{ margin: '12px 0' }}>
                       <div style={{ fontSize: 'clamp(32px, 5vw, 44px)', fontWeight: 900, fontFamily: 'monospace', color: '#ffffff', letterSpacing: '-0.02em' }}>
@@ -436,7 +447,7 @@ export default function App() {
                         </>
                       ) : (
                         <>
-                          <Layers size={16} color="#34d399" />
+                          <Layers size={16} color="#22d3ee" />
                           <span>Copy Green Quote Summary</span>
                         </>
                       )}
@@ -460,9 +471,9 @@ export default function App() {
                   <div style={{ fontSize: '11px', color: '#64748b' }}>Guaranteed SLA: Under 90 Mins</div>
                 </div>
                 <div style={{ backgroundColor: '#020617', border: '1px solid #334155', padding: '20px', borderRadius: '16px' }}>
-                  <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>Dwell Reduction</div>
-                  <div style={{ fontSize: '32px', fontWeight: 900, color: '#22d3ee', fontFamily: 'monospace', margin: '8px 0' }}>-78%</div>
-                  <div style={{ fontSize: '11px', color: '#64748b' }}>Versus legacy freight handling</div>
+                  <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>Transit Window</div>
+                  <div style={{ fontSize: '32px', fontWeight: 900, color: '#facc15', fontFamily: 'monospace', margin: '8px 0' }}>24 Hours</div>
+                  <div style={{ fontSize: '11px', color: '#64748b' }}>Same-Day / Next-Day Regional Delivery</div>
                 </div>
                 <div style={{ backgroundColor: '#020617', border: '1px solid #334155', padding: '20px', borderRadius: '16px' }}>
                   <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>Demurrage Risk</div>
