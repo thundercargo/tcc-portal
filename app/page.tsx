@@ -57,7 +57,6 @@ function LiveBackgroundCanvas() {
     };
     window.addEventListener('resize', handleResize);
 
-    // Particle nodes representing logistics network traffic
     const particles = Array.from({ length: 45 }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
@@ -70,7 +69,6 @@ function LiveBackgroundCanvas() {
     const render = () => {
       ctx.clearRect(0, 0, width, height);
 
-      // Draw subtle grid lines
       ctx.strokeStyle = 'rgba(30, 41, 59, 0.3)';
       ctx.lineWidth = 1;
       const gridSize = 60;
@@ -87,7 +85,6 @@ function LiveBackgroundCanvas() {
         ctx.stroke();
       }
 
-      // Update & Draw Particles & Constellation Lines
       particles.forEach((p, i) => {
         p.x += p.vx;
         p.y += p.vy;
@@ -103,7 +100,6 @@ function LiveBackgroundCanvas() {
         ctx.fill();
         ctx.shadowBlur = 0;
 
-        // Connect nearby nodes
         for (let j = i + 1; j < particles.length; j++) {
           const p2 = particles[j];
           const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
@@ -185,7 +181,7 @@ export default function App() {
     else {
       base = selectedTariff.slabs[5] + (w - 500) * selectedTariff.excess;
     }
-    return base + 20; // ₹20 Green ESG Offset
+    return base + 20;
   };
 
   const estimatedCost = calculateRate(weight);
@@ -217,7 +213,6 @@ export default function App() {
       position: 'relative',
       overflowX: 'hidden'
     }}>
-      {/* Live Animated Interactive Cyber Wallpaper */}
       <LiveBackgroundCanvas />
 
       <div style={{ maxWidth: '1150px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -258,7 +253,7 @@ export default function App() {
               </p>
             </div>
 
-            {/* Sleek Compact Top-Right Live IST Clock */}
+            {/* Compact Top-Right Live IST Clock */}
             <div style={{
               background: 'rgba(2, 6, 23, 0.85)',
               border: '1px solid rgba(34, 211, 238, 0.4)',
@@ -503,13 +498,13 @@ export default function App() {
                   <div style={{ fontSize: '11px', color: '#94a3b8' }}>Direct driver & loader medical cover</div>
                 </div>
                 <div style={{ backgroundColor: '#020617', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '20px', borderRadius: '16px' }}>
-                  <div style={{ fontSize: '11px', color: '#34d399', fontWeight 700, textTransform: 'uppercase' }}>Urban Afforestation</div>
-                  <div style={{ fontSize: '28px', fontWeight 900, color: '#fff', fontFamily: 'monospace', margin: '8px 0' }}>₹5 <span style={{ fontSize: '12px', color: '#34d399' }}>/waybill</span></div>
+                  <div style={{ fontSize: '11px', color: '#34d399', fontWeight: 700, textTransform: 'uppercase' }}>Urban Afforestation</div>
+                  <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', margin: '8px 0' }}>₹5 <span style={{ fontSize: '12px', color: '#34d399' }}>/waybill</span></div>
                   <div style={{ fontSize: '11px', color: '#94a3b8' }}>Tree plantation near district terminal hubs</div>
                 </div>
                 <div style={{ backgroundColor: '#020617', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '20px', borderRadius: '16px' }}>
                   <div style={{ fontSize: '11px', color: '#34d399', fontWeight: 700, textTransform: 'uppercase' }}>Climate Auditing</div>
-                  <div style={{ fontSize: '28px', fontWeight 900, color: '#fff', fontFamily: 'monospace', margin: '8px 0' }}>₹5 <span style={{ fontSize: '12px', color: '#34d399' }}>/waybill</span></div>
+                  <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', margin: '8px 0' }}>₹5 <span style={{ fontSize: '12px', color: '#34d399' }}>/waybill</span></div>
                   <div style={{ fontSize: '11px', color: '#64748b' }}>Quarterly carbon footprint verification</div>
                 </div>
               </div>
@@ -528,15 +523,15 @@ export default function App() {
           </div>
           <div style={{ background: 'rgba(15, 23, 42, 0.7)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#94a3b8', fontWeight 700 }}>District Logistics Hubs</div>
-              <div style={{ fontSize: '28px', fontWeight 900, color: '#fff', fontFamily: 'monospace', marginTop: '4px' }}>175+</div>
+              <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#94a3b8', fontWeight: 700 }}>District Logistics Hubs</div>
+              <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', marginTop: '4px' }}>175+</div>
             </div>
             <MapPin size={24} color="#34d399" />
           </div>
           <div style={{ background: 'rgba(15, 23, 42, 0.7)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#94a3b8', fontWeight: 700 }}>Express Collection Nodes</div>
-              <div style={{ fontSize: '28px', fontWeight 900, color: '#fff', fontFamily: 'monospace', marginTop: '4px' }}>355+</div>
+              <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', marginTop: '4px' }}>355+</div>
             </div>
             <PackageCheck size={24} color="#22d3ee" />
           </div>
