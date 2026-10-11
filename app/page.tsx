@@ -36,7 +36,7 @@ const TARIFF_MATRIX: Record<string, { name: string; slabs: number[]; excess: num
   'reg-6b': { name: 'REGIONAL 6B (551 – 600 KM)', slabs: [590, 890, 1620, 2320, 4420, 6920], excess: 13.50 },
 };
 
-// Interactive Animated Background Canvas
+// Interactive Vertical Meteor Stream / Digital Rain Background
 function LiveBackgroundCanvas() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -57,61 +57,49 @@ function LiveBackgroundCanvas() {
     };
     window.addEventListener('resize', handleResize);
 
-    const particles = Array.from({ length: 45 }, () => ({
+    // Create vertical meteor streaks
+    const colors = ['#22d3ee', '#34d399', '#38bdf8', '#facc15', '#a855f7'];
+    const meteors = Array.from({ length: 60 }, () => ({
       x: Math.random() * width,
-      y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.8,
-      vy: (Math.random() - 0.5) * 0.8,
-      radius: Math.random() * 2 + 1,
-      hue: Math.random() > 0.5 ? '#22d3ee' : '#34d399'
+      y: (Math.random() - 0.5) * height,
+      length: Math.random() * 80 + 40,
+      speed: Math.random() * 4 + 2,
+      opacity: Math.random() * 0.7 + 0.3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      width: Math.random() * 1.5 + 0.8
     }));
 
     const render = () => {
-      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = 'rgba(2, 6, 23, 0.25)'; // Motion blur trail effect
+      ctx.fillRect(0, 0, width, height);
 
-      ctx.strokeStyle = 'rgba(30, 41, 59, 0.3)';
-      ctx.lineWidth = 1;
-      const gridSize = 60;
-      for (let x = 0; x < width; x += gridSize) {
+      meteors.forEach((m) => {
+        m.y += m.speed;
+        if (m.y > height + m.length) {
+          m.y = -m.length;
+          m.x = Math.random() * width;
+          m.speed = Math.random() * 4 + 2;
+        }
+
+        const gradient = ctx.createLinearGradient(m.x, m.y - m.length, m.x, m.y);
+        gradient.addColorStop(0, 'rgba(0,0,0,0)');
+        gradient.addColorStop(1, m.color);
+
         ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, height);
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = m.width;
+        ctx.moveTo(m.x, m.y - m.length);
+        ctx.lineTo(m.x, m.y);
         ctx.stroke();
-      }
-      for (let y = 0; y < height; y += gridSize) {
+
+        // Glowing head of the meteor
         ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(width, y);
-        ctx.stroke();
-      }
-
-      particles.forEach((p, i) => {
-        p.x += p.vx;
-        p.y += p.vy;
-
-        if (p.x < 0 || p.x > width) p.vx *= -1;
-        if (p.y < 0 || p.y > height) p.vy *= -1;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = p.hue;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = p.hue;
+        ctx.arc(m.x, m.y, m.width * 1.2, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = m.color;
         ctx.fill();
         ctx.shadowBlur = 0;
-
-        for (let j = i + 1; j < particles.length; j++) {
-          const p2 = particles[j];
-          const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-          if (dist < 140) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(34, 211, 238, ${0.25 * (1 - dist / 140)})`;
-            ctx.lineWidth = 0.8;
-            ctx.stroke();
-          }
-        }
       });
 
       animationFrameId = requestAnimationFrame(render);
@@ -136,7 +124,7 @@ function LiveBackgroundCanvas() {
         height: '100vh',
         pointerEvents: 'none',
         zIndex: 0,
-        opacity: 0.6
+        opacity: 0.75
       }}
     />
   );
@@ -181,7 +169,7 @@ export default function App() {
     else {
       base = selectedTariff.slabs[5] + (w - 500) * selectedTariff.excess;
     }
-    return base + 20;
+    return base + 20; // ₹20 Green ESG Offset
   };
 
   const estimatedCost = calculateRate(weight);
@@ -309,7 +297,7 @@ export default function App() {
 
         {/* Main Content Area */}
         <div style={{
-          background: 'rgba(15, 23, 42, 0.7)', border: '1px solid rgba(51, 65, 85, 0.7)',
+          background: 'rgba(15, 23, 42, 0.75)', border: '1px solid rgba(51, 65, 85, 0.7)',
           backdropFilter: 'blur(25px)', borderRadius: '24px', padding: '28px', marginBottom: '28px',
           boxShadow: '0 20px 40px rgba(0,0,0,0.5)'
         }}>
@@ -514,21 +502,21 @@ export default function App() {
 
         {/* Statistics Grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px', marginBottom: '28px' }}>
-          <div style={{ background: 'rgba(15, 23, 42, 0.7)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#94a3b8', fontWeight: 700 }}>Consolidation Terminals</div>
               <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', marginTop: '4px' }}>3 Primary</div>
             </div>
             <Building2 size={24} color="#22d3ee" />
           </div>
-          <div style={{ background: 'rgba(15, 23, 42, 0.7)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#94a3b8', fontWeight: 700 }}>District Logistics Hubs</div>
               <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', marginTop: '4px' }}>175+</div>
             </div>
             <MapPin size={24} color="#34d399" />
           </div>
-          <div style={{ background: 'rgba(15, 23, 42, 0.7)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#94a3b8', fontWeight: 700 }}>Express Collection Nodes</div>
               <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', marginTop: '4px' }}>355+</div>
@@ -538,7 +526,7 @@ export default function App() {
         </div>
 
         {/* Footer */}
-        <footer style={{ background: 'rgba(15, 23, 42, 0.7)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '24px', textAlign: 'center', fontSize: '12px', color: '#94a3b8' }}>
+        <footer style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '24px', textAlign: 'center', fontSize: '12px', color: '#94a3b8' }}>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', flexWrap: 'wrap', marginBottom: '14px', fontWeight: 600 }}>
             <a href="tel:+918340085989" style={{ color: '#cbd5e1', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Phone size={14} color="#22d3ee" /> +91 8340085989
