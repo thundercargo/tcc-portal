@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+'use client';
+import React, { useState, useEffect } from 'react';
 import {
   Calculator,
   Zap,
   Leaf,
   ShieldCheck,
-  Truck,
   MapPin,
-  TrendingUp,
   Clock,
   Phone,
   Mail,
@@ -22,7 +21,7 @@ import {
 } from 'lucide-react';
 
 // Master Tariff Slab Matrix Data (Dated 08-10-2026)
-const TARIFF_MATRIX = {
+const TARIFF_MATRIX: Record<string, { name: string; slabs: number[]; excess: number }> = {
   'intra-1': { name: 'INTRA-CITY 1 (4 – 5 KM)', slabs: [150, 250, 380, 550, 1100, 1800], excess: 3.50 },
   'intra-2': { name: 'INTRA-CITY 2 (6 – 15 KM)', slabs: [200, 320, 480, 750, 1500, 2400], excess: 4.50 },
   'intra-3': { name: 'INTRA-CITY 3 (16 – 30 KM)', slabs: [280, 420, 650, 1050, 2000, 3200], excess: 6.00 },
@@ -41,14 +40,34 @@ const TARIFF_MATRIX = {
 };
 
 export default function App() {
-  const [weight, setWeight] = useState(100);
-  const [corridor, setCorridor] = useState('intra-1');
-  const [activeTab, setActiveTab] = useState('calculator');
-  const [copied, setCopied] = useState(false);
+  const [weight, setWeight] = useState<number>(100);
+  const [corridor, setCorridor] = useState<string>('intra-1');
+  const [activeTab, setActiveTab] = useState<'calculator' | 'sla' | 'esg'>('calculator');
+  const [copied, setCopied] = useState<boolean>(false);
+  const [timeString, setTimeString] = useState<string>('');
+
+  // Live IST Clock Hook
+  useEffect(() => {
+    const updateClock = () => {
+      const now = new Date();
+      const options: Intl.DateTimeFormatOptions = {
+        timeZone: 'Asia/Kolkata',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+      };
+      setTimeString(new Intl.DateTimeFormat('en-IN', options).format(now));
+    };
+
+    updateClock();
+    const interval = setInterval(updateClock, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const selectedTariff = TARIFF_MATRIX[corridor] || TARIFF_MATRIX['intra-1'];
 
-  const calculateRate = (w) => {
+  const calculateRate = (w: number) => {
     if (!w || w <= 0) return 0;
     if (w <= 10) return selectedTariff.slabs[0];
     if (w <= 25) return selectedTariff.slabs[1];
@@ -57,7 +76,6 @@ export default function App() {
     if (w <= 250) return selectedTariff.slabs[4];
     if (w <= 500) return selectedTariff.slabs[5];
 
-    // Excess weight over 500 KG calculation
     const baseCost = selectedTariff.slabs[5];
     const excessWeight = w - 500;
     return baseCost + excessWeight * selectedTariff.excess;
@@ -65,7 +83,7 @@ export default function App() {
 
   const estimatedCost = calculateRate(weight);
 
-  const getSlabLabel = (w) => {
+  const getSlabLabel = (w: number) => {
     if (w <= 10) return '1 – 10 KG';
     if (w <= 25) return '11 – 25 KG';
     if (w <= 50) return '26 – 50 KG';
@@ -89,14 +107,12 @@ export default function App() {
       <div className="fixed bottom-0 right-1/4 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[130px] pointer-events-none -z-10" />
 
       {/* Grid Pattern Overlay */}
-      <div 
-        className="fixed inset-0 bg-[linear-gradient(to_right,#1e293b15_1px,transparent_1px),linear-gradient(to_bottom,#1e293b15_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none -z-10" 
-      />
+      <div className="fixed inset-0 bg-[linear-gradient(to_right,#1e293b15_1px,transparent_1px),linear-gradient(to_bottom,#1e293b15_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none -z-10" />
 
       {/* Main Container */}
       <div className="max-w-6xl mx-auto px-4 py-6 md:py-10">
 
-        {}
+        {/* TOP HEADER */}
         <header className="relative bg-slate-900/60 border border-slate-800/80 backdrop-blur-2xl rounded-3xl p-6 md:p-8 mb-8 shadow-2xl shadow-cyan-950/20 overflow-hidden">
           <div className="absolute -top-24 -right-24 w-64 h-64 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />
           
@@ -105,7 +121,7 @@ export default function App() {
               <div className="flex items-center gap-3 mb-2 flex-wrap">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                   <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-                  NATIONWIDE B2B LAST-MILE LOGISTICS
+                  SOUTH INDIA B2B LAST-MILE LOGISTICS
                 </span>
                 <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-mono">
                   UDYAM-TS-02-0359997
@@ -116,73 +132,25 @@ export default function App() {
                 THUNDER CARGO <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400">CORRIDOR</span>
               </h1>
               <p className="text-slate-400 text-sm md:text-base mt-2 font-medium max-w-2xl">
-                Enterprise Last-Mile Integration & Digital Terminal Dispatch Network
+                South India Last-Mile Integration & Digital Terminal Dispatch Network
               </p>
             </div>
 
+            {/* TOP RIGHT CLOCK & SYSTEM STATUS */}
             <div className="flex flex-col sm:flex-row lg:flex-col items-start lg:items-end gap-2 border-t lg:border-t-0 border-slate-800 pt-4 lg:pt-0">
-              <div className="text-xs uppercase tracking-widest text-slate-500 font-semibold">Live System Status</div>
-              <div className="flex items-center gap-2 bg-slate-950/80 px-4 py-2 rounded-2xl border border-cyan-500/30 text-cyan-300 font-mono text-xs">
-                <Globe className="w-4 h-4 text-cyan-400 animate-spin" style={{ animationDuration: '10s' }} />
-                <span>3 Primary Nodes • 175+ District Hubs</span>
+              <div className="text-xs uppercase tracking-widest text-slate-500 font-semibold flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-cyan-400" /> Live System Time (IST)
+              </div>
+              <div className="flex items-center gap-2 bg-slate-950/90 px-4 py-2 rounded-2xl border border-cyan-500/40 text-cyan-300 font-mono text-sm font-bold shadow-lg shadow-cyan-950/50">
+                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>{timeString || 'IST Loading...'}</span>
               </div>
               <div className="text-[11px] text-slate-400 font-mono">Master Tariff Schedule: 08-10-2026</div>
             </div>
           </div>
         </header>
 
-        {}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <div className="group relative bg-slate-900/50 border border-slate-800/90 hover:border-cyan-500/50 transition-all duration-300 backdrop-blur-xl p-5 rounded-2xl overflow-hidden shadow-lg">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-500/5 rounded-full blur-xl group-hover:bg-cyan-500/15 transition-all" />
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Consolidation Terminals</div>
-                <div className="text-3xl font-extrabold text-white mt-1 font-mono tracking-tight group-hover:text-cyan-400 transition-colors">
-                  3 <span className="text-cyan-400 text-lg">Primary</span>
-                </div>
-              </div>
-              <div className="p-3 bg-cyan-500/10 rounded-xl border border-cyan-500/20 text-cyan-400">
-                <Building2 className="w-6 h-6" />
-              </div>
-            </div>
-            <p className="text-xs text-slate-500 mt-2">Strategic high-capacity processing centers</p>
-          </div>
-
-          <div className="group relative bg-slate-900/50 border border-slate-800/90 hover:border-emerald-500/50 transition-all duration-300 backdrop-blur-xl p-5 rounded-2xl overflow-hidden shadow-lg">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/15 transition-all" />
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">District Logistics Hubs</div>
-                <div className="text-3xl font-extrabold text-white mt-1 font-mono tracking-tight group-hover:text-emerald-400 transition-colors">
-                  175<span className="text-emerald-400">+</span>
-                </div>
-              </div>
-              <div className="p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20 text-emerald-400">
-                <MapPin className="w-6 h-6" />
-              </div>
-            </div>
-            <p className="text-xs text-slate-500 mt-2">Authorized last-mile delivery touchpoints</p>
-          </div>
-
-          <div className="group relative bg-slate-900/50 border border-slate-800/90 hover:border-teal-500/50 transition-all duration-300 backdrop-blur-xl p-5 rounded-2xl overflow-hidden shadow-lg">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-teal-500/5 rounded-full blur-xl group-hover:bg-teal-500/15 transition-all" />
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Express Collection Nodes</div>
-                <div className="text-3xl font-extrabold text-white mt-1 font-mono tracking-tight group-hover:text-teal-300 transition-colors">
-                  355<span className="text-teal-300">+</span>
-                </div>
-              </div>
-              <div className="p-3 bg-teal-500/10 rounded-xl border border-teal-500/20 text-teal-300">
-                <PackageCheck className="w-6 h-6" />
-              </div>
-            </div>
-            <p className="text-xs text-slate-500 mt-2">Micro-fulfillment and merchant intake points</p>
-          </div>
-        </div>
-
-        {}
+        {/* NAVIGATION TABS */}
         <div className="flex p-1.5 bg-slate-900/80 border border-slate-800 rounded-2xl mb-8 gap-2 overflow-x-auto backdrop-blur-xl">
           <button
             onClick={() => setActiveTab('calculator')}
@@ -221,8 +189,8 @@ export default function App() {
           </button>
         </div>
 
-        {}
-        <div className="bg-slate-900/40 border border-slate-800/90 rounded-3xl p-6 md:p-8 backdrop-blur-2xl shadow-2xl relative overflow-hidden">
+        {/* MAIN DISPLAY CONTAINER */}
+        <div className="bg-slate-900/40 border border-slate-800/90 rounded-3xl p-6 md:p-8 backdrop-blur-2xl shadow-2xl relative overflow-hidden mb-8">
           
           {/* TAB 1: MASTER TARIFF CALCULATOR */}
           {activeTab === 'calculator' && (
@@ -234,7 +202,7 @@ export default function App() {
                     Master B2B Freight Rate Engine
                   </h2>
                   <p className="text-sm text-slate-400 mt-1">
-                    Instant contract quote calculation based on distance corridor & weight slab rules.
+                    Instant contract quote calculation based on South India distance corridors & weight slab rules.
                   </p>
                 </div>
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
@@ -391,7 +359,7 @@ export default function App() {
                   Terminal Evacuation & SLA Telemetry
                 </h2>
                 <p className="text-sm text-slate-400 mt-1">
-                  Automated dispatch protocol guaranteeing swift clearance across all 175+ hubs.
+                  Automated dispatch protocol guaranteeing swift clearance across all South India hubs.
                 </p>
               </div>
 
@@ -421,18 +389,6 @@ export default function App() {
                   <div className="w-full bg-slate-900 h-2 rounded-full mt-4 overflow-hidden">
                     <div className="bg-teal-300 h-full w-[100%]" />
                   </div>
-                </div>
-              </div>
-
-              <div className="p-6 rounded-2xl bg-cyan-950/20 border border-cyan-800/40 flex items-start gap-4">
-                <div className="p-3 bg-cyan-500/10 rounded-xl text-cyan-400 shrink-0">
-                  <Clock className="w-6 h-6" />
-                </div>
-                <div>
-                  <h4 className="text-base font-bold text-white">Digital Manifesting Protocol</h4>
-                  <p className="text-xs text-slate-300 leading-relaxed mt-1">
-                    All consignment notes generated under TCC master tariffs feature real-time digital pre-manifesting. Packages are assigned priority dispatch lanes immediately upon arrival at any primary consolidation node.
-                  </p>
                 </div>
               </div>
             </div>
@@ -475,8 +431,59 @@ export default function App() {
 
         </div>
 
-        {}
-        <footer className="mt-12 bg-slate-900/60 border border-slate-800/80 backdrop-blur-2xl rounded-3xl p-6 md:p-8 text-center text-xs text-slate-400 space-y-4">
+        {/* NETWORK STATS CARDS (REORDERED BELOW THE CALCULATOR) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <div className="group relative bg-slate-900/50 border border-slate-800/90 hover:border-cyan-500/50 transition-all duration-300 backdrop-blur-xl p-5 rounded-2xl overflow-hidden shadow-lg">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-500/5 rounded-full blur-xl group-hover:bg-cyan-500/15 transition-all" />
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Consolidation Terminals</div>
+                <div className="text-3xl font-extrabold text-white mt-1 font-mono tracking-tight group-hover:text-cyan-400 transition-colors">
+                  3 <span className="text-cyan-400 text-lg">Primary</span>
+                </div>
+              </div>
+              <div className="p-3 bg-cyan-500/10 rounded-xl border border-cyan-500/20 text-cyan-400">
+                <Building2 className="w-6 h-6" />
+              </div>
+            </div>
+            <p className="text-xs text-slate-500 mt-2">Strategic high-capacity processing centers</p>
+          </div>
+
+          <div className="group relative bg-slate-900/50 border border-slate-800/90 hover:border-emerald-500/50 transition-all duration-300 backdrop-blur-xl p-5 rounded-2xl overflow-hidden shadow-lg">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/15 transition-all" />
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">District Logistics Hubs</div>
+                <div className="text-3xl font-extrabold text-white mt-1 font-mono tracking-tight group-hover:text-emerald-400 transition-colors">
+                  175<span className="text-emerald-400">+</span>
+                </div>
+              </div>
+              <div className="p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20 text-emerald-400">
+                <MapPin className="w-6 h-6" />
+              </div>
+            </div>
+            <p className="text-xs text-slate-500 mt-2">Authorized last-mile delivery touchpoints</p>
+          </div>
+
+          <div className="group relative bg-slate-900/50 border border-slate-800/90 hover:border-teal-500/50 transition-all duration-300 backdrop-blur-xl p-5 rounded-2xl overflow-hidden shadow-lg">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-teal-500/5 rounded-full blur-xl group-hover:bg-teal-500/15 transition-all" />
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Express Collection Nodes</div>
+                <div className="text-3xl font-extrabold text-white mt-1 font-mono tracking-tight group-hover:text-teal-300 transition-colors">
+                  355<span className="text-teal-300">+</span>
+                </div>
+              </div>
+              <div className="p-3 bg-teal-500/10 rounded-xl border border-teal-500/20 text-teal-300">
+                <PackageCheck className="w-6 h-6" />
+              </div>
+            </div>
+            <p className="text-xs text-slate-500 mt-2">Micro-fulfillment and merchant intake points</p>
+          </div>
+        </div>
+
+        {/* FOOTER */}
+        <footer className="bg-slate-900/60 border border-slate-800/80 backdrop-blur-2xl rounded-3xl p-6 md:p-8 text-center text-xs text-slate-400 space-y-4">
           <div className="flex flex-wrap justify-center items-center gap-6 font-medium text-slate-300">
             <a href="tel:+918340085989" className="flex items-center gap-2 hover:text-cyan-400 transition-colors">
               <Phone className="w-4 h-4 text-cyan-400" />
@@ -495,7 +502,7 @@ export default function App() {
           </div>
 
           <div className="pt-4 border-t border-slate-800/60 text-slate-500 text-[11px]">
-            Thunder Cargo Corridor (TCC) • Enterprise Last-Mile Logistics Infrastructure Framework
+            Thunder Cargo Corridor (TCC) • South India B2B Last-Mile Logistics Infrastructure Framework
           </div>
         </footer>
 
