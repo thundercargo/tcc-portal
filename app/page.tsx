@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Calculator,
   Zap,
@@ -10,7 +10,6 @@ import {
   Phone,
   Mail,
   Award,
-  ChevronRight,
   Layers,
   BarChart3,
   CheckCircle2,
@@ -36,6 +35,116 @@ const TARIFF_MATRIX: Record<string, { name: string; slabs: number[]; excess: num
   'reg-6a': { name: 'REGIONAL 6A (501 – 550 KM)', slabs: [560, 840, 1520, 2180, 4150, 6400], excess: 12.50 },
   'reg-6b': { name: 'REGIONAL 6B (551 – 600 KM)', slabs: [590, 890, 1620, 2320, 4420, 6920], excess: 13.50 },
 };
+
+// Interactive Animated Background Canvas
+function LiveBackgroundCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animationFrameId: number;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    };
+    window.addEventListener('resize', handleResize);
+
+    // Particle nodes representing logistics network traffic
+    const particles = Array.from({ length: 45 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      vx: (Math.random() - 0.5) * 0.8,
+      vy: (Math.random() - 0.5) * 0.8,
+      radius: Math.random() * 2 + 1,
+      hue: Math.random() > 0.5 ? '#22d3ee' : '#34d399'
+    }));
+
+    const render = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      // Draw subtle grid lines
+      ctx.strokeStyle = 'rgba(30, 41, 59, 0.3)';
+      ctx.lineWidth = 1;
+      const gridSize = 60;
+      for (let x = 0; x < width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+      for (let y = 0; y < height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+
+      // Update & Draw Particles & Constellation Lines
+      particles.forEach((p, i) => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.hue;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = p.hue;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // Connect nearby nodes
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+          if (dist < 140) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(34, 211, 238, ${0.25 * (1 - dist / 140)})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      });
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        pointerEvents: 'none',
+        zIndex: 0,
+        opacity: 0.6
+      }}
+    />
+  );
+}
 
 export default function App() {
   const [weight, setWeight] = useState<number>(100);
@@ -76,8 +185,7 @@ export default function App() {
     else {
       base = selectedTariff.slabs[5] + (w - 500) * selectedTariff.excess;
     }
-    // Include automated Green Logistics / ESG levy (₹20 fixed per waybill: Welfare ₹10 + Afforestation ₹5 + Audit ₹5)
-    return base + 20;
+    return base + 20; // ₹20 Green ESG Offset
   };
 
   const estimatedCost = calculateRate(weight);
@@ -93,7 +201,7 @@ export default function App() {
   };
 
   const handleShareQuote = () => {
-    const text = `TCC B2B Green Freight Quote\nCorridor: ${selectedTariff.name}\nWeight: ${weight} KG\nEst. Tariff: ₹${estimatedCost.toLocaleString('en-IN')} (Incl. ₹20 ESG Green Levy)\nSAC: 9965 RCM Compliant`;
+    const text = `TCC B2B Green Freight Quote\nCorridor: ${selectedTariff.name}\nWeight: ${weight} KG\nEst. Tariff: ₹${estimatedCost.toLocaleString('en-IN')} (Incl. ₹20 ESG Green Offset)\nSAC: 9965 RCM Compliant`;
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -109,68 +217,64 @@ export default function App() {
       position: 'relative',
       overflowX: 'hidden'
     }}>
-      {/* Background neon glows */}
-      <div style={{
-        position: 'fixed', top: '-100px', left: '10%', width: '450px', height: '450px',
-        backgroundColor: 'rgba(6, 182, 212, 0.15)', borderRadius: '50%', filter: 'blur(100px)', pointerEvents: 'none'
-      }} />
-      <div style={{
-        position: 'fixed', bottom: '-100px', right: '10%', width: '450px', height: '450px',
-        backgroundColor: 'rgba(16, 185, 129, 0.12)', borderRadius: '50%', filter: 'blur(100px)', pointerEvents: 'none'
-      }} />
+      {/* Live Animated Interactive Cyber Wallpaper */}
+      <LiveBackgroundCanvas />
 
-      <div style={{ maxWidth: '1150px', margin: '0 auto' }}>
+      <div style={{ maxWidth: '1150px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         
-        {/* Header Section - Clean & Non-Repetitive */}
+        {/* Header Section */}
         <header style={{
-          background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.6) 100%)',
-          border: '1px solid rgba(56, 189, 248, 0.25)',
-          backdropFilter: 'blur(20px)',
+          background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.7) 100%)',
+          border: '1px solid rgba(56, 189, 248, 0.3)',
+          backdropFilter: 'blur(25px)',
           borderRadius: '24px',
-          padding: '32px',
+          padding: '28px 32px',
           marginBottom: '28px',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.5)'
+          boxShadow: '0 20px 50px rgba(0,0,0,0.6)'
         }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
-              <div>
-                <div style={{ display: 'flex', gap: '10px', marginBottom: '12px', flexWrap: 'wrap' }}>
-                  <span style={{
-                    display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px',
-                    borderRadius: '50px', fontSize: '11px', fontWeight: 700, letterSpacing: '0.05em',
-                    backgroundColor: 'rgba(16, 185, 129, 0.15)', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.3)'
-                  }}>
-                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#34d399', display: 'inline-block' }} />
-                    ENTERPRISE B2B LOGISTICS NETWORK
-                  </span>
-                  <span style={{
-                    padding: '6px 14px', borderRadius: '50px', fontSize: '11px', fontWeight: 700,
-                    backgroundColor: 'rgba(6, 182, 212, 0.15)', color: '#22d3ee', border: '1px solid rgba(6, 182, 212, 0.3)', fontFamily: 'monospace'
-                  }}>
-                    UDYAM-TS-02-0359997
-                  </span>
-                </div>
-                <h1 style={{ fontSize: 'clamp(26px, 4vw, 44px)', fontWeight: 900, margin: 0, letterSpacing: '-0.02em', color: '#ffffff' }}>
-                  THUNDER CARGO <span style={{ background: 'linear-gradient(to right, #22d3ee, #34d399)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>CORRIDOR</span>
-                </h1>
-                <p style={{ color: '#94a3b8', fontSize: '14px', margin: '8px 0 0 0', fontWeight: 500 }}>
-                  Automated Terminal Dispatch & Sustainable Freight Infrastructure
-                </p>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+            <div>
+              <div style={{ display: 'flex', gap: '10px', marginBottom: '10px', flexWrap: 'wrap' }}>
+                <span style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '4px 12px',
+                  borderRadius: '50px', fontSize: '11px', fontWeight: 700,
+                  backgroundColor: 'rgba(16, 185, 129, 0.15)', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.3)'
+                }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#34d399', display: 'inline-block' }} />
+                  ENTERPRISE B2B LOGISTICS NETWORK
+                </span>
+                <span style={{
+                  padding: '4px 12px', borderRadius: '50px', fontSize: '11px', fontWeight: 700,
+                  backgroundColor: 'rgba(6, 182, 212, 0.15)', color: '#22d3ee', border: '1px solid rgba(6, 182, 212, 0.3)', fontFamily: 'monospace'
+                }}>
+                  UDYAM-TS-02-0359997
+                </span>
               </div>
+              <h1 style={{ fontSize: 'clamp(26px, 4vw, 42px)', fontWeight: 900, margin: 0, letterSpacing: '-0.02em', color: '#ffffff' }}>
+                THUNDER CARGO <span style={{ background: 'linear-gradient(to right, #22d3ee, #34d399)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>CORRIDOR</span>
+              </h1>
+              <p style={{ color: '#94a3b8', fontSize: '13px', margin: '6px 0 0 0', fontWeight: 500 }}>
+                Automated Terminal Dispatch & Sustainable Freight Infrastructure
+              </p>
+            </div>
 
-              {/* IST Live Clock Box */}
-              <div style={{
-                background: 'rgba(2, 6, 23, 0.8)', border: '1px solid rgba(34, 211, 238, 0.4)',
-                borderRadius: '16px', padding: '14px 20px', boxShadow: '0 8px 20px rgba(6, 182, 212, 0.15)'
-              }}>
-                <div style={{ fontSize: '10px', textTransform: 'uppercase', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <Clock size={12} color="#22d3ee" /> Live System Time (IST)
-                </div>
-                <div style={{ color: '#22d3ee', fontFamily: 'monospace', fontSize: '18px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#34d399' }} />
-                  {timeString || 'Loading IST...'}
-                </div>
-                <div style={{ fontSize: '10px', color: '#64748b', marginTop: '4px', fontFamily: 'monospace' }}>Master Tariff Schedule: 08-10-2026</div>
+            {/* Sleek Compact Top-Right Live IST Clock */}
+            <div style={{
+              background: 'rgba(2, 6, 23, 0.85)',
+              border: '1px solid rgba(34, 211, 238, 0.4)',
+              borderRadius: '12px',
+              padding: '8px 16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              boxShadow: '0 8px 20px rgba(6, 182, 212, 0.2)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#64748b', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase' }}>
+                <Clock size={14} color="#22d3ee" /> IST
+              </div>
+              <div style={{ color: '#22d3ee', fontFamily: 'monospace', fontSize: '15px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#34d399' }} />
+                {timeString || 'IST Loading...'}
               </div>
             </div>
           </div>
@@ -178,7 +282,7 @@ export default function App() {
 
         {/* Navigation Tabs */}
         <div style={{
-          display: 'flex', gap: '12px', background: 'rgba(15, 23, 42, 0.8)', padding: '8px',
+          display: 'flex', gap: '12px', background: 'rgba(15, 23, 42, 0.85)', padding: '8px',
           borderRadius: '18px', border: '1px solid rgba(51, 65, 85, 0.8)', marginBottom: '28px', overflowX: 'auto'
         }}>
           {[
@@ -210,9 +314,9 @@ export default function App() {
 
         {/* Main Content Area */}
         <div style={{
-          background: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(51, 65, 85, 0.6)',
-          backdropFilter: 'blur(20px)', borderRadius: '24px', padding: '28px', marginBottom: '28px',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.4)'
+          background: 'rgba(15, 23, 42, 0.7)', border: '1px solid rgba(51, 65, 85, 0.7)',
+          backdropFilter: 'blur(25px)', borderRadius: '24px', padding: '28px', marginBottom: '28px',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.5)'
         }}>
           {activeTab === 'calculator' && (
             <div>
@@ -292,7 +396,6 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* ESG Highlight Box */}
                   <div style={{ padding: '14px', borderRadius: '14px', backgroundColor: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.3)', fontSize: '12px', color: '#94a3b8' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#34d399', fontWeight: 700, marginBottom: '6px' }}>
                       <Leaf size={14} color="#34d399" /> Integrated Green Logistics & ESG Levy
@@ -301,10 +404,10 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Right Result Card with ESG breakdown */}
+                {/* Right Result Card */}
                 <div>
                   <div style={{
-                    background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(2, 6, 23, 0.95) 100%)',
+                    background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(2, 6, 23, 0.98) 100%)',
                     border: '1px solid rgba(16, 185, 129, 0.4)', borderRadius: '20px', padding: '24px', boxShadow: '0 15px 35px rgba(16, 185, 129, 0.15)'
                   }}>
                     <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#34d399', fontWeight: 700, marginBottom: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -397,16 +500,16 @@ export default function App() {
                 <div style={{ backgroundColor: '#020617', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '20px', borderRadius: '16px' }}>
                   <div style={{ fontSize: '11px', color: '#34d399', fontWeight: 700, textTransform: 'uppercase' }}>Hub Welfare Fund</div>
                   <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', margin: '8px 0' }}>₹10 <span style={{ fontSize: '12px', color: '#34d399' }}>/waybill</span></div>
-                  <div style={{ fontSize: '11px', color: '#94a3b8' }}>Direct driver & loader medical/accident cover</div>
+                  <div style={{ fontSize: '11px', color: '#94a3b8' }}>Direct driver & loader medical cover</div>
                 </div>
                 <div style={{ backgroundColor: '#020617', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '20px', borderRadius: '16px' }}>
-                  <div style={{ fontSize: '11px', color: '#34d399', fontWeight: 700, textTransform: 'uppercase' }}>Urban Afforestation</div>
-                  <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', margin: '8px 0' }}>₹5 <span style={{ fontSize: '12px', color: '#34d399' }}>/waybill</span></div>
+                  <div style={{ fontSize: '11px', color: '#34d399', fontWeight 700, textTransform: 'uppercase' }}>Urban Afforestation</div>
+                  <div style={{ fontSize: '28px', fontWeight 900, color: '#fff', fontFamily: 'monospace', margin: '8px 0' }}>₹5 <span style={{ fontSize: '12px', color: '#34d399' }}>/waybill</span></div>
                   <div style={{ fontSize: '11px', color: '#94a3b8' }}>Tree plantation near district terminal hubs</div>
                 </div>
                 <div style={{ backgroundColor: '#020617', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '20px', borderRadius: '16px' }}>
                   <div style={{ fontSize: '11px', color: '#34d399', fontWeight: 700, textTransform: 'uppercase' }}>Climate Auditing</div>
-                  <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', margin: '8px 0' }}>₹5 <span style={{ fontSize: '12px', color: '#34d399' }}>/waybill</span></div>
+                  <div style={{ fontSize: '28px', fontWeight 900, color: '#fff', fontFamily: 'monospace', margin: '8px 0' }}>₹5 <span style={{ fontSize: '12px', color: '#34d399' }}>/waybill</span></div>
                   <div style={{ fontSize: '11px', color: '#64748b' }}>Quarterly carbon footprint verification</div>
                 </div>
               </div>
@@ -416,31 +519,31 @@ export default function App() {
 
         {/* Statistics Grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px', marginBottom: '28px' }}>
-          <div style={{ background: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ background: 'rgba(15, 23, 42, 0.7)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#94a3b8', fontWeight: 700 }}>Consolidation Terminals</div>
               <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', marginTop: '4px' }}>3 Primary</div>
             </div>
             <Building2 size={24} color="#22d3ee" />
           </div>
-          <div style={{ background: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ background: 'rgba(15, 23, 42, 0.7)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#94a3b8', fontWeight: 700 }}>District Logistics Hubs</div>
-              <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', marginTop: '4px' }}>175+</div>
+              <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#94a3b8', fontWeight 700 }}>District Logistics Hubs</div>
+              <div style={{ fontSize: '28px', fontWeight 900, color: '#fff', fontFamily: 'monospace', marginTop: '4px' }}>175+</div>
             </div>
             <MapPin size={24} color="#34d399" />
           </div>
-          <div style={{ background: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ background: 'rgba(15, 23, 42, 0.7)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#94a3b8', fontWeight: 700 }}>Express Collection Nodes</div>
-              <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', marginTop: '4px' }}>355+</div>
+              <div style={{ fontSize: '28px', fontWeight 900, color: '#fff', fontFamily: 'monospace', marginTop: '4px' }}>355+</div>
             </div>
             <PackageCheck size={24} color="#22d3ee" />
           </div>
         </div>
 
         {/* Footer */}
-        <footer style={{ background: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '24px', textAlign: 'center', fontSize: '12px', color: '#94a3b8' }}>
+        <footer style={{ background: 'rgba(15, 23, 42, 0.7)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '24px', textAlign: 'center', fontSize: '12px', color: '#94a3b8' }}>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', flexWrap: 'wrap', marginBottom: '14px', fontWeight: 600 }}>
             <a href="tel:+918340085989" style={{ color: '#cbd5e1', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Phone size={14} color="#22d3ee" /> +91 8340085989
