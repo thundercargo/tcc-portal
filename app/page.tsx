@@ -11,7 +11,6 @@ import {
   Mail,
   Award,
   ChevronRight,
-  Globe,
   Layers,
   BarChart3,
   CheckCircle2,
@@ -20,7 +19,6 @@ import {
   Sparkles
 } from 'lucide-react';
 
-// Master Tariff Slab Matrix Data (Dated 08-10-2026)
 const TARIFF_MATRIX: Record<string, { name: string; slabs: number[]; excess: number }> = {
   'intra-1': { name: 'INTRA-CITY 1 (4 – 5 KM)', slabs: [150, 250, 380, 550, 1100, 1800], excess: 3.50 },
   'intra-2': { name: 'INTRA-CITY 2 (6 – 15 KM)', slabs: [200, 320, 480, 750, 1500, 2400], excess: 4.50 },
@@ -46,7 +44,6 @@ export default function App() {
   const [copied, setCopied] = useState<boolean>(false);
   const [timeString, setTimeString] = useState<string>('');
 
-  // Live IST Clock Hook
   useEffect(() => {
     const updateClock = () => {
       const now = new Date();
@@ -101,174 +98,191 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#030712] text-slate-100 font-sans relative overflow-x-hidden selection:bg-cyan-500 selection:text-black">
-      {/* Background Cyber Ambient Lights */}
-      <div className="fixed top-0 left-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-[140px] pointer-events-none -z-10 animate-pulse" />
-      <div className="fixed bottom-0 right-1/4 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[130px] pointer-events-none -z-10" />
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#020617',
+      color: '#f8fafc',
+      fontFamily: 'Inter, system-ui, sans-serif',
+      padding: '24px 16px',
+      position: 'relative',
+      overflowX: 'hidden'
+    }}>
+      {/* Background neon glows */}
+      <div style={{
+        position: 'fixed', top: '-100px', left: '10%', width: '450px', height: '450px',
+        backgroundColor: 'rgba(6, 182, 212, 0.15)', borderRadius: '50%', filter: 'blur(100px)', pointerEvents: 'none'
+      }} />
+      <div style={{
+        position: 'fixed', bottom: '-100px', right: '10%', width: '450px', height: '450px',
+        backgroundColor: 'rgba(16, 185, 129, 0.12)', borderRadius: '50%', filter: 'blur(100px)', pointerEvents: 'none'
+      }} />
 
-      {/* Grid Pattern Overlay */}
-      <div className="fixed inset-0 bg-[linear-gradient(to_right,#1e293b15_1px,transparent_1px),linear-gradient(to_bottom,#1e293b15_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none -z-10" />
-
-      {/* Main Container */}
-      <div className="max-w-6xl mx-auto px-4 py-6 md:py-10">
-
-        {/* TOP HEADER */}
-        <header className="relative bg-slate-900/60 border border-slate-800/80 backdrop-blur-2xl rounded-3xl p-6 md:p-8 mb-8 shadow-2xl shadow-cyan-950/20 overflow-hidden">
-          <div className="absolute -top-24 -right-24 w-64 h-64 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />
-          
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
-            <div>
-              <div className="flex items-center gap-3 mb-2 flex-wrap">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-                  SOUTH INDIA B2B LAST-MILE LOGISTICS
-                </span>
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-mono">
-                  UDYAM-TS-02-0359997
-                </span>
+      <div style={{ maxWidth: '1150px', margin: '0 auto' }}>
+        
+        {/* Header Section */}
+        <header style={{
+          background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.6) 100%)',
+          border: '1px solid rgba(56, 189, 248, 0.25)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '24px',
+          padding: '32px',
+          marginBottom: '28px',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.5)'
+        }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
+              <div>
+                <div style={{ display: 'flex', gap: '10px', marginBottom: '12px', flexWrap: 'wrap' }}>
+                  <span style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px',
+                    borderRadius: '50px', fontSize: '11px', fontWeight: 700, letterSpacing: '0.05em',
+                    backgroundColor: 'rgba(16, 185, 129, 0.15)', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.3)'
+                  }}>
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#34d399', display: 'inline-block' }} />
+                    SOUTH INDIA B2B LAST-MILE LOGISTICS
+                  </span>
+                  <span style={{
+                    padding: '6px 14px', borderRadius: '50px', fontSize: '11px', fontWeight: 700,
+                    backgroundColor: 'rgba(6, 182, 212, 0.15)', color: '#22d3ee', border: '1px solid rgba(6, 182, 212, 0.3)', fontFamily: 'monospace'
+                  }}>
+                    UDYAM-TS-02-0359997
+                  </span>
+                </div>
+                <h1 style={{ fontSize: 'clamp(26px, 4vw, 44px)', fontWeight: 900, margin: 0, letterSpacing: '-0.02em', color: '#ffffff' }}>
+                  THUNDER CARGO <span style={{ background: 'linear-gradient(to right, #22d3ee, #34d399)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>CORRIDOR</span>
+                </h1>
+                <p style={{ color: '#94a3b8', fontSize: '14px', margin: '8px 0 0 0', fontWeight: 500 }}>
+                  South India Last-Mile Integration & Digital Terminal Dispatch Network
+                </p>
               </div>
-              
-              <h1 className="text-3xl md:text-5xl font-black tracking-tight text-white flex items-center gap-3">
-                THUNDER CARGO <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400">CORRIDOR</span>
-              </h1>
-              <p className="text-slate-400 text-sm md:text-base mt-2 font-medium max-w-2xl">
-                South India Last-Mile Integration & Digital Terminal Dispatch Network
-              </p>
-            </div>
 
-            {/* TOP RIGHT CLOCK & SYSTEM STATUS */}
-            <div className="flex flex-col sm:flex-row lg:flex-col items-start lg:items-end gap-2 border-t lg:border-t-0 border-slate-800 pt-4 lg:pt-0">
-              <div className="text-xs uppercase tracking-widest text-slate-500 font-semibold flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-cyan-400" /> Live System Time (IST)
+              {/* IST Live Clock Box */}
+              <div style={{
+                background: 'rgba(2, 6, 23, 0.8)', border: '1px solid rgba(34, 211, 238, 0.4)',
+                borderRadius: '16px', padding: '14px 20px', boxShadow: '0 8px 20px rgba(6, 182, 212, 0.15)'
+              }}>
+                <div style={{ fontSize: '10px', textTransform: 'uppercase', color: '#64748b', fontWeight: 700, marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Clock size={12} color="#22d3ee" /> Live System Time (IST)
+                </div>
+                <div style={{ color: '#22d3ee', fontFamily: 'monospace', fontSize: '18px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#34d399' }} />
+                  {timeString || 'Loading IST...'}
+                </div>
+                <div style={{ fontSize: '10px', color: '#64748b', marginTop: '4px', fontFamily: 'monospace' }}>Master Tariff Schedule: 08-10-2026</div>
               </div>
-              <div className="flex items-center gap-2 bg-slate-950/90 px-4 py-2 rounded-2xl border border-cyan-500/40 text-cyan-300 font-mono text-sm font-bold shadow-lg shadow-cyan-950/50">
-                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span>{timeString || 'IST Loading...'}</span>
-              </div>
-              <div className="text-[11px] text-slate-400 font-mono">Master Tariff Schedule: 08-10-2026</div>
             </div>
           </div>
         </header>
 
-        {/* NAVIGATION TABS */}
-        <div className="flex p-1.5 bg-slate-900/80 border border-slate-800 rounded-2xl mb-8 gap-2 overflow-x-auto backdrop-blur-xl">
-          <button
-            onClick={() => setActiveTab('calculator')}
-            className={`flex items-center gap-2.5 px-6 py-3 rounded-xl font-semibold text-sm transition-all whitespace-nowrap flex-1 justify-center ${
-              activeTab === 'calculator'
-                ? 'bg-gradient-to-r from-cyan-500 to-teal-500 text-slate-950 font-bold shadow-lg shadow-cyan-500/25'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-            }`}
-          >
-            <Calculator className="w-4 h-4" />
-            <span>Master Tariff Engine</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('sla')}
-            className={`flex items-center gap-2.5 px-6 py-3 rounded-xl font-semibold text-sm transition-all whitespace-nowrap flex-1 justify-center ${
-              activeTab === 'sla'
-                ? 'bg-gradient-to-r from-cyan-500 to-teal-500 text-slate-950 font-bold shadow-lg shadow-cyan-500/25'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-            }`}
-          >
-            <Zap className="w-4 h-4" />
-            <span>90-Min Evacuation SLA</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('esg')}
-            className={`flex items-center gap-2.5 px-6 py-3 rounded-xl font-semibold text-sm transition-all whitespace-nowrap flex-1 justify-center ${
-              activeTab === 'esg'
-                ? 'bg-gradient-to-r from-cyan-500 to-teal-500 text-slate-950 font-bold shadow-lg shadow-cyan-500/25'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-            }`}
-          >
-            <Leaf className="w-4 h-4" />
-            <span>Voluntary ESG Pledge</span>
-          </button>
+        {/* Navigation Tabs */}
+        <div style={{
+          display: 'flex', gap: '12px', background: 'rgba(15, 23, 42, 0.8)', padding: '8px',
+          borderRadius: '18px', border: '1px solid rgba(51, 65, 85, 0.8)', marginBottom: '28px', overflowX: 'auto'
+        }}>
+          {[
+            { id: 'calculator', label: 'Master Tariff Engine', icon: Calculator },
+            { id: 'sla', label: '90-Min Evacuation SLA', icon: Zap },
+            { id: 'esg', label: 'Voluntary ESG Pledge', icon: Leaf }
+          ].map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                style={{
+                  flex: 1, padding: '12px 20px', borderRadius: '12px', border: 'none', cursor: 'pointer',
+                  fontWeight: 700, fontSize: '13px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                  background: isActive ? 'linear-gradient(135deg, #06b6d4 0%, #10b981 100%)' : 'transparent',
+                  color: isActive ? '#020617' : '#94a3b8',
+                  boxShadow: isActive ? '0 10px 25px rgba(6, 182, 212, 0.3)' : 'none',
+                  transition: 'all 0.3s ease', whiteSpace: 'nowrap'
+                }}
+              >
+                <Icon size={16} />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* MAIN DISPLAY CONTAINER */}
-        <div className="bg-slate-900/40 border border-slate-800/90 rounded-3xl p-6 md:p-8 backdrop-blur-2xl shadow-2xl relative overflow-hidden mb-8">
-          
-          {/* TAB 1: MASTER TARIFF CALCULATOR */}
+        {/* Main Content Area */}
+        <div style={{
+          background: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(51, 65, 85, 0.6)',
+          backdropFilter: 'blur(20px)', borderRadius: '24px', padding: '28px', marginBottom: '28px',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.4)'
+        }}>
           {activeTab === 'calculator' && (
-            <div className="space-y-8 animate-fadeIn">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800/80 pb-6">
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(51, 65, 85, 0.6)', paddingBottom: '20px', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
                 <div>
-                  <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                    <BarChart3 className="w-6 h-6 text-cyan-400" />
-                    Master B2B Freight Rate Engine
+                  <h2 style={{ fontSize: '20px', fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: '10px', color: '#fff' }}>
+                    <BarChart3 size={20} color="#22d3ee" /> Master B2B Freight Rate Engine
                   </h2>
-                  <p className="text-sm text-slate-400 mt-1">
-                    Instant contract quote calculation based on South India distance corridors & weight slab rules.
-                  </p>
+                  <p style={{ color: '#94a3b8', fontSize: '13px', margin: '4px 0 0 0' }}>Instant contract quote calculation based on South India distance corridors & weight slabs.</p>
                 </div>
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
-                  <ShieldCheck className="w-4 h-4" />
-                  SAC 9965 RCM Compliant
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 12px', borderRadius: '10px', backgroundColor: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.25)', color: '#34d399', fontSize: '12px', fontWeight: 700 }}>
+                  <ShieldCheck size={14} /> SAC 9965 RCM Compliant
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                {/* Input Controls */}
-                <div className="lg:col-span-7 space-y-6">
-                  <div className="space-y-2">
-                    <label className="block text-xs uppercase tracking-wider text-cyan-400 font-bold flex items-center justify-between">
-                      <span>Corridor / Route Matrix</span>
-                      <span className="text-slate-500 text-[11px] font-normal">Select applicable distance range</span>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', alignItems: 'start' }}>
+                
+                {/* Left Controls */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#22d3ee', fontWeight: 800, marginBottom: '8px' }}>
+                      Corridor / Route Matrix
                     </label>
-                    <div className="relative">
-                      <select
-                        value={corridor}
-                        onChange={(e) => setCorridor(e.target.value)}
-                        className="w-full bg-slate-950 border border-slate-800 hover:border-cyan-500/50 focus:border-cyan-500 rounded-2xl px-5 py-4 text-white font-medium text-sm focus:outline-none transition-all appearance-none cursor-pointer"
-                      >
-                        {Object.entries(TARIFF_MATRIX).map(([key, item]) => (
-                          <option key={key} value={key} className="bg-slate-900 text-white py-2">
-                            {item.name}
-                          </option>
-                        ))}
-                      </select>
-                      <ChevronRight className="w-5 h-5 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none rotate-90" />
-                    </div>
+                    <select
+                      value={corridor}
+                      onChange={(e) => setCorridor(e.target.value)}
+                      style={{
+                        width: '100%', backgroundColor: '#020617', border: '1px solid #334155',
+                        borderRadius: '14px', padding: '14px', color: '#ffffff', fontSize: '14px', fontWeight: 600, outline: 'none', cursor: 'pointer'
+                      }}
+                    >
+                      {Object.entries(TARIFF_MATRIX).map(([key, item]) => (
+                        <option key={key} value={key} style={{ background: '#0f172a', color: '#fff' }}>
+                          {item.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <label className="block text-xs uppercase tracking-wider text-cyan-400 font-bold">
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                      <label style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#22d3ee', fontWeight: 800 }}>
                         Consignment Gross Weight (KG)
                       </label>
-                      <span className="text-xs text-slate-400 font-mono">Min 1 KG</span>
+                      <span style={{ fontSize: '11px', color: '#94a3b8', fontFamily: 'monospace' }}>Min 1 KG</span>
                     </div>
-                    
-                    <div className="relative">
+                    <div style={{ position: 'relative' }}>
                       <input
                         type="number"
                         min="1"
                         max="10000"
                         value={weight}
                         onChange={(e) => setWeight(Math.max(1, Number(e.target.value)))}
-                        className="w-full bg-slate-950 border border-slate-800 hover:border-cyan-500/50 focus:border-cyan-500 rounded-2xl px-5 py-4 text-white font-mono text-xl focus:outline-none transition-all"
-                        placeholder="Enter weight in kg..."
+                        style={{
+                          width: '100%', backgroundColor: '#020617', border: '1px solid #334155',
+                          borderRadius: '14px', padding: '14px 50px 14px 16px', color: '#ffffff', fontSize: '18px', fontFamily: 'monospace', fontWeight: 700, outline: 'none', boxSizing: 'border-box'
+                        }}
                       />
-                      <span className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">
-                        KG
-                      </span>
+                      <span style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', color: '#64748b', fontWeight: 700, fontSize: '13px' }}>KG</span>
                     </div>
 
-                    {/* Quick Preset Buttons */}
-                    <div className="flex gap-2 pt-2 overflow-x-auto">
+                    <div style={{ display: 'flex', gap: '6px', marginTop: '10px', flexWrap: 'wrap' }}>
                       {[10, 25, 50, 100, 250, 500, 750].map((preset) => (
                         <button
                           key={preset}
                           onClick={() => setWeight(preset)}
-                          className={`px-3 py-1.5 rounded-lg text-xs font-mono border transition-all ${
-                            weight === preset
-                              ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50'
-                              : 'bg-slate-950 text-slate-400 border-slate-800 hover:border-slate-700'
-                          }`}
+                          style={{
+                            padding: '6px 12px', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace', fontWeight: 700,
+                            border: weight === preset ? '1px solid rgba(34, 211, 238, 0.6)' : '1px solid #334155',
+                            backgroundColor: weight === preset ? 'rgba(6, 182, 212, 0.2)' : '#020617',
+                            color: weight === preset ? '#22d3ee' : '#94a3b8', cursor: 'pointer'
+                          }}
                         >
                           {preset}kg
                         </button>
@@ -276,232 +290,158 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80 text-xs text-slate-400 space-y-2">
-                    <div className="flex items-center gap-2 font-semibold text-slate-300">
-                      <Sparkles className="w-4 h-4 text-cyan-400" />
-                      Dynamic Weight Slab Rules
+                  <div style={{ padding: '14px', borderRadius: '14px', backgroundColor: 'rgba(2, 6, 23, 0.6)', border: '1px solid rgba(51, 65, 85, 0.6)', fontSize: '12px', color: '#94a3b8' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#cbd5e1', fontWeight: 700, marginBottom: '6px' }}>
+                      <Sparkles size={14} color="#22d3ee" /> Dynamic Weight Slab Rules
                     </div>
-                    <p className="leading-relaxed">
-                      Slabs covered: 1-10kg, 11-25kg, 26-50kg, 51-100kg, 101-250kg, 251-500kg.
-                      Consignments exceeding 500kg are billed at the 500kg base slab rate plus an incremental per-kg surcharge (₹{selectedTariff.excess.toFixed(2)}/kg for {selectedTariff.name}).
-                    </p>
+                    Slabs covered: 1-10kg, 11-25kg, 26-50kg, 51-100kg, 101-250kg, 251-500kg. Surcharges apply past 500kg (+₹{selectedTariff.excess.toFixed(2)}/kg).
                   </div>
                 </div>
 
-                {/* Tariff Display Card */}
-                <div className="lg:col-span-5">
-                  <div className="relative bg-gradient-to-b from-slate-900 to-slate-950 border border-cyan-500/30 rounded-3xl p-6 md:p-8 shadow-2xl shadow-cyan-950/40 overflow-hidden">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none" />
-
-                    <div className="text-xs uppercase tracking-widest text-slate-400 font-bold mb-1">
+                {/* Right Result Card */}
+                <div>
+                  <div style={{
+                    background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(2, 6, 23, 0.95) 100%)',
+                    border: '1px solid rgba(34, 211, 238, 0.4)', borderRadius: '20px', padding: '24px', boxShadow: '0 15px 35px rgba(6, 182, 212, 0.15)'
+                  }}>
+                    <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#94a3b8', fontWeight: 700, marginBottom: '6px' }}>
                       Exact Tariff Quote
                     </div>
-                    
-                    <div className="my-4">
-                      <div className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-cyan-400 font-mono tracking-tight">
+                    <div style={{ margin: '12px 0' }}>
+                      <div style={{ fontSize: 'clamp(32px, 5vw, 44px)', fontWeight: 900, fontFamily: 'monospace', color: '#ffffff', letterSpacing: '-0.02em' }}>
                         ₹{estimatedCost.toLocaleString('en-IN')}
                       </div>
-                      <div className="text-xs text-emerald-400 flex items-center gap-1.5 mt-2 font-semibold">
-                        <CheckCircle2 className="w-4 h-4" />
-                        Guaranteed Commercial Rate (All Inclusive)
+                      <div style={{ fontSize: '12px', color: '#34d399', display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px', fontWeight: 700 }}>
+                        <CheckCircle2 size={14} /> Guaranteed Commercial Rate (All Inclusive)
                       </div>
                     </div>
 
-                    <div className="space-y-3 border-t border-slate-800/80 pt-5 my-5 text-xs">
-                      <div className="flex justify-between items-center">
-                        <span className="text-slate-400">Selected Corridor:</span>
-                        <span className="font-semibold text-white text-right max-w-[200px]">
-                          {selectedTariff.name}
-                        </span>
+                    <div style={{ borderTop: '1px solid rgba(51, 65, 85, 0.6)', paddingTop: '16px', margin: '16px 0', fontSize: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <span style={{ color: '#94a3b8' }}>Selected Corridor:</span>
+                        <span style={{ fontWeight: 700, color: '#fff', textAlign: 'right', maxWidth: '180px' }}>{selectedTariff.name}</span>
                       </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-slate-400">Weight Bracket:</span>
-                        <span className="font-mono text-cyan-300 font-bold">
-                          {getSlabLabel(weight)}
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-slate-400">Excess Tariff Rate:</span>
-                        <span className="font-mono text-slate-300">
-                          ₹{selectedTariff.excess.toFixed(2)} / excess kg
-                        </span>
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <span style={{ color: '#94a3b8' }}>Weight Bracket:</span>
+                        <span style={{ fontFamily: 'monospace', color: '#22d3ee', fontWeight: 700 }}>{getSlabLabel(weight)}</span>
                       </div>
                     </div>
 
                     <button
                       onClick={handleShareQuote}
-                      className="w-full py-3.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-all flex items-center justify-center gap-2"
+                      style={{
+                        width: '100%', padding: '14px', borderRadius: '12px', fontWeight: 800, fontSize: '11px',
+                        textTransform: 'uppercase', letterSpacing: '0.05em', border: '1px solid #334155',
+                        backgroundColor: '#1e293b', color: '#ffffff', cursor: 'pointer', display: 'flex',
+                        alignItems: 'center', justifyContent: 'center', gap: '8px', transition: 'all 0.2s'
+                      }}
                     >
                       {copied ? (
                         <>
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                          <CheckCircle2 size={16} color="#34d399" />
                           <span>Quote Copied to Clipboard!</span>
                         </>
                       ) : (
                         <>
-                          <Layers className="w-4 h-4 text-cyan-400" />
+                          <Layers size={16} color="#22d3ee" />
                           <span>Copy Quote Summary</span>
                         </>
                       )}
                     </button>
                   </div>
                 </div>
+
               </div>
             </div>
           )}
 
-          {/* TAB 2: 90-MIN EVACUATION SLA */}
           {activeTab === 'sla' && (
-            <div className="space-y-8 animate-fadeIn">
-              <div className="border-b border-slate-800/80 pb-6">
-                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                  <Zap className="w-6 h-6 text-cyan-400" />
-                  Terminal Evacuation & SLA Telemetry
-                </h2>
-                <p className="text-sm text-slate-400 mt-1">
-                  Automated dispatch protocol guaranteeing swift clearance across all South India hubs.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-slate-950/80 border border-slate-800 p-6 rounded-2xl relative overflow-hidden">
-                  <div className="text-xs text-slate-400 uppercase font-bold tracking-wider">Average Clear Time</div>
-                  <div className="text-4xl font-black text-emerald-400 font-mono my-2">42 Mins</div>
-                  <div className="text-xs text-slate-500">Guaranteed SLA Target: Under 90 Mins</div>
-                  <div className="w-full bg-slate-900 h-2 rounded-full mt-4 overflow-hidden">
-                    <div className="bg-emerald-400 h-full w-[46%]" />
-                  </div>
+            <div>
+              <h2 style={{ fontSize: '20px', fontWeight: 800, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '10px', color: '#fff' }}>
+                <Zap size={20} color="#22d3ee" /> Terminal Evacuation & SLA Telemetry
+              </h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+                <div style={{ backgroundColor: '#020617', border: '1px solid #334155', padding: '20px', borderRadius: '16px' }}>
+                  <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>Average Clear Time</div>
+                  <div style={{ fontSize: '32px', fontWeight: 900, color: '#34d399', fontFamily: 'monospace', margin: '8px 0' }}>42 Mins</div>
+                  <div style={{ fontSize: '11px', color: '#64748b' }}>Guaranteed SLA: Under 90 Mins</div>
                 </div>
-
-                <div className="bg-slate-950/80 border border-slate-800 p-6 rounded-2xl relative overflow-hidden">
-                  <div className="text-xs text-slate-400 uppercase font-bold tracking-wider">Dwell Reduction</div>
-                  <div className="text-4xl font-black text-cyan-400 font-mono my-2">-78%</div>
-                  <div className="text-xs text-slate-500">Versus conventional legacy freight handling</div>
-                  <div className="w-full bg-slate-900 h-2 rounded-full mt-4 overflow-hidden">
-                    <div className="bg-cyan-400 h-full w-[78%]" />
-                  </div>
+                <div style={{ backgroundColor: '#020617', border: '1px solid #334155', padding: '20px', borderRadius: '16px' }}>
+                  <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>Dwell Reduction</div>
+                  <div style={{ fontSize: '32px', fontWeight: 900, color: '#22d3ee', fontFamily: 'monospace', margin: '8px 0' }}>-78%</div>
+                  <div style={{ fontSize: '11px', color: '#64748b' }}>Versus legacy freight handling</div>
                 </div>
-
-                <div className="bg-slate-950/80 border border-slate-800 p-6 rounded-2xl relative overflow-hidden">
-                  <div className="text-xs text-slate-400 uppercase font-bold tracking-wider">Demurrage Risk</div>
-                  <div className="text-4xl font-black text-teal-300 font-mono my-2">0.00%</div>
-                  <div className="text-xs text-slate-500">Zero wharfage accumulation recorded</div>
-                  <div className="w-full bg-slate-900 h-2 rounded-full mt-4 overflow-hidden">
-                    <div className="bg-teal-300 h-full w-[100%]" />
-                  </div>
+                <div style={{ backgroundColor: '#020617', border: '1px solid #334155', padding: '20px', borderRadius: '16px' }}>
+                  <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>Demurrage Risk</div>
+                  <div style={{ fontSize: '32px', fontWeight: 900, color: '#34d399', fontFamily: 'monospace', margin: '8px 0' }}>0.00%</div>
+                  <div style={{ fontSize: '11px', color: '#64748b' }}>Zero wharfage accumulation</div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* TAB 3: VOLUNTARY ESG PLEDGE */}
           {activeTab === 'esg' && (
-            <div className="space-y-8 animate-fadeIn">
-              <div className="border-b border-slate-800/80 pb-6">
-                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                  <Leaf className="w-6 h-6 text-emerald-400" />
-                  ESG & Green Last-Mile Pledge
-                </h2>
-                <p className="text-sm text-slate-400 mt-1">
-                  Voluntary sustainability contributions built into TCC's commercial framework (₹20 per consignment note).
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-slate-950/80 border border-slate-800 p-6 rounded-2xl">
-                  <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">Hub Welfare Fund</div>
-                  <div className="text-3xl font-black text-white font-mono my-2">₹10 <span className="text-xs text-slate-500 font-normal">/ consignment</span></div>
-                  <p className="text-xs text-slate-400">Directly funds ground crew amenities and safety gear across hubs.</p>
+            <div>
+              <h2 style={{ fontSize: '20px', fontWeight: 800, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '10px', color: '#fff' }}>
+                <Leaf size={20} color="#34d399" /> ESG & Green Last-Mile Pledge
+              </h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+                <div style={{ backgroundColor: '#020617', border: '1px solid #334155', padding: '20px', borderRadius: '16px' }}>
+                  <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>Hub Welfare Fund</div>
+                  <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', margin: '8px 0' }}>₹10 <span style={{ fontSize: '12px', color: '#34d399' }}>/waybill</span></div>
                 </div>
-
-                <div className="bg-slate-950/80 border border-slate-800 p-6 rounded-2xl">
-                  <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">Urban Afforestation</div>
-                  <div className="text-3xl font-black text-white font-mono my-2">₹5 <span className="text-xs text-slate-500 font-normal">/ consignment</span></div>
-                  <p className="text-xs text-slate-400">Supports green belt creation around high-density transit corridors.</p>
+                <div style={{ backgroundColor: '#020617', border: '1px solid #334155', padding: '20px', borderRadius: '16px' }}>
+                  <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>Urban Afforestation</div>
+                  <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', margin: '8px 0' }}>₹5 <span style={{ fontSize: '12px', color: '#34d399' }}>/waybill</span></div>
                 </div>
-
-                <div className="bg-slate-950/80 border border-slate-800 p-6 rounded-2xl">
-                  <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">Climate Auditing</div>
-                  <div className="text-3xl font-black text-white font-mono my-2">₹5 <span className="text-xs text-slate-500 font-normal">/ consignment</span></div>
-                  <p className="text-xs text-slate-400">Covers carbon footprint auditing and third-party green verification.</p>
+                <div style={{ backgroundColor: '#020617', border: '1px solid #334155', padding: '20px', borderRadius: '16px' }}>
+                  <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>Climate Auditing</div>
+                  <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', margin: '8px 0' }}>₹5 <span style={{ fontSize: '12px', color: '#34d399' }}>/waybill</span></div>
                 </div>
               </div>
             </div>
           )}
-
         </div>
 
-        {/* NETWORK STATS CARDS (REORDERED BELOW THE CALCULATOR) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <div className="group relative bg-slate-900/50 border border-slate-800/90 hover:border-cyan-500/50 transition-all duration-300 backdrop-blur-xl p-5 rounded-2xl overflow-hidden shadow-lg">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-500/5 rounded-full blur-xl group-hover:bg-cyan-500/15 transition-all" />
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Consolidation Terminals</div>
-                <div className="text-3xl font-extrabold text-white mt-1 font-mono tracking-tight group-hover:text-cyan-400 transition-colors">
-                  3 <span className="text-cyan-400 text-lg">Primary</span>
-                </div>
-              </div>
-              <div className="p-3 bg-cyan-500/10 rounded-xl border border-cyan-500/20 text-cyan-400">
-                <Building2 className="w-6 h-6" />
-              </div>
+        {/* Statistics Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px', marginBottom: '28px' }}>
+          <div style={{ background: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#94a3b8', fontWeight: 700 }}>Consolidation Terminals</div>
+              <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', marginTop: '4px' }}>3 Primary</div>
             </div>
-            <p className="text-xs text-slate-500 mt-2">Strategic high-capacity processing centers</p>
+            <Building2 size={24} color="#22d3ee" />
           </div>
-
-          <div className="group relative bg-slate-900/50 border border-slate-800/90 hover:border-emerald-500/50 transition-all duration-300 backdrop-blur-xl p-5 rounded-2xl overflow-hidden shadow-lg">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/15 transition-all" />
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">District Logistics Hubs</div>
-                <div className="text-3xl font-extrabold text-white mt-1 font-mono tracking-tight group-hover:text-emerald-400 transition-colors">
-                  175<span className="text-emerald-400">+</span>
-                </div>
-              </div>
-              <div className="p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20 text-emerald-400">
-                <MapPin className="w-6 h-6" />
-              </div>
+          <div style={{ background: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#94a3b8', fontWeight: 700 }}>District Logistics Hubs</div>
+              <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', marginTop: '4px' }}>175+</div>
             </div>
-            <p className="text-xs text-slate-500 mt-2">Authorized last-mile delivery touchpoints</p>
+            <MapPin size={24} color="#34d399" />
           </div>
-
-          <div className="group relative bg-slate-900/50 border border-slate-800/90 hover:border-teal-500/50 transition-all duration-300 backdrop-blur-xl p-5 rounded-2xl overflow-hidden shadow-lg">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-teal-500/5 rounded-full blur-xl group-hover:bg-teal-500/15 transition-all" />
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Express Collection Nodes</div>
-                <div className="text-3xl font-extrabold text-white mt-1 font-mono tracking-tight group-hover:text-teal-300 transition-colors">
-                  355<span className="text-teal-300">+</span>
-                </div>
-              </div>
-              <div className="p-3 bg-teal-500/10 rounded-xl border border-teal-500/20 text-teal-300">
-                <PackageCheck className="w-6 h-6" />
-              </div>
+          <div style={{ background: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#94a3b8', fontWeight: 700 }}>Express Collection Nodes</div>
+              <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', marginTop: '4px' }}>355+</div>
             </div>
-            <p className="text-xs text-slate-500 mt-2">Micro-fulfillment and merchant intake points</p>
+            <PackageCheck size={24} color="#22d3ee" />
           </div>
         </div>
 
-        {/* FOOTER */}
-        <footer className="bg-slate-900/60 border border-slate-800/80 backdrop-blur-2xl rounded-3xl p-6 md:p-8 text-center text-xs text-slate-400 space-y-4">
-          <div className="flex flex-wrap justify-center items-center gap-6 font-medium text-slate-300">
-            <a href="tel:+918340085989" className="flex items-center gap-2 hover:text-cyan-400 transition-colors">
-              <Phone className="w-4 h-4 text-cyan-400" />
-              <span>+91 8340085989</span>
+        {/* Footer */}
+        <footer style={{ background: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '24px', textAlign: 'center', fontSize: '12px', color: '#94a3b8' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', flexWrap: 'wrap', marginBottom: '14px', fontWeight: 600 }}>
+            <a href="tel:+918340085989" style={{ color: '#cbd5e1', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Phone size={14} color="#22d3ee" /> +91 8340085989
             </a>
-            <span className="text-slate-700 hidden sm:inline">•</span>
-            <a href="mailto:tcc.cargodesk@gmail.com" className="flex items-center gap-2 hover:text-cyan-400 transition-colors">
-              <Mail className="w-4 h-4 text-cyan-400" />
-              <span>tcc.cargodesk@gmail.com</span>
+            <a href="mailto:tcc.cargodesk@gmail.com" style={{ color: '#cbd5e1', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Mail size={14} color="#22d3ee" /> tcc.cargodesk@gmail.com
             </a>
-            <span className="text-slate-700 hidden sm:inline">•</span>
-            <div className="flex items-center gap-2 text-slate-400">
-              <Award className="w-4 h-4 text-emerald-400" />
-              <span>MSME Registered: UDYAM-TS-02-0359997</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#34d399' }}>
+              <Award size={14} /> UDYAM-TS-02-0359997
             </div>
           </div>
-
-          <div className="pt-4 border-t border-slate-800/60 text-slate-500 text-[11px]">
+          <div style={{ borderTop: '1px solid rgba(51, 65, 85, 0.4)', paddingTop: '12px', color: '#64748b', fontSize: '11px' }}>
             Thunder Cargo Corridor (TCC) • South India B2B Last-Mile Logistics Infrastructure Framework
           </div>
         </footer>
