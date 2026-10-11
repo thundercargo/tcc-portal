@@ -166,7 +166,7 @@ export default function App() {
     else {
       base = selectedTariff.slabs[5] + (w - 500) * selectedTariff.excess;
     }
-    return base + 20;
+    return base + 20; // ₹20 Green ESG Offset
   };
 
   const estimatedCost = calculateRate(weight);
@@ -202,7 +202,7 @@ export default function App() {
 
       <div style={{ maxWidth: '1150px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         
-        {/* Header Section - Title at the Top */}
+        {/* Header Section */}
         <header style={{
           background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.7) 100%)',
           border: '1px solid rgba(56, 189, 248, 0.3)',
@@ -214,12 +214,10 @@ export default function App() {
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
             <div>
-              {/* Primary Title Prominently First */}
               <h1 style={{ fontSize: 'clamp(28px, 4.5vw, 46px)', fontWeight: 900, margin: '0 0 10px 0', letterSpacing: '-0.02em', color: '#ffffff' }}>
                 THUNDER CARGO <span style={{ background: 'linear-gradient(to right, #22d3ee, #34d399)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>CORRIDOR</span>
               </h1>
 
-              {/* Sub-Tags directly below Title */}
               <div style={{ display: 'flex', gap: '10px', marginBottom: '8px', flexWrap: 'wrap' }}>
                 <span style={{
                   display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '4px 12px',
@@ -414,7 +412,7 @@ export default function App() {
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <span style={{ color: '#94a3b8' }}>Weight Bracket:</span>
-                        <span style={{ fontFamily: 'monospace', color: '#22d3ee', fontWeight 700 }}>{getSlabLabel(weight)}</span>
+                        <span style={{ fontFamily: 'monospace', color: '#22d3ee', fontWeight: 700 }}>{getSlabLabel(weight)}</span>
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px dashed rgba(51, 65, 85, 0.6)', paddingTop: '8px' }}>
                         <span style={{ color: '#34d399', display: 'flex', alignItems: 'center', gap: '4px' }}><Leaf size={12}/> ESG Contribution:</span>
@@ -462,13 +460,13 @@ export default function App() {
                   <div style={{ fontSize: '11px', color: '#64748b' }}>Guaranteed SLA: Under 90 Mins</div>
                 </div>
                 <div style={{ backgroundColor: '#020617', border: '1px solid #334155', padding: '20px', borderRadius: '16px' }}>
-                  <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight 700, textTransform: 'uppercase' }}>Dwell Reduction</div>
-                  <div style={{ fontSize: '32px', fontWeight 900, color: '#22d3ee', fontFamily: 'monospace', margin: '8px 0' }}>-78%</div>
+                  <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>Dwell Reduction</div>
+                  <div style={{ fontSize: '32px', fontWeight: 900, color: '#22d3ee', fontFamily: 'monospace', margin: '8px 0' }}>-78%</div>
                   <div style={{ fontSize: '11px', color: '#64748b' }}>Versus legacy freight handling</div>
                 </div>
                 <div style={{ backgroundColor: '#020617', border: '1px solid #334155', padding: '20px', borderRadius: '16px' }}>
                   <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>Demurrage Risk</div>
-                  <div style={{ fontSize: '32px', fontWeight 900, color: '#34d399', fontFamily: 'monospace', margin: '8px 0' }}>0.00%</div>
+                  <div style={{ fontSize: '32px', fontWeight: 900, color: '#34d399', fontFamily: 'monospace', margin: '8px 0' }}>0.00%</div>
                   <div style={{ fontSize: '11px', color: '#64748b' }}>Zero wharfage accumulation</div>
                 </div>
               </div>
@@ -477,23 +475,23 @@ export default function App() {
 
           {activeTab === 'esg' && (
             <div>
-              <h2 style={{ fontSize: '20px', fontWeight 800, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '10px', color: '#fff' }}>
+              <h2 style={{ fontSize: '20px', fontWeight: 800, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '10px', color: '#fff' }}>
                 <Leaf size={20} color="#34d399" /> ESG & Green Last-Mile Pledge
               </h2>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
                 <div style={{ backgroundColor: '#020617', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '20px', borderRadius: '16px' }}>
                   <div style={{ fontSize: '11px', color: '#34d399', fontWeight: 700, textTransform: 'uppercase' }}>Hub Welfare Fund</div>
-                  <div style={{ fontSize: '28px', fontWeight 900, color: '#fff', fontFamily: 'monospace', margin: '8px 0' }}>₹10 <span style={{ fontSize: '12px', color: '#34d399' }}>/waybill</span></div>
+                  <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', margin: '8px 0' }}>₹10 <span style={{ fontSize: '12px', color: '#34d399' }}>/waybill</span></div>
                   <div style={{ fontSize: '11px', color: '#94a3b8' }}>Direct driver & loader medical cover</div>
                 </div>
                 <div style={{ backgroundColor: '#020617', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '20px', borderRadius: '16px' }}>
                   <div style={{ fontSize: '11px', color: '#34d399', fontWeight: 700, textTransform: 'uppercase' }}>Urban Afforestation</div>
-                  <div style={{ fontSize: '28px', fontWeight 900, color: '#fff', fontFamily: 'monospace', margin: '8px 0' }}>₹5 <span style={{ fontSize: '12px', color: '#34d399' }}>/waybill</span></div>
+                  <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', margin: '8px 0' }}>₹5 <span style={{ fontSize: '12px', color: '#34d399' }}>/waybill</span></div>
                   <div style={{ fontSize: '11px', color: '#94a3b8' }}>Tree plantation near district terminal hubs</div>
                 </div>
                 <div style={{ backgroundColor: '#020617', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '20px', borderRadius: '16px' }}>
                   <div style={{ fontSize: '11px', color: '#34d399', fontWeight: 700, textTransform: 'uppercase' }}>Climate Auditing</div>
-                  <div style={{ fontSize: '28px', fontWeight 900, color: '#fff', fontFamily: 'monospace', margin: '8px 0' }}>₹5 <span style={{ fontSize: '12px', color: '#34d399' }}>/waybill</span></div>
+                  <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', margin: '8px 0' }}>₹5 <span style={{ fontSize: '12px', color: '#34d399' }}>/waybill</span></div>
                   <div style={{ fontSize: '11px', color: '#64748b' }}>Quarterly carbon footprint verification</div>
                 </div>
               </div>
@@ -506,21 +504,21 @@ export default function App() {
           <div style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#94a3b8', fontWeight: 700 }}>Consolidation Terminals</div>
-              <div style={{ fontSize: '28px', fontWeight 900, color: '#fff', fontFamily: 'monospace', marginTop: '4px' }}>3 Primary</div>
+              <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', marginTop: '4px' }}>3 Primary</div>
             </div>
             <Building2 size={24} color="#22d3ee" />
           </div>
           <div style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#94a3b8', fontWeight: 700 }}>District Logistics Hubs</div>
-              <div style={{ fontSize: '28px', fontWeight 900, color: '#fff', fontFamily: 'monospace', marginTop: '4px' }}>175+</div>
+              <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', marginTop: '4px' }}>175+</div>
             </div>
             <MapPin size={24} color="#34d399" />
           </div>
           <div style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid rgba(51, 65, 85, 0.6)', borderRadius: '20px', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#94a3b8', fontWeight: 700 }}>Express Collection Nodes</div>
-              <div style={{ fontSize: '28px', fontWeight 900, color: '#fff', fontFamily: 'monospace', marginTop: '4px' }}>355+</div>
+              <div style={{ fontSize: '28px', fontWeight: 900, color: '#fff', fontFamily: 'monospace', marginTop: '4px' }}>355+</div>
             </div>
             <PackageCheck size={24} color="#22d3ee" />
           </div>
