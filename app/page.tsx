@@ -1,936 +1,811 @@
 ```html
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thunder Cargo Corridor (TCC) | B2B Logistics Framework</title>
-    <!-- Tailwind CSS -->
+    <title>Thunder Cargo Corridor (TCC) | Master B2B Tariff Engine</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        cyber: {
-                            bg: '#060911',
-                            card: '#0d1322',
-                            cardHover: '#131b2e',
+                        tcc: {
+                            bg: '#080b12',
+                            card: '#0e1422',
                             border: '#1e293b',
-                            cyan: '#06b6d4',
-                            cyanGlow: '#22d3ee',
-                            teal: '#14b8a6',
-                            emerald: '#10b981',
-                            amber: '#f59e0b',
+                            accent: '#00f2fe',
+                            teal: '#4facfe',
+                            gold: '#fbbf24',
+                            thunder: '#38bdf8'
                         }
                     },
                     fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        mono: ['"JetBrains Mono"', 'monospace'],
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'monospace']
                     }
                 }
             }
         }
     </script>
-
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #060911;
-            color: #f1f5f9;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #080b12;
+            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
             overflow-x: hidden;
         }
-
-        /* Glassmorphism containers */
+        /* Custom Glowing Glass Effects */
         .glass-panel {
-            background: rgba(13, 19, 34, 0.75);
+            background: rgba(14, 20, 34, 0.75);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 12px 32px 0 rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 242, 254, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
-
         .glass-panel-glow {
-            background: rgba(13, 19, 34, 0.85);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(34, 211, 238, 0.25);
-            box-shadow: 0 0 25px rgba(6, 182, 212, 0.15);
+            background: rgba(14, 20, 34, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 242, 254, 0.35);
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.12);
         }
-
-        .glass-card-interactive {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .neon-border-accent {
+            border-color: rgba(0, 242, 254, 0.5);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
         }
-        .glass-card-interactive:hover {
-            border-color: rgba(34, 211, 238, 0.4);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.2);
-        }
-
-        /* Rain Canvas Background */
-        #particleCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 0;
-        }
-
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #060911;
+            background: #080b12;
         }
         ::-webkit-scrollbar-thumb {
             background: #1e293b;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #06b6d4;
+            background: #00f2fe;
         }
-
-        /* Animated Pulsing Glow */
-        @keyframes cyanPulse {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.05); }
+        /* Range Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
         }
-        .glow-effect {
-            animation: cyanPulse 4s infinite ease-in-out;
+        input[type=range]:focus {
+            outline: none;
         }
-
-        /* Toast notification */
-        #toast {
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            transform: translateY(100px);
-            opacity: 0;
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8px;
+            cursor: pointer;
+            background: #1e293b;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 242, 254, 0.2);
         }
-        #toast.show {
-            transform: translateY(0);
-            opacity: 1;
+        input[type=range]::-webkit-slider-thumb {
+            height: 22px;
+            width: 22px;
+            border-radius: 50%;
+            background: #00f2fe;
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -7px;
+            box-shadow: 0 0 12px #00f2fe;
         }
     </style>
 </head>
-<body class="min-h-screen relative flex flex-col justify-between selection:bg-cyber-cyan selection:text-black">
+<body class="relative min-h-screen text-slate-100 flex flex-col justify-between selection:bg-cyan-500 selection:text-black">
 
-    <!-- Falling Droplet Light Beam Canvas -->
-    <canvas id="particleCanvas"></canvas>
+    <canvas id="bgCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0 opacity-40"></canvas>
 
-    <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <!-- Main Outer Wrapper -->
+    <div class="relative z-10 w-full max-w-5xl mx-auto px-4 py-6 space-y-6">
 
-        <!-- Header & Real-Time IST Clock Header -->
-        <header class="glass-panel rounded-2xl p-6 sm:p-8 relative overflow-hidden">
-            <div class="absolute -right-16 -top-16 w-64 h-64 bg-cyber-cyan/10 rounded-full blur-3xl pointer-events-none"></div>
-
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <div class="flex flex-wrap items-center gap-2 mb-3">
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 tracking-wider uppercase">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping mr-2"></span>
-                            NATIONWIDE B2B LAST-MILE LOGISTICS
-                        </span>
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-                            UDYAM-TS-02-0359997
-                        </span>
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-medium bg-purple-500/10 text-purple-300 border border-purple-500/20">
-                            <i class="fa-solid fa-shield-halved text-xs mr-1.5"></i> SAC 9965 RCM COMPLIANT
-                        </span>
-                    </div>
-
-                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white font-sans">
-                        THUNDER CARGO <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyber-cyan to-cyber-teal">CORRIDOR</span>
-                    </h1>
-                    <p class="mt-2 text-sm sm:text-base text-slate-400 max-w-2xl">
-                        Enterprise Last-Mile Integration & Digital Terminal Dispatch Network
-                    </p>
+        <header class="glass-panel rounded-2xl p-5 md:p-6 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800/80 pb-4">
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-cyan-950/80 text-cyan-300 border border-cyan-500/30">
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                        NATIONWIDE B2B LAST-MILE LOGISTICS
+                    </span>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono bg-slate-900 text-slate-300 border border-slate-700">
+                        UDYAM-TS-02-0359997
+                    </span>
                 </div>
 
-                <!-- Live IST Clock Box -->
-                <div class="flex flex-col items-start md:items-end w-full md:w-auto">
-                    <div class="glass-panel px-4 py-3 rounded-xl border border-cyan-500/30 flex items-center space-x-3 w-full md:w-auto justify-between md:justify-start">
-                        <div class="flex items-center space-x-2">
-                            <i class="fa-regular fa-clock text-cyber-cyan text-lg animate-pulse"></i>
-                            <span class="text-xs uppercase tracking-widest text-slate-400 font-mono">LIVE IST CLOCK</span>
-                        </div>
-                        <div id="istClock" class="font-mono text-xl font-bold text-cyber-cyan tracking-wider">
-                            00:00:00 AM IST
-                        </div>
-                    </div>
-                    <div class="mt-2 text-xs text-slate-400 flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-cyber-cyan"></span>
-                        Master Tariff Schedule: <span class="font-mono text-slate-200">2026-Q4 ACTIVE</span>
-                    </div>
+                <!-- LIVE IST REAL-TIME DIGITAL CLOCK WITH SECONDS -->
+                <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-950/90 border border-cyan-500/40 text-cyan-400 font-mono text-sm tracking-wider shadow-lg">
+                    <svg class="w-4 h-4 text-cyan-400 animate-spin" style="animation-duration: 8s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="text-xs text-slate-400 font-sans">LIVE IST:</span>
+                    <span id="liveIstClock" class="font-bold text-cyan-300">00:00:00 AM IST</span>
                 </div>
             </div>
 
-            <!-- Option 1: Dynamic Live System Status Pill Bar -->
-            <div id="slaStatusPill" class="mt-6 pt-4 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs sm:text-sm text-slate-300 gap-3">
-                <div class="flex items-center space-x-3 w-full sm:w-auto">
-                    <span class="flex h-3 w-3 relative">
-                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-                    </span>
-                    <span id="slaStatusText" class="font-medium text-emerald-300">
-                        🟢 LIVE SLA: 4-HR INTRA-CITY / 24-HR REGIONAL DISPATCH
-                    </span>
+            <!-- Title Header Block -->
+            <div class="pt-2">
+                <h1 class="text-2xl sm:text-4xl font-black tracking-tight uppercase">
+                    THUNDER CARGO <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-teal-300 to-blue-500">CORRIDOR</span>
+                </h1>
+                <p class="text-sm sm:text-base text-slate-400 font-medium mt-1">
+                    Enterprise Last-Mile Integration & Digital Terminal Dispatch Network
+                </p>
+                <p class="text-xs text-cyan-400/90 italic font-mono mt-1">
+                    "Loaded at Dawn, Landed by Dusk • Shipped by Dusk, Delivered by Dawn"
+                </p>
+            </div>
+
+            <!-- Live Status Sub-Bar -->
+            <div class="flex flex-wrap items-center justify-between gap-2 pt-2 text-xs font-mono text-slate-400 bg-slate-950/50 p-3 rounded-xl border border-slate-800">
+                <div class="flex items-center gap-2">
+                    <span class="text-teal-400">🌐 LIVE SYSTEM STATUS:</span>
+                    <span class="text-slate-200 font-semibold">3 Primary Nodes • 175+ District Hubs • 355+ Express Nodes</span>
                 </div>
-                <div class="flex items-center space-x-4 text-xs font-mono text-slate-400 w-full sm:w-auto justify-between sm:justify-end">
-                    <span><strong class="text-white">3</strong> Primary Nodes</span>
-                    <span>•</span>
-                    <span><strong class="text-white">175+</strong> District Hubs</span>
-                    <span>•</span>
-                    <span class="text-cyber-cyan font-semibold">100% Fleet Readiness</span>
+                <div>
+                    Master Tariff Schedule: <span class="text-cyan-400 font-semibold">08-10-2026</span>
                 </div>
             </div>
         </header>
 
-        <!-- Key Logistics Stat Bar -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="glass-panel glass-card-interactive p-5 rounded-xl flex items-center justify-between">
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Node 1 -->
+            <div class="glass-panel p-4 rounded-xl flex items-center justify-between hover:border-cyan-500/50 transition-all duration-300">
                 <div>
-                    <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">CONSOLIDATION TERMINALS</div>
-                    <div class="text-3xl font-extrabold text-white font-mono flex items-baseline gap-2">
-                        3 <span class="text-sm font-sans font-medium text-cyber-cyan">Primary</span>
-                    </div>
-                    <p class="text-xs text-slate-400 mt-1">Strategic high-capacity processing centers</p>
+                    <div class="text-xs text-slate-400 font-mono uppercase tracking-wider">CONSOLIDATION TERMINALS</div>
+                    <div class="text-2xl font-black text-cyan-400 mt-1">3 <span class="text-sm font-semibold text-slate-300">Primary</span></div>
+                    <div class="text-xs text-slate-500 mt-0.5">Strategic high-capacity processing centers</div>
                 </div>
-                <div class="p-3 bg-cyan-500/10 border border-cyan-500/20 rounded-xl text-cyber-cyan">
-                    <i class="fa-solid fa-warehouse text-2xl"></i>
+                <div class="p-3 bg-cyan-950/50 rounded-xl border border-cyan-500/20 text-cyan-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h5m-5 0V11m0 5h5m-5-5h5m-5-5h5"></path></svg>
                 </div>
             </div>
 
-            <div class="glass-panel glass-card-interactive p-5 rounded-xl flex items-center justify-between">
+            <!-- Node 2 -->
+            <div class="glass-panel p-4 rounded-xl flex items-center justify-between hover:border-teal-500/50 transition-all duration-300">
                 <div>
-                    <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">DISTRICT LOGISTICS HUBS</div>
-                    <div class="text-3xl font-extrabold text-white font-mono flex items-baseline gap-2">
-                        175+ <span class="text-xs font-sans font-medium text-emerald-400">Active</span>
-                    </div>
-                    <p class="text-xs text-slate-400 mt-1">Authorized last-mile delivery touchpoints</p>
+                    <div class="text-xs text-slate-400 font-mono uppercase tracking-wider">DISTRICT LOGISTICS HUBS</div>
+                    <div class="text-2xl font-black text-teal-400 mt-1">175+</div>
+                    <div class="text-xs text-slate-500 mt-0.5">Authorized last-mile delivery touchpoints</div>
                 </div>
-                <div class="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400">
-                    <i class="fa-solid fa-map-location-dot text-2xl"></i>
+                <div class="p-3 bg-teal-950/50 rounded-xl border border-teal-500/20 text-teal-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                 </div>
             </div>
 
-            <div class="glass-panel glass-card-interactive p-5 rounded-xl flex items-center justify-between">
+            <!-- Node 3 -->
+            <div class="glass-panel p-4 rounded-xl flex items-center justify-between hover:border-blue-500/50 transition-all duration-300">
                 <div>
-                    <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">EXPRESS COLLECTION NODES</div>
-                    <div class="text-3xl font-extrabold text-white font-mono flex items-baseline gap-2">
-                        355+ <span class="text-xs font-sans font-medium text-amber-400">Integrated</span>
-                    </div>
-                    <p class="text-xs text-slate-400 mt-1">Micro-fulfillment and merchant intake points</p>
+                    <div class="text-xs text-slate-400 font-mono uppercase tracking-wider">EXPRESS COLLECTION NODES</div>
+                    <div class="text-2xl font-black text-blue-400 mt-1">355+</div>
+                    <div class="text-xs text-slate-500 mt-0.5">Micro-fulfillment and merchant intake points</div>
                 </div>
-                <div class="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-400">
-                    <i class="fa-solid fa-cubes text-2xl"></i>
-                </div>
-            </div>
-        </div>
-
-        <!-- Quick Nav Actions & Dual-Engine Mode Selection (Option 2) -->
-        <div class="flex flex-col space-y-4">
-            <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/80 p-2 rounded-2xl border border-slate-800">
-                <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-                    <button class="px-5 py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-cyber-cyan to-cyber-teal text-black shadow-lg shadow-cyan-500/20 flex items-center space-x-2">
-                        <i class="fa-solid fa-calculator"></i>
-                        <span>Master Tariff Engine</span>
-                    </button>
-                    <button onclick="scrollToVanguard()" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center space-x-2">
-                        <i class="fa-solid fa-truck-fast"></i>
-                        <span>90-Min Evacuation SLA</span>
-                    </button>
-                    <button onclick="openTariffModal()" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center space-x-2">
-                        <i class="fa-solid fa-table-list"></i>
-                        <span>Full Rate Matrix Chart</span>
-                    </button>
-                </div>
-                <button onclick="scrollToVanguard()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-mono text-cyan-300 bg-cyan-950/40 border border-cyan-800/50 hover:border-cyan-500 flex items-center justify-center space-x-2">
-                    <i class="fa-solid fa-leaf text-emerald-400"></i>
-                    <span>Voluntary ESG Pledge Active</span>
-                </button>
-            </div>
-
-            <!-- Option 2: Dual Engine Service Selector Card -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div id="service24h" onclick="selectServiceMode('24H')" 
-                     class="glass-panel p-5 rounded-xl border-2 cursor-pointer transition-all duration-200 border-cyan-500 bg-cyan-950/20 relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-cyan-500/10 rounded-bl-full pointer-events-none"></div>
-                    <div class="flex justify-between items-start mb-2">
-                        <div class="flex items-center space-x-2">
-                            <i class="fa-solid fa-truck-moving text-cyber-cyan text-xl"></i>
-                            <h3 class="font-bold text-white text-lg">24H SAME-DAY EXPRESS</h3>
-                        </div>
-                        <span class="px-2.5 py-1 rounded text-xs font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">STANDARD RATE</span>
-                    </div>
-                    <p class="text-xs text-slate-300 mb-3">
-                        Reliable standard enterprise SLA with full consolidation node routing and guaranteed same-day pickup.
-                    </p>
-                    <div class="flex items-center justify-between text-xs text-slate-400 font-mono pt-2 border-t border-slate-800">
-                        <span>EVACUATION: 90 MINS</span>
-                        <span class="text-cyan-400 font-bold">100% BASE TARIFF</span>
-                    </div>
-                </div>
-
-                <div id="service12h" onclick="selectServiceMode('12H')" 
-                     class="glass-panel p-5 rounded-xl border-2 cursor-pointer transition-all duration-200 border-slate-800 hover:border-amber-500/50 bg-slate-900/40 relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-amber-500/10 rounded-bl-full pointer-events-none"></div>
-                    <div class="flex justify-between items-start mb-2">
-                        <div class="flex items-center space-x-2">
-                            <i class="fa-solid fa-bolt text-amber-400 text-xl animate-bounce"></i>
-                            <h3 class="font-bold text-white text-lg">⚡ THUNDER SERVICE 12H</h3>
-                        </div>
-                        <span class="px-2.5 py-1 rounded text-xs font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">+30% VELOCITY</span>
-                    </div>
-                    <p class="text-xs text-slate-300 mb-3">
-                        Ultra-express direct corridor routing. Guaranteed dawn/dusk landing for time-critical industrial freight.
-                    </p>
-                    <div class="flex items-center justify-between text-xs text-slate-400 font-mono pt-2 border-t border-slate-800">
-                        <span>PRIORITY CORRIDOR</span>
-                        <span class="text-amber-400 font-bold">SUNRISE/SUNSET SLA</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Freight Calculator Panel -->
-        <main class="glass-panel rounded-2xl p-6 sm:p-8 relative">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center pb-6 border-b border-slate-800 gap-4">
-                <div>
-                    <div class="flex items-center space-x-3">
-                        <div class="p-2 bg-cyan-500/10 rounded-lg text-cyber-cyan">
-                            <i class="fa-solid fa-chart-line text-xl"></i>
-                        </div>
-                        <div>
-                            <h2 class="text-xl sm:text-2xl font-bold text-white tracking-tight">Master B2B Freight Rate Engine</h2>
-                            <p class="text-xs sm:text-sm text-slate-400">Instant contract quote calculation based on distance corridor & weight slab rules.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex items-center space-x-2">
-                    <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-mono font-semibold bg-slate-800 text-emerald-400 border border-emerald-500/30">
-                        <i class="fa-solid fa-circle-check text-xs mr-1.5"></i> SAC 9965 RCM COMPLIANT
-                    </span>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-6">
-                <!-- Inputs Column -->
-                <div class="lg:col-span-7 space-y-6">
-                    
-                    <!-- Corridor Matrix Dropdown -->
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex justify-between">
-                            <span>Corridor / Route Matrix</span>
-                            <span class="text-cyber-cyan font-mono text-xs">Select applicable distance range</span>
-                        </label>
-                        <div class="relative">
-                            <select id="corridorSelect" onchange="calculateFreight()" 
-                                    class="w-full bg-slate-900/90 border border-slate-700 focus:border-cyber-cyan focus:ring-1 focus:ring-cyber-cyan rounded-xl px-4 py-3.5 text-slate-100 font-sans text-sm sm:text-base appearance-none cursor-pointer outline-none transition">
-                                <option value="intra1">INTRA-CITY 1 (4 – 5 KM)</option>
-                                <option value="intra2">INTRA-CITY 2 (6 – 15 KM)</option>
-                                <option value="intra3">INTRA-CITY 3 (16 – 30 KM)</option>
-                                <option value="reg1a">REGIONAL 1A (31 – 45 KM)</option>
-                                <option value="reg1b">REGIONAL 1B (46 – 60 KM)</option>
-                                <option value="reg2a">REGIONAL 2A (61 – 80 KM)</option>
-                                <option value="reg2b">REGIONAL 2B (81 – 100 KM)</option>
-                                <option value="reg3a">REGIONAL 3A (101 – 150 KM)</option>
-                                <option value="reg3b">REGIONAL 3B (151 – 200 KM)</option>
-                                <option value="reg4a">REGIONAL 4A (201 – 250 KM)</option>
-                                <option value="reg4b">REGIONAL 4B (251 – 300 KM)</option>
-                                <option value="reg5a">REGIONAL 5A (301 – 400 KM)</option>
-                                <option value="reg5b">REGIONAL 5B (401 – 500 KM)</option>
-                                <option value="reg6a">REGIONAL 6A (501 – 600 KM)</option>
-                            </select>
-                            <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-slate-400">
-                                <i class="fa-solid fa-chevron-down text-sm"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Gross Weight Section -->
-                    <div>
-                        <div class="flex justify-between items-center mb-2">
-                            <label class="text-xs font-bold text-slate-300 uppercase tracking-wider">
-                                Consignment Gross Weight (KG)
-                            </label>
-                            <span class="text-xs font-mono text-slate-400">Min: <strong class="text-white">1 KG</strong></span>
-                        </div>
-
-                        <!-- Numeric Input & Units -->
-                        <div class="relative mb-3">
-                            <input type="number" id="weightInput" value="100" min="1" max="10000" oninput="syncWeightFromInput()" 
-                                   class="w-full bg-slate-900/90 border border-slate-700 focus:border-cyber-cyan focus:ring-1 focus:ring-cyber-cyan rounded-xl px-4 py-3.5 text-xl font-bold font-mono text-white outline-none transition pr-16" placeholder="Enter weight">
-                            <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-slate-400 font-bold font-mono text-sm">
-                                KG
-                            </div>
-                        </div>
-
-                        <!-- Interactive Range Slider -->
-                        <div class="space-y-1 mb-4">
-                            <input type="range" id="weightSlider" min="1" max="1000" value="100" step="1" oninput="syncWeightFromSlider()" 
-                                   class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyber-cyan">
-                            <div class="flex justify-between text-[10px] font-mono text-slate-500">
-                                <span>1 KG</span>
-                                <span>250 KG</span>
-                                <span>500 KG</span>
-                                <span>750 KG</span>
-                                <span>1000+ KG</span>
-                            </div>
-                        </div>
-
-                        <!-- Quick Presets -->
-                        <div class="flex flex-wrap gap-2">
-                            <button onclick="setWeightPreset(10)" class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">10kg</button>
-                            <button onclick="setWeightPreset(25)" class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">25kg</button>
-                            <button onclick="setWeightPreset(50)" class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">50kg</button>
-                            <button onclick="setWeightPreset(100)" class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-cyan-950 text-cyber-cyan border border-cyan-700/50 transition">100kg</button>
-                            <button onclick="setWeightPreset(250)" class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">250kg</button>
-                            <button onclick="setWeightPreset(500)" class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">500kg</button>
-                            <button onclick="setWeightPreset(750)" class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">750kg</button>
-                        </div>
-                    </div>
-
-                    <!-- Dynamic Slab Explanation Box -->
-                    <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2">
-                        <div class="flex items-center space-x-2 text-xs font-bold text-cyber-cyan">
-                            <i class="fa-solid fa-network-wired"></i>
-                            <span>Dynamic Weight Slab Rules</span>
-                        </div>
-                        <p id="slabRuleDescription" class="text-xs text-slate-400 leading-relaxed font-sans">
-                            Slabs covered: 1-10kg, 11-25kg, 26-50kg, 51-100kg, 101-250kg, 251-500kg. Conspiracies exceeding 500kg are billed at the 500kg base slab rate plus an incremental per-kg surcharge based on corridor bracket.
-                        </p>
-                    </div>
-
-                    <!-- Green Levy Toggle -->
-                    <div class="flex items-center justify-between p-3 rounded-xl bg-emerald-950/20 border border-emerald-900/40">
-                        <div class="flex items-center space-x-3">
-                            <input type="checkbox" id="esgCheck" onchange="calculateFreight()" class="w-4 h-4 rounded text-emerald-500 focus:ring-emerald-400 bg-slate-900 border-slate-700">
-                            <div>
-                                <label for="esgCheck" class="text-xs font-bold text-emerald-300 cursor-pointer">Include Voluntary ESG Clean Transit Levy (+2%)</label>
-                                <p class="text-[11px] text-slate-400">Funds electric vehicle last-mile fleet expansion across district nodes.</p>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-leaf text-emerald-400 text-lg"></i>
-                    </div>
-
-                </div>
-
-                <!-- Output & Tradeoff Column -->
-                <div class="lg:col-span-5 flex flex-col justify-between space-y-6">
-                    <div id="quoteDisplayBox" class="glass-panel-glow rounded-2xl p-6 space-y-5 relative overflow-hidden flex-1 flex flex-col justify-between">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-cyber-cyan/10 rounded-bl-full pointer-events-none"></div>
-
-                        <div class="space-y-4">
-                            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                                <span class="text-xs font-mono uppercase tracking-widest text-slate-400">EXACT TARIFF QUOTE</span>
-                                <span id="quoteBadgeMode" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                                    24H EXPRESS
-                                </span>
-                            </div>
-
-                            <!-- Main Price Display -->
-                            <div>
-                                <div class="flex items-baseline space-x-1">
-                                    <span class="text-2xl font-bold text-cyber-cyan font-mono">₹</span>
-                                    <span id="finalPriceDisplay" class="text-4xl sm:text-5xl font-black text-white font-mono tracking-tight">550</span>
-                                </div>
-                                <div class="flex items-center space-x-2 mt-1">
-                                    <i class="fa-solid fa-circle-check text-emerald-400 text-xs"></i>
-                                    <span class="text-xs text-emerald-400 font-medium">Guaranteed Commercial Rate (All inclusive)</span>
-                                </div>
-                            </div>
-
-                            <!-- Details Breakdown -->
-                            <div class="space-y-2 text-xs font-mono pt-2 border-t border-slate-800/80">
-                                <div class="flex justify-between text-slate-400">
-                                    <span>Selected Corridor:</span>
-                                    <span id="summaryCorridor" class="text-slate-200 font-bold">INTRA-CITY 1 (4 – 5 KM)</span>
-                                </div>
-                                <div class="flex justify-between text-slate-400">
-                                    <span>Weight Bracket:</span>
-                                    <span id="summaryBracket" class="text-slate-200 font-bold">51 – 100 KG</span>
-                                </div>
-                                <div id="excessRateRow" class="flex justify-between text-slate-400">
-                                    <span>Excess Tariff Rate:</span>
-                                    <span id="summaryExcessRate" class="text-cyber-cyan">₹3.50 / excess kg</span>
-                                </div>
-                            </div>
-
-                            <!-- Option 4: Velocity vs Cost Impact Badge -->
-                            <div id="impactBadgeBox" class="p-3 rounded-xl bg-cyan-950/40 border border-cyan-800/50 flex items-start space-x-3">
-                                <i class="fa-solid fa-clock-rotate-left text-cyber-cyan text-base mt-0.5"></i>
-                                <div>
-                                    <div id="impactBadgeTitle" class="text-xs font-bold text-cyan-300">
-                                        Standard Dispatch Schedule
-                                    </div>
-                                    <p id="impactBadgeText" class="text-[11px] text-slate-300 mt-0.5">
-                                        Saves 12 to 24 Hours of Industrial Supply-Chain Downtime via guaranteed same-day collection.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div class="pt-4 space-y-2">
-                            <button onclick="copyQuoteSummary()" 
-                                    class="w-full py-3 px-4 rounded-xl font-bold text-xs uppercase tracking-wider bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 transition flex items-center justify-center space-x-2 shadow-lg">
-                                <i class="fa-regular fa-copy text-sm"></i>
-                                <span id="copyBtnText">COPY QUOTE SUMMARY</span>
-                            </button>
-                            <button onclick="openTariffModal()" 
-                                    class="w-full py-2.5 px-4 rounded-xl font-semibold text-xs text-slate-400 hover:text-white transition flex items-center justify-center space-x-2">
-                                <i class="fa-solid fa-table"></i>
-                                <span>View Full Rates Matrix</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Corporate Profile & Old City Fleet Vanguard Section -->
-        <section id="vanguardSection" class="glass-panel rounded-2xl p-6 sm:p-8 relative overflow-hidden space-y-6">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-800 pb-6 gap-4">
-                <div>
-                    <span class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                        STRATEGIC GUARDIANSHIP & FLEET INTEGRATION
-                    </span>
-                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2">
-                        Corporate Profile & Old City Fleet Vanguard
-                    </h2>
-                    <p class="text-sm text-slate-400 mt-1 max-w-3xl">
-                        Synthesizing enterprise last-mile technology with deep local logistics heritage across the Charminar and Old City corridors.
-                    </p>
-                </div>
-                <div class="flex items-center space-x-3">
-                    <div class="text-right font-mono text-xs text-slate-400">
-                        <div>OPERATIONAL SITES</div>
-                        <div class="text-cyber-cyan font-bold text-sm">HYDERABAD / TELANGANA HUB</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Strategic Command Profile -->
-                <div class="bg-slate-900/60 p-5 rounded-xl border border-slate-800 flex flex-col justify-between">
-                    <div>
-                        <div class="w-10 h-10 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyber-cyan mb-4">
-                            <i class="fa-solid fa-building-columns text-lg"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-2">High Command Governance</h3>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            Engineered under Master Logistics Framework guidelines with full RCM compliance (SAC 9965). Built to service heavy enterprise manufacturing, industrial spare dispatch, and high-frequency B2B corridor trades.
-                        </p>
-                    </div>
-                    <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] font-mono text-slate-400">
-                        REGISTRATION: UDYAM-TS-02-0359997
-                    </div>
-                </div>
-
-                <!-- Old City Fleet Vanguard -->
-                <div class="bg-slate-900/60 p-5 rounded-xl border border-slate-800 flex flex-col justify-between">
-                    <div>
-                        <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-4">
-                            <i class="fa-solid fa-motorcycle text-lg"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-2">Charminar Auto & Fleet Vanguard</h3>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            Empowering 350+ traditional auto driver veterans and micro-fleet operators from Hyderabad's Old City districts. Integrated via real-time digital nodes to execute rapid 90-minute terminal evacuations.
-                        </p>
-                    </div>
-                    <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] font-mono text-emerald-400 flex justify-between">
-                        <span>2-HR EVACUATION SLA</span>
-                        <span>350+ ACTIVE VEHICLES</span>
-                    </div>
-                </div>
-
-                <!-- Environmental Pledge -->
-                <div class="bg-slate-900/60 p-5 rounded-xl border border-slate-800 flex flex-col justify-between">
-                    <div>
-                        <div class="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-4">
-                            <i class="fa-solid fa-bolt text-lg"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-2">Green Transit Initiative</h3>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            Accelerating transition toward 100% electric 3-wheeler and 4-wheeler last-mile cargo units. Supported by user-contributed voluntary ESG levies to deploy fast-charging stations across regional hubs.
-                        </p>
-                    </div>
-                    <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] font-mono text-amber-300 flex justify-between">
-                        <span>TARGET: 2028 NET-ZERO</span>
-                        <span>EV FLEET 40%</span>
-                    </div>
+                <div class="p-3 bg-blue-950/50 rounded-xl border border-blue-500/20 text-blue-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
                 </div>
             </div>
         </section>
 
-        <!-- Footer -->
-        <footer class="glass-panel rounded-2xl p-6 text-center text-xs text-slate-400 space-y-3">
-            <div class="flex flex-wrap items-center justify-center gap-6 text-slate-300">
-                <span class="flex items-center space-x-2">
-                    <i class="fa-solid fa-phone text-cyber-cyan"></i>
-                    <span>+91 8340085989</span>
-                </span>
-                <span>•</span>
-                <span class="flex items-center space-x-2">
-                    <i class="fa-solid fa-envelope text-cyber-cyan"></i>
-                    <span>tcc.cargodesk@gmail.com</span>
-                </span>
-                <span>•</span>
-                <span class="flex items-center space-x-2">
-                    <i class="fa-solid fa-id-card text-emerald-400"></i>
-                    <span>MSME Registered: UDYAM-TS-02-0359997</span>
+        <nav class="flex flex-wrap items-center justify-center gap-2 p-1.5 glass-panel rounded-xl">
+            <button onclick="scrollToSection('calculatorSection')" class="flex-1 min-w-[140px] px-4 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-teal-500 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-lg hover:brightness-110 transition">
+                🧮 Master Tariff Engine
+            </button>
+            <button onclick="openTariffModal()" class="flex-1 min-w-[140px] px-4 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 font-semibold text-xs uppercase tracking-wider transition">
+                📊 Tariff Chart Modal
+            </button>
+            <button onclick="scrollToSection('corporateSection')" class="flex-1 min-w-[140px] px-4 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 font-semibold text-xs uppercase tracking-wider transition">
+                🛡️ Fleet Vanguard & Profile
+            </button>
+        </nav>
+
+        <section class="glass-panel rounded-2xl p-5 md:p-6 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <span class="p-1.5 rounded-lg bg-cyan-950 border border-cyan-500/40 text-cyan-400">⚙️</span>
+                    Select Dispatch Service Tier
+                </h2>
+                <span class="text-xs font-mono text-cyan-400 bg-cyan-950/60 px-2.5 py-1 rounded-md border border-cyan-800">
+                    SLA Priority Engine Active
                 </span>
             </div>
-            <p class="text-slate-500 text-[11px]">
+
+            <!-- Service Mode Selection Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Service 1: 24H Base -->
+                <div id="card24H" onclick="setServiceTier('24H')" class="cursor-pointer rounded-xl p-4 border transition-all duration-300 bg-slate-900/90 border-cyan-500 shadow-md">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-950 text-cyan-300 border border-cyan-700 uppercase">
+                                Standard Rate
+                            </span>
+                            <h3 class="text-base font-bold text-white mt-1.5">24H SAME-DAY EXPRESS</h3>
+                            <p class="text-xs text-slate-400 mt-1">4-Hour Local Intra-City / 24-Hour Regional SLA</p>
+                        </div>
+                        <div class="w-5 h-5 rounded-full border-2 border-cyan-400 flex items-center justify-center p-0.5">
+                            <div id="radio24H" class="w-full h-full rounded-full bg-cyan-400"></div>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-t border-slate-800 text-xs font-mono text-slate-400 flex justify-between">
+                        <span>Base Master Tariff</span>
+                        <span class="text-emerald-400 font-semibold">100% Base Rate</span>
+                    </div>
+                </div>
+
+                <!-- Service 2: 12H Thunder Service -->
+                <div id="card12H" onclick="setServiceTier('12H')" class="cursor-pointer rounded-xl p-4 border transition-all duration-300 bg-slate-950/50 border-slate-800 hover:border-cyan-500/40 opacity-75">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-950 text-amber-300 border border-amber-700 uppercase">
+                                ⚡ Thunder Ultra-Express
+                            </span>
+                            <h3 class="text-base font-bold text-white mt-1.5">12H THUNDER SERVICE</h3>
+                            <p class="text-xs text-slate-400 mt-1">Loaded at Dawn, Landed by Dusk • Shipped by Dusk, Delivered by Dawn</p>
+                        </div>
+                        <div class="w-5 h-5 rounded-full border-2 border-slate-600 flex items-center justify-center p-0.5">
+                            <div id="radio12H" class="w-full h-full rounded-full bg-transparent"></div>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-t border-slate-800 text-xs font-mono text-slate-400 flex justify-between">
+                        <span>Speed Surcharge (+25-30%)</span>
+                        <span class="text-amber-400 font-semibold">+30% Thunder Rate</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Live SLA Status Display Banner -->
+            <div id="slaStatusBanner" class="p-3 rounded-xl bg-cyan-950/40 border border-cyan-500/30 text-xs font-mono text-cyan-300 flex items-center justify-between">
+                <span class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span id="slaText">🟢 LIVE SLA: 4-HR INTRA-CITY / 24-HR REGIONAL DISPATCH ACTIVE</span>
+                </span>
+                <span id="downtimeSavedBadge" class="hidden sm:inline-block px-2.5 py-0.5 rounded bg-cyan-900/80 text-cyan-200 text-[11px] font-bold border border-cyan-600">
+                    Standard Industrial SLA
+                </span>
+            </div>
+        </section>
+
+        <main id="calculatorSection" class="glass-panel-glow rounded-2xl p-5 md:p-6 space-y-6">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 bg-cyan-950 rounded-xl border border-cyan-500/30 text-cyan-400">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-black text-white uppercase tracking-tight">Master B2B Freight Rate Engine</h2>
+                        <p class="text-xs text-slate-400">Instant contract quote calculation based on distance corridor & weight slab rules.</p>
+                    </div>
+                </div>
+                <span class="px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-500/40">
+                    SAC 9965 RCM Compliant
+                </span>
+            </div>
+
+            <!-- Inputs Grid -->
+            <div class="space-y-5">
+                <!-- Corridor Selection -->
+                <div class="space-y-2">
+                    <label class="flex justify-between text-xs font-mono uppercase tracking-wider text-slate-300">
+                        <span class="text-cyan-400 font-bold">CORRIDOR / ROUTE MATRIX</span>
+                        <span class="text-slate-400">Select applicable distance range</span>
+                    </label>
+                    <select id="corridorSelect" onchange="calculateTariff()" class="w-full bg-slate-950 text-slate-100 border border-slate-700 hover:border-cyan-500 rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:border-cyan-400 transition">
+                        <!-- Populated dynamically via JavaScript -->
+                    </select>
+                </div>
+
+                <!-- Weight Input & Presets -->
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center text-xs font-mono uppercase tracking-wider text-slate-300">
+                        <span class="text-cyan-400 font-bold">CONSIGNMENT GROSS WEIGHT (KG)</span>
+                        <span class="text-slate-400">Min 1 KG</span>
+                    </div>
+
+                    <!-- Input Box -->
+                    <div class="relative">
+                        <input type="number" id="weightInput" value="100" min="1" max="5000" oninput="syncWeightFromInput(this.value)" class="w-full bg-slate-950 text-cyan-300 text-2xl font-black font-mono border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-400 transition pl-5 pr-16" />
+                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold font-mono">KG</span>
+                    </div>
+
+                    <!-- Interactive Slider -->
+                    <div class="pt-2">
+                        <input type="range" id="weightSlider" min="1" max="1000" value="100" step="1" oninput="syncWeightFromSlider(this.value)" class="w-full" />
+                    </div>
+
+                    <!-- Quick Preset Buttons -->
+                    <div class="flex flex-wrap gap-2 pt-1">
+                        <button onclick="setWeightPreset(10)" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300 hover:border-cyan-500 transition">10kg</button>
+                        <button onclick="setWeightPreset(25)" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300 hover:border-cyan-500 transition">25kg</button>
+                        <button onclick="setWeightPreset(50)" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300 hover:border-cyan-500 transition">50kg</button>
+                        <button onclick="setWeightPreset(100)" class="px-3 py-1.5 rounded-lg bg-cyan-950 border border-cyan-500/50 text-xs font-mono text-cyan-300 font-bold transition">100kg</button>
+                        <button onclick="setWeightPreset(250)" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300 hover:border-cyan-500 transition">250kg</button>
+                        <button onclick="setWeightPreset(500)" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300 hover:border-cyan-500 transition">500kg</button>
+                        <button onclick="setWeightPreset(750)" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300 hover:border-cyan-500 transition">750kg</button>
+                    </div>
+                </div>
+
+                <!-- Dynamic Rules Sub-card -->
+                <div class="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80 text-xs text-slate-400 space-y-1">
+                    <div class="font-bold text-cyan-300 font-mono flex items-center gap-1.5">
+                        <span>✨ Dynamic Weight Slab Rules</span>
+                    </div>
+                    <p id="slabRuleDescription">
+                        Slabs covered: 1-10kg, 11-25kg, 26-50kg, 51-100kg, 101-250kg, 251-500kg. Consignments exceeding 500kg are billed at the 500kg base slab rate plus an incremental per-kg surcharge.
+                    </p>
+                </div>
+            </div>
+
+            <!-- RESULT QUOTE CARD (Exact Screen Reproduction) -->
+            <div class="p-6 rounded-2xl bg-gradient-to-br from-slate-950 via-cyan-950/20 to-slate-950 border border-cyan-500/40 space-y-4 shadow-2xl relative overflow-hidden">
+                <div class="absolute -right-12 -top-12 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+                <div class="text-xs font-mono text-slate-400 uppercase tracking-widest font-bold">
+                    EXACT TARIFF QUOTE
+                </div>
+
+                <div class="flex items-baseline gap-2">
+                    <span id="quotePrice" class="text-4xl sm:text-5xl font-black text-cyan-300 font-mono">₹980</span>
+                    <span id="thunderBadgeInline" class="hidden text-xs font-bold font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                        +30% Thunder Applied
+                    </span>
+                </div>
+
+                <div class="flex items-center gap-2 text-emerald-400 text-xs font-semibold">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span id="rateGuaranteeText">Guaranteed Commercial Rate (All Inclusive)</span>
+                </div>
+
+                <hr class="border-slate-800/80 my-2" />
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
+                    <div class="flex justify-between sm:justify-start sm:gap-4">
+                        <span class="text-slate-500">Selected Corridor:</span>
+                        <span id="quoteCorridor" class="text-slate-200 font-bold">REGIONAL 2A (101 – 150 KM)</span>
+                    </div>
+                    <div class="flex justify-between sm:justify-start sm:gap-4">
+                        <span class="text-slate-500">Weight Bracket:</span>
+                        <span id="quoteBracket" class="text-cyan-300 font-bold">51 – 100 KG</span>
+                    </div>
+                    <div class="flex justify-between sm:justify-start sm:gap-4">
+                        <span class="text-slate-500">Excess Tariff Rate:</span>
+                        <span id="quoteExcessRate" class="text-slate-300 font-bold">₹6.00 / excess kg</span>
+                    </div>
+                    <div class="flex justify-between sm:justify-start sm:gap-4">
+                        <span class="text-slate-500">Estimated Delivery SLA:</span>
+                        <span id="quoteSla" class="text-emerald-400 font-bold">Within 24 Hours</span>
+                    </div>
+                </div>
+
+                <!-- COPY BUTTON -->
+                <button onclick="copyQuoteSummary()" class="w-full mt-4 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-cyan-500/30 text-cyan-300 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition shadow-lg active:scale-95">
+                    <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    <span>COPY QUOTE SUMMARY</span>
+                </button>
+            </div>
+        </main>
+
+        <section id="corporateSection" class="glass-panel rounded-2xl p-5 md:p-6 space-y-5">
+            <div class="border-b border-slate-800 pb-3">
+                <span class="text-xs font-mono font-bold text-cyan-400 uppercase tracking-widest">Enterprise Last-Mile Integration</span>
+                <h2 class="text-xl font-black text-white mt-0.5 uppercase">TCC Guardianship & Fleet Vanguard Profile</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs text-slate-300 leading-relaxed">
+                <!-- Profile Block 1 -->
+                <div class="space-y-3 p-4 rounded-xl bg-slate-950/50 border border-slate-800">
+                    <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                        <span class="text-cyan-400">🏛️</span> Railway Terminal Evacuation SLA
+                    </h3>
+                    <p>
+                        Engineered specifically for high-frequency freight offloading at major rail heads (including Secunderabad - SCR Terminal). TCC guarantees a <strong>90-Minute Platform Evacuation SLA</strong>, ensuring break-bulk cargo moves seamlessly from train doors to regional distribution hubs without demurrage overheads.
+                    </p>
+                </div>
+
+                <!-- Profile Block 2 -->
+                <div class="space-y-3 p-4 rounded-xl bg-slate-950/50 border border-slate-800">
+                    <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                        <span class="text-teal-400">🛺</span> Old City (Charminar) Last-Mile Vanguard
+                    </h3>
+                    <p>
+                        Empowering local auto-drivers and delivery personnel across Hyderabad’s historic core. Our digital dispatch network transforms traditional last-mile logistics into a synchronized grid, executing <strong>2-Hour Intra-City 30KM Clearance</strong> with precision tracking.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Key Corporate Attributes Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 font-mono text-center text-xs">
+                <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+                    <div class="text-cyan-400 font-bold text-base">90-MIN</div>
+                    <div class="text-slate-400 text-[10px] mt-0.5">Rail Evacuation SLA</div>
+                </div>
+                <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+                    <div class="text-teal-400 font-bold text-base">2-HOUR</div>
+                    <div class="text-slate-400 text-[10px] mt-0.5">30KM City Clearance</div>
+                </div>
+                <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+                    <div class="text-amber-400 font-bold text-base">+30% MAX</div>
+                    <div class="text-slate-400 text-[10px] mt-0.5">12H Thunder Premium</div>
+                </div>
+                <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+                    <div class="text-emerald-400 font-bold text-base">100%</div>
+                    <div class="text-slate-400 text-[10px] mt-0.5">SAC 9965 Compliant</div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="glass-panel rounded-2xl p-5 text-center text-xs space-y-3 font-mono">
+            <div class="flex flex-wrap items-center justify-center gap-6 text-slate-300">
+                <a href="tel:+918340085989" class="hover:text-cyan-400 transition flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                    +91 8340085989
+                </a>
+                <a href="mailto:tcc.cargodesk@gmail.com" class="hover:text-cyan-400 transition flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    tcc.cargodesk@gmail.com
+                </a>
+                <span class="text-emerald-400 font-semibold flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    MSME Registered: UDYAM-TS-02-0359997
+                </span>
+            </div>
+            <div class="text-slate-500 pt-2 border-t border-slate-800/60 text-[11px]">
                 Thunder Cargo Corridor (TCC) • Enterprise Last-Mile Logistics Infrastructure Framework
-            </p>
+            </div>
         </footer>
 
     </div>
 
-    <!-- Full Tariff Matrix Modal -->
-    <div id="tariffModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
-        <div class="glass-panel w-full max-w-5xl max-h-[90vh] rounded-2xl flex flex-col overflow-hidden border border-cyan-500/30">
+    <div id="tariffModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+        <div class="glass-panel-glow w-full max-w-5xl rounded-2xl max-h-[90vh] flex flex-col my-auto border border-cyan-500/50 shadow-2xl">
             <!-- Modal Header -->
-            <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/80">
+            <div class="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between">
                 <div>
-                    <h3 class="text-xl font-bold text-white">Master B2B Freight Rate Chart Matrix</h3>
-                    <p class="text-xs text-slate-400 mt-1">Official SAC 9965 Commercial Tariff Schedule (24H vs 12H Thunder Rates)</p>
+                    <h3 class="text-lg font-black text-white uppercase">TCC Master B2B Tariff Matrix Schedule</h3>
+                    <p class="text-xs text-slate-400">Complete corridor & weight bracket rate card with 12H Thunder (+30%) comparison.</p>
                 </div>
-                <button onclick="closeTariffModal()" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
-                    <i class="fa-solid fa-xmark text-lg"></i>
+                <button onclick="closeTariffModal()" class="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition">
+                    ✕
                 </button>
             </div>
 
-            <!-- Modal Content Table -->
-            <div class="p-6 overflow-y-auto space-y-4">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-xs">
-                        <thead>
-                            <tr class="border-b border-slate-700 bg-slate-900/90 text-slate-300 font-mono">
-                                <th class="p-3">CORRIDOR / ROUTE</th>
-                                <th class="p-3">1-10 KG</th>
-                                <th class="p-3">11-25 KG</th>
-                                <th class="p-3">26-50 KG</th>
-                                <th class="p-3">51-100 KG</th>
-                                <th class="p-3">101-250 KG</th>
-                                <th class="p-3">251-500 KG</th>
-                                <th class="p-3 text-cyber-cyan">EXCESS / KG (>500)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="modalTableBody" class="divide-y divide-slate-800 font-mono text-slate-300">
-                            <!-- Populated dynamically via JS -->
-                        </tbody>
-                    </table>
-                </div>
+            <!-- Modal Content - Table -->
+            <div class="p-4 overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs font-mono">
+                    <thead>
+                        <tr class="border-b border-slate-700 bg-slate-950 text-cyan-300">
+                            <th class="p-2.5">Corridor / Distance</th>
+                            <th class="p-2.5">1–10 kg</th>
+                            <th class="p-2.5">11–25 kg</th>
+                            <th class="p-2.5">26–50 kg</th>
+                            <th class="p-2.5">51–100 kg</th>
+                            <th class="p-2.5">101–250 kg</th>
+                            <th class="p-2.5">251–500 kg</th>
+                            <th class="p-2.5 text-amber-300">Excess >500kg</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modalTariffTableBody" class="divide-y divide-slate-800/60 text-slate-300">
+                        <!-- Populated via JS -->
+                    </tbody>
+                </table>
             </div>
 
             <!-- Modal Footer -->
-            <div class="p-4 border-t border-slate-800 bg-slate-900/80 flex justify-end">
-                <button onclick="closeTariffModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold">
-                    Close Window
+            <div class="p-4 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400 font-mono">
+                <span>As of Date: 08-10-2026</span>
+                <button onclick="closeTariffModal()" class="px-4 py-2 rounded-lg bg-cyan-500 text-black font-bold hover:bg-cyan-400 transition">
+                    Close Schedule
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Toast Feedback Banner -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 glass-panel border border-cyber-cyan px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 text-sm text-white">
-        <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
-        <span id="toastMessage">Quote Summary Copied to Clipboard!</span>
-    </div>
-
     <script>
-        // Comprehensive B2B Master Tariff Matrix Data (24H Base Rates)
-        const tariffMatrix = {
-            intra1: { name: "INTRA-CITY 1 (4 – 5 KM)", slabs: [100, 175, 300, 550, 950, 1500], excess: 3.50 },
-            intra2: { name: "INTRA-CITY 2 (6 – 15 KM)", slabs: [130, 225, 390, 715, 1235, 1950], excess: 4.55 },
-            intra3: { name: "INTRA-CITY 3 (16 – 30 KM)", slabs: [160, 280, 480, 880, 1520, 2400], excess: 5.60 },
-            reg1a:  { name: "REGIONAL 1A (31 – 45 KM)", slabs: [200, 350, 600, 1100, 1900, 3000], excess: 7.00 },
-            reg1b:  { name: "REGIONAL 1B (46 – 60 KM)", slabs: [240, 420, 720, 1320, 2280, 3600], excess: 8.40 },
-            reg2a:  { name: "REGIONAL 2A (61 – 80 KM)", slabs: [280, 490, 840, 1540, 2660, 4200], excess: 9.80 },
-            reg2b:  { name: "REGIONAL 2B (81 – 100 KM)", slabs: [320, 560, 960, 1760, 3040, 4800], excess: 11.20 },
-            reg3a:  { name: "REGIONAL 3A (101 – 150 KM)", slabs: [380, 665, 1140, 2090, 3610, 5700], excess: 13.30 },
-            reg3b:  { name: "REGIONAL 3B (151 – 200 KM)", slabs: [440, 770, 1320, 2420, 4180, 6600], excess: 15.40 },
-            reg4a:  { name: "REGIONAL 4A (201 – 250 KM)", slabs: [500, 875, 1500, 2750, 4750, 7500], excess: 17.50 },
-            reg4b:  { name: "REGIONAL 4B (251 – 300 KM)", slabs: [560, 980, 1680, 3080, 5320, 8400], excess: 19.60 },
-            reg5a:  { name: "REGIONAL 5A (301 – 400 KM)", slabs: [650, 1135, 1950, 3575, 6175, 9750], excess: 22.75 },
-            reg5b:  { name: "REGIONAL 5B (401 – 500 KM)", slabs: [750, 1310, 2250, 4125, 7125, 11250], excess: 26.25 },
-            reg6a:  { name: "REGIONAL 6A (501 – 600 KM)", slabs: [850, 1485, 2550, 4675, 8075, 12750], excess: 29.75 }
+        /* ==========================================================================
+           TCC MASTER TARIFF MATRIX DATA STRUCTURE (Matching Image 1000035365)
+           ========================================================================== */
+        const TCC_MATRIX = [
+            { id: 'INTRA-1', name: 'INTRA-CITY 1 (4 – 5 KM)', s1: 150, s2: 250, s3: 380, s4: 550, s5: 1100, s6: 1800, excess: 3.50 },
+            { id: 'INTRA-2', name: 'INTRA-CITY 2 (6 – 15 KM)', s1: 200, s2: 320, s3: 480, s4: 750, s5: 1500, s6: 2400, excess: 4.50 },
+            { id: 'INTRA-3', name: 'INTRA-CITY 3 (16 – 30 KM)', s1: 280, s2: 420, s3: 650, s4: 1050, s5: 2000, s6: 3200, excess: 6.00 },
+            { id: 'REG-1A', name: 'REGIONAL 1A (31 – 50 KM)', s1: 240, s2: 340, s3: 520, s4: 720, s5: 1400, s6: 2400, excess: 4.50 },
+            { id: 'REG-1B', name: 'REGIONAL 1B (51 – 100 KM)', s1: 280, s2: 390, s3: 600, s4: 820, s5: 1600, s6: 2750, excess: 5.20 },
+            { id: 'REG-2A', name: 'REGIONAL 2A (101 – 150 KM)', s1: 320, s2: 450, s3: 700, s4: 980, s5: 1900, s6: 3100, excess: 6.00 },
+            { id: 'REG-2B', name: 'REGIONAL 2B (151 – 200 KM)', s1: 350, s2: 490, s3: 780, s4: 1100, s5: 2200, s6: 3500, excess: 6.80 },
+            { id: 'REG-3A', name: 'REGIONAL 3A (201 – 250 KM)', s1: 380, s2: 540, s3: 880, s4: 1280, s5: 2480, s6: 3750, excess: 7.30 },
+            { id: 'REG-3B', name: 'REGIONAL 3B (251 – 300 KM)', s1: 410, s2: 590, s3: 1020, s4: 1420, s5: 2680, s6: 3920, excess: 7.80 },
+            { id: 'REG-4A', name: 'REGIONAL 4A (301 – 350 KM)', s1: 440, s2: 640, s3: 1120, s4: 1580, s5: 2950, s6: 4400, excess: 8.60 },
+            { id: 'REG-4B', name: 'REGIONAL 4B (351 – 400 KM)', s1: 470, s2: 690, s3: 1220, s4: 1720, s5: 3220, s6: 4920, excess: 9.50 },
+            { id: 'REG-5A', name: 'REGIONAL 5A (401 – 450 KM)', s1: 500, s2: 740, s3: 1320, s4: 1880, s5: 3550, s6: 5400, excess: 10.50 },
+            { id: 'REG-5B', name: 'REGIONAL 5B (451 – 500 KM)', s1: 530, s2: 790, s3: 1420, s4: 2020, s5: 3820, s6: 5920, excess: 11.50 },
+            { id: 'REG-6A', name: 'REGIONAL 6A (501 – 550 KM)', s1: 560, s2: 840, s3: 1520, s4: 2180, s5: 4150, s6: 6400, excess: 12.50 },
+            { id: 'REG-6B', name: 'REGIONAL 6B (551 – 600 KM)', s1: 590, s2: 890, s3: 1620, s4: 2320, s5: 4420, s6: 6920, excess: 13.50 }
+        ];
+
+        // Global State
+        let selectedServiceTier = '24H'; // '24H' or '12H'
+
+        window.onload = function() {
+            initLiveClock();
+            initCanvasAnimation();
+            populateCorridorSelect();
+            populateTariffModalTable();
+            calculateTariff();
         };
 
-        // Current Active Service Mode ('24H' or '12H')
-        let currentMode = '24H';
-
-        function updateISTClock() {
-            const now = new Date();
-            // Convert to IST (UTC+5:30)
-            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-            const istTime = new Date(utc + (3600000 * 5.5));
-
-            let hours = istTime.getHours();
-            const minutes = String(istTime.getMinutes()).padStart(2, '0');
-            const seconds = String(istTime.getSeconds()).padStart(2, '0');
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-
-            hours = hours % 12;
-            hours = hours ? hours : 12; // hour 0 is 12
-            const strHours = String(hours).padStart(2, '0');
-
-            document.getElementById('istClock').textContent = `${strHours}:${minutes}:${seconds} ${ampm} IST`;
+        function initLiveClock() {
+            function updateClock() {
+                const now = new Date();
+                // Format to IST string
+                const options = {
+                    timeZone: 'Asia/Kolkata',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                };
+                const timeString = now.toLocaleTimeString('en-US', options);
+                document.getElementById('liveIstClock').textContent = timeString + ' IST';
+            }
+            updateClock();
+            setInterval(updateClock, 1000);
         }
-        setInterval(updateISTClock, 1000);
-        updateISTClock();
 
-        function selectServiceMode(mode) {
-            currentMode = mode;
-            const btn24 = document.getElementById('service24h');
-            const btn12 = document.getElementById('service12h');
-            const badgeMode = document.getElementById('quoteBadgeMode');
-            const slaText = document.getElementById('slaStatusText');
+        function populateCorridorSelect() {
+            const select = document.getElementById('corridorSelect');
+            select.innerHTML = '';
+            TCC_MATRIX.forEach((item, index) => {
+                const opt = document.createElement('option');
+                opt.value = item.id;
+                opt.textContent = item.name;
+                if (item.id === 'REG-2A') opt.selected = true; // Default matching screenshot
+                select.appendChild(opt);
+            });
+        }
 
-            if (mode === '24H') {
-                btn24.className = "glass-panel p-5 rounded-xl border-2 cursor-pointer transition-all duration-200 border-cyan-500 bg-cyan-950/20 relative overflow-hidden group";
-                btn12.className = "glass-panel p-5 rounded-xl border-2 cursor-pointer transition-all duration-200 border-slate-800 hover:border-amber-500/50 bg-slate-900/40 relative overflow-hidden group";
-                badgeMode.textContent = "24H EXPRESS";
-                badgeMode.className = "px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30";
-                
-                slaText.innerHTML = "🟢 LIVE SLA: 4-HR INTRA-CITY / 24-HR REGIONAL DISPATCH";
-                slaText.className = "font-medium text-emerald-300";
+        function populateTariffModalTable() {
+            const tbody = document.getElementById('modalTariffTableBody');
+            tbody.innerHTML = '';
+            TCC_MATRIX.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-900/60 transition';
+                tr.innerHTML = `
+                    <td class="p-2.5 font-bold text-white">${item.name}</td>
+                    <td class="p-2.5">₹${item.s1}</td>
+                    <td class="p-2.5">₹${item.s2}</td>
+                    <td class="p-2.5">₹${item.s3}</td>
+                    <td class="p-2.5 text-cyan-300 font-bold">₹${item.s4}</td>
+                    <td class="p-2.5">₹${item.s5}</td>
+                    <td class="p-2.5">₹${item.s6}</td>
+                    <td class="p-2.5 text-amber-300 font-semibold">+₹${item.excess.toFixed(2)} / kg</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function setServiceTier(tier) {
+            selectedServiceTier = tier;
+            const card24H = document.getElementById('card24H');
+            const card12H = document.getElementById('card12H');
+            const radio24H = document.getElementById('radio24H');
+            const radio12H = document.getElementById('radio12H');
+            const slaText = document.getElementById('slaText');
+            const downtimeBadge = document.getElementById('downtimeSavedBadge');
+
+            if (tier === '24H') {
+                card24H.className = 'cursor-pointer rounded-xl p-4 border transition-all duration-300 bg-slate-900/90 border-cyan-500 shadow-md';
+                card12H.className = 'cursor-pointer rounded-xl p-4 border transition-all duration-300 bg-slate-950/50 border-slate-800 opacity-75';
+                radio24H.className = 'w-full h-full rounded-full bg-cyan-400';
+                radio12H.className = 'w-full h-full rounded-full bg-transparent';
+
+                slaText.textContent = '🟢 LIVE SLA: 4-HR INTRA-CITY / 24-HR REGIONAL DISPATCH ACTIVE';
+                downtimeBadge.textContent = 'Standard Industrial SLA';
+                downtimeBadge.className = 'hidden sm:inline-block px-2.5 py-0.5 rounded bg-cyan-900/80 text-cyan-200 text-[11px] font-bold border border-cyan-600';
             } else {
-                btn12.className = "glass-panel p-5 rounded-xl border-2 cursor-pointer transition-all duration-200 border-amber-500 bg-amber-950/20 relative overflow-hidden group";
-                btn24.className = "glass-panel p-5 rounded-xl border-2 cursor-pointer transition-all duration-200 border-slate-800 hover:border-cyan-500/50 bg-slate-900/40 relative overflow-hidden group";
-                badgeMode.textContent = "⚡ 12H THUNDER";
-                badgeMode.className = "px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30";
-                
-                slaText.innerHTML = "⚡ THUNDER SLA: NEXT SUNRISE DEPARTURE IN 03:42:15 • GUARANTEED DUSK LANDING";
-                slaText.className = "font-medium text-amber-300";
+                card12H.className = 'cursor-pointer rounded-xl p-4 border transition-all duration-300 bg-gradient-to-r from-amber-950/40 via-slate-900 to-slate-900 border-amber-500 shadow-lg';
+                card24H.className = 'cursor-pointer rounded-xl p-4 border transition-all duration-300 bg-slate-950/50 border-slate-800 opacity-75';
+                radio12H.className = 'w-full h-full rounded-full bg-amber-400';
+                radio24H.className = 'w-full h-full rounded-full bg-transparent';
+
+                slaText.textContent = '⚡ THUNDER SLA: NEXT SUNRISE DEPARTURE IN 03:42:15 • GUARANTEED DUSK LANDING';
+                downtimeBadge.textContent = '⚡ Saves 12 to 36 Hours of Downtime';
+                downtimeBadge.className = 'hidden sm:inline-block px-2.5 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[11px] font-bold border border-amber-500/40 animate-pulse';
             }
 
-            calculateFreight();
+            calculateTariff();
         }
 
-        function syncWeightFromInput() {
-            const val = document.getElementById('weightInput').value;
-            document.getElementById('weightSlider').value = val || 1;
-            calculateFreight();
+        function syncWeightFromInput(val) {
+            let weight = parseFloat(val) || 1;
+            document.getElementById('weightSlider').value = Math.min(weight, 1000);
+            calculateTariff();
         }
 
-        function syncWeightFromSlider() {
-            const val = document.getElementById('weightSlider').value;
+        function syncWeightFromSlider(val) {
             document.getElementById('weightInput').value = val;
-            calculateFreight();
+            calculateTariff();
         }
 
-        function setWeightPreset(kg) {
-            document.getElementById('weightInput').value = kg;
-            document.getElementById('weightSlider').value = kg;
-            calculateFreight();
+        function setWeightPreset(weight) {
+            document.getElementById('weightInput').value = weight;
+            document.getElementById('weightSlider').value = Math.min(weight, 1000);
+            calculateTariff();
         }
 
-        function calculateFreight() {
-            const corridorKey = document.getElementById('corridorSelect').value;
+        function calculateTariff() {
+            const corridorId = document.getElementById('corridorSelect').value;
             const weight = parseFloat(document.getElementById('weightInput').value) || 1;
-            const esgChecked = document.getElementById('esgCheck').checked;
-            const corridor = tariffMatrix[corridorKey];
 
-            let baseCost = 0;
-            let bracketText = "";
+            const corridor = TCC_MATRIX.find(c => c.id === corridorId) || TCC_MATRIX[5];
+
+            let basePrice = 0;
+            let bracketText = '';
 
             if (weight <= 10) {
-                baseCost = corridor.slabs[0];
-                bracketText = "1 – 10 KG";
+                basePrice = corridor.s1;
+                bracketText = '1 – 10 KG';
             } else if (weight <= 25) {
-                baseCost = corridor.slabs[1];
-                bracketText = "11 – 25 KG";
+                basePrice = corridor.s2;
+                bracketText = '11 – 25 KG';
             } else if (weight <= 50) {
-                baseCost = corridor.slabs[2];
-                bracketText = "26 – 50 KG";
+                basePrice = corridor.s3;
+                bracketText = '26 – 50 KG';
             } else if (weight <= 100) {
-                baseCost = corridor.slabs[3];
-                bracketText = "51 – 100 KG";
+                basePrice = corridor.s4;
+                bracketText = '51 – 100 KG';
             } else if (weight <= 250) {
-                baseCost = corridor.slabs[4];
-                bracketText = "101 – 250 KG";
+                basePrice = corridor.s5;
+                bracketText = '101 – 250 KG';
             } else if (weight <= 500) {
-                baseCost = corridor.slabs[5];
-                bracketText = "251 – 500 KG";
+                basePrice = corridor.s6;
+                bracketText = '251 – 500 KG';
             } else {
-                const excessKg = weight - 500;
-                baseCost = corridor.slabs[5] + (excessKg * corridor.excess);
-                bracketText = `>500 KG (${weight} KG Total)`;
+                const excessWeight = weight - 500;
+                basePrice = corridor.s6 + (excessWeight * corridor.excess);
+                bracketText = `> 500 KG (${excessWeight.toFixed(0)}kg excess)`;
             }
 
-            // Apply 12H Thunder Premium (+30%) if active
-            let totalCost = baseCost;
-            if (currentMode === '12H') {
-                totalCost = totalCost * 1.30;
-            }
-
-            // Apply Voluntary ESG Levy (+2%)
-            if (esgChecked) {
-                totalCost = totalCost * 1.02;
-            }
-
-            // Update UI
-            document.getElementById('finalPriceDisplay').textContent = Math.round(totalCost).toLocaleString('en-IN');
-            document.getElementById('summaryCorridor').textContent = corridor.name;
-            document.getElementById('summaryBracket').textContent = bracketText;
-            document.getElementById('summaryExcessRate').textContent = `₹${corridor.excess.toFixed(2)} / excess kg`;
-
-            // Update Dynamic Downtime Saved Badge (Option 4)
-            const titleEl = document.getElementById('impactBadgeTitle');
-            const textEl = document.getElementById('impactBadgeText');
-
-            if (currentMode === '12H') {
-                titleEl.textContent = "⚡ Thunder Velocity Optimization Active";
-                titleEl.className = "text-xs font-bold text-amber-300";
-                textEl.textContent = `Saves 12 to 36 Hours of Critical Supply-Chain Downtime compared to standard regional routing.`;
+            // Apply 12H Thunder Premium multiplier (+30%)
+            let finalPrice = basePrice;
+            if (selectedServiceTier === '12H') {
+                finalPrice = Math.round(basePrice * 1.30);
             } else {
-                titleEl.textContent = "Standard Express Dispatch Schedule";
-                titleEl.className = "text-xs font-bold text-cyan-300";
-                textEl.textContent = `Saves 12 to 24 Hours of Industrial Downtime via guaranteed terminal consolidation.`;
+                finalPrice = Math.round(basePrice);
+            }
+
+            // UI Updates
+            document.getElementById('quotePrice').textContent = `₹${finalPrice.toLocaleString('en-IN')}`;
+            document.getElementById('quoteCorridor').textContent = corridor.name;
+            document.getElementById('quoteBracket').textContent = bracketText;
+            document.getElementById('quoteExcessRate').textContent = `₹${corridor.excess.toFixed(2)} / excess kg`;
+
+            const thunderBadgeInline = document.getElementById('thunderBadgeInline');
+            const rateGuaranteeText = document.getElementById('rateGuaranteeText');
+            const quoteSla = document.getElementById('quoteSla');
+
+            if (selectedServiceTier === '12H') {
+                thunderBadgeInline.classList.remove('hidden');
+                rateGuaranteeText.textContent = '⚡ Thunder Service 12H Priority Express Delivery';
+                quoteSla.textContent = 'Within 12 Hours (Dawn/Dusk SLA)';
+                quoteSla.className = 'text-amber-400 font-bold';
+            } else {
+                thunderBadgeInline.classList.add('hidden');
+                rateGuaranteeText.textContent = 'Guaranteed Commercial Rate (All Inclusive)';
+                quoteSla.textContent = corridor.name.includes('INTRA') ? 'Within 4 Hours' : 'Within 24 Hours';
+                quoteSla.className = 'text-emerald-400 font-bold';
             }
         }
 
         function copyQuoteSummary() {
-            const price = document.getElementById('finalPriceDisplay').textContent;
-            const corridor = document.getElementById('summaryCorridor').textContent;
+            const corridor = document.getElementById('quoteCorridor').textContent;
             const weight = document.getElementById('weightInput').value;
-            const mode = currentMode === '12H' ? '12H Thunder Ultra-Express' : '24H Standard Express';
+            const price = document.getElementById('quotePrice').textContent;
+            const bracket = document.getElementById('quoteBracket').textContent;
+            const tier = selectedServiceTier === '12H' ? '12H THUNDER SERVICE (+30% Priority)' : '24H SAME-DAY EXPRESS';
 
-            const summaryText = `[TCC FREIGHT QUOTE]\nCorridor: ${corridor}\nMode: ${mode}\nGross Weight: ${weight} KG\nTotal Estimated Rate: ₹${price} (Incl. SAC 9965 Taxes)\nMaster Dispatch Desk: +91 8340085989`;
+            const summaryText = `--- THUNDER CARGO CORRIDOR (TCC) OFFICIAL QUOTE ---\n` +
+                                `Service Tier: ${tier}\n` +
+                                `Corridor: ${corridor}\n` +
+                                `Weight: ${weight} KG (Bracket: ${bracket})\n` +
+                                `Calculated Tariff Rate: ${price} (All Inclusive)\n` +
+                                `SAC Code: 9965 (RCM Compliant)\n` +
+                                `Timestamp: ${new Date().toLocaleString('en-IN')} IST\n` +
+                                `Support: +91 8340085989 | tcc.cargodesk@gmail.com`;
 
-            // Copy to clipboard fallback
-            const dummy = document.createElement("textarea");
-            document.body.appendChild(dummy);
-            dummy.value = summaryText;
-            dummy.select();
-            document.execCommand("copy");
-            document.body.removeChild(dummy);
-
-            showToast("Quote Summary Copied to Clipboard!");
+            // Fallback clipboard method per instructions
+            const textArea = document.createElement('textarea');
+            textArea.value = summaryText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showNotification('Quote Summary copied to clipboard!');
+            } catch (err) {
+                showNotification('Copy failed. Please try again.');
+            }
+            document.body.removeChild(textArea);
         }
 
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toastMessage').textContent = msg;
-            toast.classList.add('show');
+        function showNotification(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-6 right-6 z-50 bg-cyan-500 text-slate-950 font-mono text-xs font-bold px-4 py-3 rounded-xl shadow-2xl transition-all duration-300 transform translate-y-0';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
             setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+                toast.style.opacity = '0';
+                setTimeout(() => document.body.removeChild(toast), 300);
+            }, 2500);
         }
 
         function openTariffModal() {
-            const tbody = document.getElementById('modalTableBody');
-            tbody.innerHTML = "";
-
-            Object.keys(tariffMatrix).forEach(key => {
-                const item = tariffMatrix[key];
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-800/50 transition";
-                
-                let modeMultiplier = currentMode === '12H' ? 1.30 : 1.0;
-                
-                tr.innerHTML = `
-                    <td class="p-3 font-bold text-white">${item.name}</td>
-                    <td class="p-3">₹${Math.round(item.slabs[0] * modeMultiplier)}</td>
-                    <td class="p-3">₹${Math.round(item.slabs[1] * modeMultiplier)}</td>
-                    <td class="p-3">₹${Math.round(item.slabs[2] * modeMultiplier)}</td>
-                    <td class="p-3">₹${Math.round(item.slabs[3] * modeMultiplier)}</td>
-                    <td class="p-3">₹${Math.round(item.slabs[4] * modeMultiplier)}</td>
-                    <td class="p-3">₹${Math.round(item.slabs[5] * modeMultiplier)}</td>
-                    <td class="p-3 text-cyber-cyan font-bold">₹${(item.excess * modeMultiplier).toFixed(2)}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-
             document.getElementById('tariffModal').classList.remove('hidden');
         }
-
         function closeTariffModal() {
             document.getElementById('tariffModal').classList.add('hidden');
         }
-
-        function scrollToVanguard() {
-            document.getElementById('vanguardSection').scrollIntoView({ behavior: 'smooth' });
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Falling Droplet Light-Beam Particle System
-        const canvas = document.getElementById('particleCanvas');
-        const ctx = canvas.getContext('2d');
+        function initCanvasAnimation() {
+            const canvas = document.getElementById('bgCanvas');
+            const ctx = canvas.getContext('2d');
 
-        let particles = [];
-        const particleCount = 45;
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+            const particles = [];
+            const particleCount = 45;
 
-        class Droplet {
-            constructor() {
-                this.reset();
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    length: Math.random() * 40 + 20,
+                    speed: Math.random() * 2 + 1,
+                    opacity: Math.random() * 0.5 + 0.1,
+                    width: Math.random() * 1.5 + 0.5
+                });
             }
 
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * -canvas.height;
-                this.length = Math.random() * 40 + 15;
-                this.speed = Math.random() * 3 + 2;
-                this.opacity = Math.random() * 0.4 + 0.1;
-                this.width = Math.random() * 1.5 + 0.5;
-                this.color = Math.random() > 0.3 ? '#06b6d4' : '#10b981';
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach(p => {
+                    ctx.beginPath();
+                    const gradient = ctx.createLinearGradient(p.x, p.y, p.x, p.y + p.length);
+                    gradient.addColorStop(0, `rgba(0, 242, 254, 0)`);
+                    gradient.addColorStop(1, `rgba(0, 242, 254, ${p.opacity})`);
+
+                    ctx.strokeStyle = gradient;
+                    ctx.lineWidth = p.width;
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(p.x, p.y + p.length);
+                    ctx.stroke();
+
+                    p.y += p.speed;
+                    if (p.y > canvas.height) {
+                        p.y = -p.length;
+                        p.x = Math.random() * canvas.width;
+                    }
+                });
+
+                requestAnimationFrame(animate);
             }
-
-            update() {
-                this.y += this.speed;
-                if (this.y > canvas.height + this.length) {
-                    this.reset();
-                }
-            }
-
-            draw() {
-                ctx.beginPath();
-                const gradient = ctx.createLinearGradient(this.x, this.y, this.x, this.y - this.length);
-                gradient.addColorStop(0, this.color);
-                gradient.addColorStop(1, 'transparent');
-
-                ctx.strokeStyle = gradient;
-                ctx.lineWidth = this.width;
-                ctx.moveTo(this.x, this.y);
-                ctx.lineTo(this.x, this.y - this.length);
-                ctx.stroke();
-            }
+            animate();
         }
-
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Droplet());
-        }
-
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
-            requestAnimationFrame(animateParticles);
-        }
-
-        window.onload = function() {
-            animateParticles();
-            calculateFreight();
-        };
     </script>
 </body>
 </html>
