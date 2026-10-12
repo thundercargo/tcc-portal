@@ -1,4 +1,5 @@
-'client';
+'use client';
+
 import React, { useState, useEffect } from 'react';
 
 const TARIFFS: Record<string, { name: string; base: number[]; excess: number }> = {
@@ -25,12 +26,70 @@ export default function TCCPortal() {
   const [corridor, setCorridor] = useState('REG_2A');
   const [weight, setWeight] = useState<number>(100);
 
+  // Live IST Clock with running seconds
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
       setClock(now.toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' IST');
     }, 1000);
     return () => clearInterval(timer);
+  }, []);
+
+  // Animated Crystal Droplets Canvas Background
+  useEffect(() => {
+    const canvas = document.getElementById('droplet-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const droplets: { x: number; y: number; len: number; speed: number; alpha: number }[] = [];
+    for (let i = 0; i < 45; i++) {
+      droplets.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        len: Math.random() * 90 + 30,
+        speed: Math.random() * 2.5 + 1,
+        alpha: Math.random() * 0.4 + 0.1
+      });
+    }
+
+    let animationId: number;
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      droplets.forEach(d => {
+        const grad = ctx.createLinearGradient(d.x, d.y, d.x, d.y + d.len);
+        grad.addColorStop(0, 'rgba(6, 182, 212, 0)');
+        grad.addColorStop(0.8, `rgba(6, 182, 212, ${d.alpha})`);
+        grad.addColorStop(1, `rgba(245, 158, 11, ${d.alpha + 0.2})`); // Amber crystal tip
+
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 1.8;
+        ctx.beginPath();
+        ctx.moveTo(d.x, d.y);
+        ctx.lineTo(d.x, d.y + d.len);
+        ctx.stroke();
+
+        d.y += d.speed;
+        if (d.y > canvas.height) {
+          d.y = -d.len;
+          d.x = Math.random() * canvas.width;
+        }
+      });
+      animationId = requestAnimationFrame(render);
+    }
+    render();
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      cancelAnimationFrame(animationId);
+    };
   }, []);
 
   // Calculation Logic
@@ -52,14 +111,18 @@ export default function TCCPortal() {
   const finalCost = mode === '12H' ? Math.round(baseCost * 1.25) : baseCost;
 
   return (
-    <main style={{ backgroundColor: '#060911', color: '#f8fafc', minHeight: '100vh', padding: '24px 16px 80px', fontFamily: 'sans-serif' }}>
-      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+    <main style={{ backgroundColor: '#060911', color: '#f8fafc', minHeight: '100vh', padding: '24px 16px 80px', fontFamily: 'sans-serif', position: 'relative', overflowX: 'hidden' }}>
+      
+      {/* Background Crystal Droplets Canvas */}
+      <canvas id="droplet-canvas" style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0 }} />
+
+      <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         
         {/* Top Badges & Clock */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center', marginBottom: '16px' }}>
           <span style={{ background: 'rgba(6,182,212,0.12)', border: '1px solid rgba(6,182,212,0.35)', color: '#06b6d4', fontSize: '11px', fontWeight: 700, padding: '6px 14px', borderRadius: '20px' }}>NATIONWIDE B2B LOGISTICS</span>
           <span style={{ background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.35)', color: '#f59e0b', fontSize: '11px', fontWeight: 700, padding: '6px 14px', borderRadius: '20px' }}>UDYAM-TS-02-0359997</span>
-          <span style={{ background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.4)', color: '#10b981', fontSize: '13px', fontWeight: 800, padding: '6px 14px', borderRadius: '20px', marginLeft: 'auto', fontFamily: 'monospace' }}>{clock}</span>
+          <span style={{ background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.4)', color: '#10b981', fontSize: '13px', fontWeight: 800, padding: '6px 14px', borderRadius: '20px', marginLeft: 'auto', fontFamily: 'monospace', boxShadow: '0 0 12px rgba(16,185,129,0.2)' }}>{clock}</span>
         </div>
 
         <h1 style={{ fontSize: '34px', fontWeight: 800, color: '#ffffff' }}>THUNDER CARGO <span style={{ color: '#06b6d4' }}>CORRIDOR</span></h1>
@@ -81,7 +144,7 @@ export default function TCCPortal() {
           </div>
         </div>
 
-        {/* Dual Subheads / Service Selectors */}
+        {/* Dual Service Subhead Headers */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
           <div 
             onClick={() => setMode('24H')}
@@ -116,7 +179,7 @@ export default function TCCPortal() {
           </div>
         </div>
 
-        {/* Calculator Engine Box */}
+        {/* Master Calculator Panel */}
         <div style={{ background: 'rgba(13,20,36,0.85)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '20px', padding: '24px', boxShadow: '0 20px 50px rgba(0,0,0,0.6)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
             <h2 style={{ fontSize: '18px', fontWeight: 800, color: '#fff' }}>Master B2B Freight Rate Engine</h2>
@@ -125,7 +188,7 @@ export default function TCCPortal() {
 
           <div style={{ marginBottom: '20px' }}>
             <label style={{ fontSize: '12px', fontWeight: 800, color: '#06b6d4', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>Corridor / Route Matrix</label>
-            <select value={corridor} onChange={(e) => setCorridor(e.target.value)} style={{ width: '100%', background: 'rgba(6,9,17,0.9)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '12px', padding: '14px', color: '#fff', fontSize: '15px', fontWeight: 700 }}>
+            <select value={corridor} onChange={(e) => setCorridor(e.target.value)} style={{ width: '100%', background: 'rgba(6,9,17,0.9)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '12px', padding: '14px', color: '#fff', fontSize: '15px', fontWeight: 700, outline: 'none' }}>
               {Object.keys(TARIFFS).map(k => (
                 <option key={k} value={k}>{TARIFFS[k].name}</option>
               ))}
@@ -134,7 +197,7 @@ export default function TCCPortal() {
 
           <div style={{ marginBottom: '20px' }}>
             <label style={{ fontSize: '12px', fontWeight: 800, color: '#06b6d4', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>Consignment Gross Weight (KG)</label>
-            <input type="number" value={weight} min={1} onChange={(e) => setWeight(Math.max(1, parseFloat(e.target.value) || 1))} style={{ width: '100%', background: 'rgba(6,9,17,0.9)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '12px', padding: '14px', color: '#fff', fontSize: '15px', fontWeight: 700 }} />
+            <input type="number" value={weight} min={1} onChange={(e) => setWeight(Math.max(1, parseFloat(e.target.value) || 1))} style={{ width: '100%', background: 'rgba(6,9,17,0.9)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '12px', padding: '14px', color: '#fff', fontSize: '15px', fontWeight: 700, outline: 'none' }} />
           </div>
 
           {/* Quote Result Box */}
@@ -148,7 +211,7 @@ export default function TCCPortal() {
               {mode === '12H' ? '⚡ 12 TO 36 HOURS OF INDUSTRIAL DOWNTIME AVOIDED' : '🟢 GUARANTEED COMMERCIAL RATE (ALL INCLUSIVE)'}
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '18px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '14px', fontSize: '12px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginToр: '18px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '14px', fontSize: '12px' }}>
               <div>
                 <span style={{ color: '#94a3b8', display: 'block' }}>Corridor:</span>
                 <strong style={{ color: '#fff' }}>{item.name}</strong>
@@ -161,8 +224,8 @@ export default function TCCPortal() {
 
             <button 
               onClick={() => {
-                navigator.clipboard.writeText(`[TCC QUOTE] Mode: ${mode} | Corridor: ${item.name} | Weight: ${weight}kg | Quote: ₹${finalCost}`);
-                alert('Dispatch Quote Copied!');
+                navigator.clipboard.writeText(`[TCC DISPATCH QUOTE] Mode: ${mode} | Corridor: ${item.name} | Weight: ${weight}kg | Quote: ₹${finalCost}`);
+                alert('Official Dispatch Quote Copied!');
               }}
               style={{ width: '100%', background: 'linear-gradient(90deg, #06b6d4, #0891b2)', border: 'none', color: '#000', fontWeight: 800, fontSize: '14px', padding: '16px', borderRadius: '12px', cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '0.5px', marginTop: '18px' }}
             >
