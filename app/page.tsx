@@ -296,8 +296,8 @@ export default function TCCPortal() {
 
         {/* Footer */}
         <div style={{ textAlign: 'center', fontSize: '11px', color: '#64748b', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '20px' }}>
-          📞 +91 8340085989 &nbsp;|&nbsp; ✉️ tcc.cargodesk@gmail.com &nbsp;|&nbsp; 🛡️ MSME Registered: UDYAM-TS-02-0359997[span_0](start_span)[span_0](end_span)
-          <div style={{ marginTop: '6px' }}>Thunder Cargo Corridor (TCC) • South India B2B Last-Mile Logistics Infrastructure Framework[span_1](start_span)[span_1](end_span)</div>
+          📞 +91 8340085989 &nbsp;|&nbsp; ✉️ tcc.cargodesk@gmail.com &nbsp;|&nbsp; 🛡️ MSME Registered: UDYAM-TS-02-0359997
+          <div style={{ marginTop: '6px' }}>Thunder Cargo Corridor (TCC) • South India B2B Last-Mile Logistics Infrastructure Framework</div>
         </div>
 
       </div>
