@@ -35,7 +35,7 @@ export default function TCCPortal() {
     return () => clearInterval(timer);
   }, []);
 
-  // Luminous Solar-Dawn Background Canvas Animation
+  // Enhanced Luminous Background with Increased Opacity
   useEffect(() => {
     const canvas = document.getElementById('bg-canvas') as HTMLCanvasElement;
     if (!canvas) return;
@@ -52,15 +52,15 @@ export default function TCCPortal() {
     const particles: { x: number; y: number; r: number; speedY: number; speedX: number; color: string; alpha: number }[] = [];
     const colors = ['#22d3ee', '#34d399', '#fbbf24', '#818cf8'];
 
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 65; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        r: Math.random() * 2.5 + 1,
-        speedY: Math.random() * 0.8 + 0.3,
-        speedX: (Math.random() - 0.5) * 0.3,
+        r: Math.random() * 3 + 1.2,
+        speedY: Math.random() * 1.2 + 0.4,
+        speedX: (Math.random() - 0.5) * 0.4,
         color: colors[Math.floor(Math.random() * colors.length)],
-        alpha: Math.random() * 0.6 + 0.2
+        alpha: Math.random() * 0.7 + 0.3
       });
     }
 
@@ -70,34 +70,31 @@ export default function TCCPortal() {
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Rich Luminous Background Gradient
       const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      grad.addColorStop(0, '#040b1a');
-      grad.addColorStop(0.5, '#0a1733');
-      grad.addColorStop(1, '#020610');
+      grad.addColorStop(0, '#030817');
+      grad.addColorStop(0.5, '#07132e');
+      grad.addColorStop(1, '#02050b');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Glowing Ambient Aurora Orbs
-      const orb1 = ctx.createRadialGradient(canvas.width * 0.2, canvas.height * 0.3 + Math.sin(step) * 40, 10, canvas.width * 0.2, canvas.height * 0.3, canvas.width * 0.6);
-      orb1.addColorStop(0, 'rgba(6, 182, 212, 0.12)');
+      const orb1 = ctx.createRadialGradient(canvas.width * 0.25, canvas.height * 0.25 + Math.sin(step) * 50, 10, canvas.width * 0.25, canvas.height * 0.25, canvas.width * 0.7);
+      orb1.addColorStop(0, 'rgba(6, 182, 212, 0.2)');
       orb1.addColorStop(1, 'rgba(6, 182, 212, 0)');
       ctx.fillStyle = orb1;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      const orb2 = ctx.createRadialGradient(canvas.width * 0.8, canvas.height * 0.7 + Math.cos(step) * 40, 10, canvas.width * 0.8, canvas.height * 0.7, canvas.width * 0.6);
-      orb2.addColorStop(0, 'rgba(16, 185, 129, 0.1)');
+      const orb2 = ctx.createRadialGradient(canvas.width * 0.75, canvas.height * 0.75 + Math.cos(step) * 50, 10, canvas.width * 0.75, canvas.height * 0.75, canvas.width * 0.7);
+      orb2.addColorStop(0, 'rgba(16, 185, 129, 0.18)');
       orb2.addColorStop(1, 'rgba(16, 185, 129, 0)');
       ctx.fillStyle = orb2;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Floating Luminous Particles
       particles.forEach(p => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
         ctx.globalAlpha = p.alpha;
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 14;
         ctx.shadowColor = p.color;
         ctx.fill();
         ctx.shadowBlur = 0;
@@ -112,7 +109,7 @@ export default function TCCPortal() {
         }
       });
 
-      step += 0.01;
+      step += 0.012;
       animId = requestAnimationFrame(draw);
     }
     draw();
@@ -147,31 +144,31 @@ export default function TCCPortal() {
 
       <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         
-        {/* Top Badges Header */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', marginBottom: '16px' }}>
-          <span style={{ background: 'rgba(6,182,212,0.15)', border: '1px solid rgba(6,182,212,0.4)', color: '#22d3ee', fontSize: '10px', fontWeight: 700, padding: '6px 14px', borderRadius: '20px', backdropFilter: 'blur(8px)' }}>ENTERPRISE B2B LOGISTICS NETWORK</span>
-          <span style={{ background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.4)', color: '#fbbf24', fontSize: '10px', fontWeight: 700, padding: '6px 14px', borderRadius: '20px', backdropFilter: 'blur(8px)' }}>24H SAME-DAY EXPRESS TRANSIT</span>
-          <span style={{ background: 'rgba(6,182,212,0.15)', border: '1px solid rgba(6,182,212,0.4)', color: '#22d3ee', fontSize: '10px', fontWeight: 700, padding: '6px 14px', borderRadius: '20px', backdropFilter: 'blur(8px)' }}>UDYAM-TS-02-0359997</span>
-          <span style={{ background: 'rgba(16,185,129,0.2)', border: '1px solid rgba(16,185,129,0.5)', color: '#34d399', fontSize: '12px', fontWeight: 700, padding: '6px 14px', borderRadius: '20px', marginLeft: 'auto', fontFamily: 'monospace', boxShadow: '0 0 15px rgba(16,185,129,0.3)', backdropFilter: 'blur(8px)' }}>IST • {clock}</span>
+        {/* Reordered Header Hierarchy */}
+        <h1 style={{ fontSize: '32px', fontWeight: 900, color: '#fff', letterSpacing: '-0.5px', textShadow: '0 2px 10px rgba(0,0,0,0.5)', marginBottom: '4px' }}>THUNDER CARGO <span style={{ color: '#22d3ee' }}>CORRIDOR</span></h1>
+        
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', marginBottom: '14px' }}>
+          <span style={{ background: 'rgba(6,182,212,0.18)', border: '1px solid rgba(6,182,212,0.45)', color: '#22d3ee', fontSize: '10px', fontWeight: 800, padding: '6px 14px', borderRadius: '20px', backdropFilter: 'blur(8px)' }}>FIRSTMILE-LASTMILE B2B</span>
+          <span style={{ background: 'rgba(6,182,212,0.18)', border: '1px solid rgba(6,182,212,0.45)', color: '#22d3ee', fontSize: '10px', fontWeight: 800, padding: '6px 14px', borderRadius: '20px', backdropFilter: 'blur(8px)' }}>UDYAM-TS-02-0359997</span>
+          <span style={{ background: 'rgba(16,185,129,0.22)', border: '1px solid rgba(16,185,129,0.55)', color: '#34d399', fontSize: '12px', fontWeight: 800, padding: '6px 14px', borderRadius: '20px', marginLeft: 'auto', fontFamily: 'monospace', boxShadow: '0 0 15px rgba(16,185,129,0.35)', backdropFilter: 'blur(8px)' }}>IST • {clock}</span>
         </div>
 
-        <h1 style={{ fontSize: '32px', fontWeight: 900, color: '#fff', letterSpacing: '-0.5px', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>THUNDER CARGO <span style={{ color: '#22d3ee' }}>CORRIDOR</span></h1>
-        <p style={{ color: '#cbd5e1', fontSize: '13px', marginTop: '4px', marginBottom: '20px', fontWeight: 500 }}>Automated Inward Office & Station-Gate Express Logistics Infrastructure</p>
+        <p style={{ color: '#cbd5e1', fontSize: '13px', marginBottom: '20px', fontWeight: 500 }}>Automated Inward Office & Station-Gate Express Logistics Infrastructure</p>
 
         {/* Action Buttons */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '24px' }}>
-          <div onClick={() => setActiveModal('TARIFF')} style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.85), rgba(8,14,28,0.9))', border: '1px solid rgba(6,182,212,0.5)', borderRadius: '14px', padding: '14px 10px', textAlign: 'center', fontSize: '12px', fontWeight: 800, color: '#22d3ee', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>📋 Master Tariff Engine</div>
-          <div onClick={() => setActiveModal('SLA')} style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.85), rgba(8,14,28,0.9))', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '14px', padding: '14px 10px', textAlign: 'center', fontSize: '12px', fontWeight: 800, color: '#94a3b8', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>⚡ Gate-to-Feeder SLA</div>
-          <div onClick={() => setActiveModal('ESG')} style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.85), rgba(8,14,28,0.9))', border: '1px solid rgba(16,185,129,0.5)', borderRadius: '14px', padding: '14px 10px', textAlign: 'center', fontSize: '12px', fontWeight: 800, color: '#34d399', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>🌱 ESG & CSR Pledge</div>
+          <div onClick={() => setActiveModal('TARIFF')} style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.9), rgba(8,14,28,0.95))', border: '1px solid rgba(6,182,212,0.5)', borderRadius: '14px', padding: '14px 10px', textAlign: 'center', fontSize: '12px', fontWeight: 800, color: '#22d3ee', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>📋 Master Tariff Engine</div>
+          <div onClick={() => setActiveModal('SLA')} style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.9), rgba(8,14,28,0.95))', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '14px', padding: '14px 10px', textAlign: 'center', fontSize: '12px', fontWeight: 800, color: '#94a3b8', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>⚡ Gate-to-Feeder SLA</div>
+          <div onClick={() => setActiveModal('ESG')} style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.9), rgba(8,14,28,0.95))', border: '1px solid rgba(16,185,129,0.5)', borderRadius: '14px', padding: '14px 10px', textAlign: 'center', fontSize: '12px', fontWeight: 800, color: '#34d399', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>🌱 ESG & CSR Pledge</div>
         </div>
 
-        {/* HIGH-END SERVICE CARDS */}
+        {/* SERVICE CARDS */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
           
           <div 
             onClick={() => setServiceMode('24H')}
             style={{ 
-              background: serviceMode === '24H' ? 'linear-gradient(135deg, rgba(6,182,212,0.25), rgba(15,23,42,0.95))' : 'linear-gradient(135deg, rgba(15,23,42,0.75), rgba(8,14,28,0.85))', 
+              background: serviceMode === '24H' ? 'linear-gradient(135deg, rgba(6,182,212,0.28), rgba(15,23,42,0.95))' : 'linear-gradient(135deg, rgba(15,23,42,0.78), rgba(8,14,28,0.88))', 
               border: serviceMode === '24H' ? '2px solid #22d3ee' : '1px solid rgba(255,255,255,0.12)', 
               borderRadius: '18px', padding: '20px', cursor: 'pointer', transition: 'all 0.3s ease',
               boxShadow: serviceMode === '24H' ? '0 0 25px rgba(6,182,212,0.35)' : '0 10px 30px rgba(0,0,0,0.5)',
@@ -188,7 +185,7 @@ export default function TCCPortal() {
           <div 
             onClick={() => setServiceMode('THUNDER')}
             style={{ 
-              background: serviceMode === 'THUNDER' ? 'linear-gradient(135deg, rgba(245,158,11,0.25), rgba(15,23,42,0.95))' : 'linear-gradient(135deg, rgba(15,23,42,0.75), rgba(8,14,28,0.85))', 
+              background: serviceMode === 'THUNDER' ? 'linear-gradient(135deg, rgba(245,158,11,0.28), rgba(15,23,42,0.95))' : 'linear-gradient(135deg, rgba(15,23,42,0.78), rgba(8,14,28,0.88))', 
               border: serviceMode === 'THUNDER' ? '2px solid #fbbf24' : '1px solid rgba(255,255,255,0.12)', 
               borderRadius: '18px', padding: '20px', cursor: 'pointer', transition: 'all 0.3s ease',
               boxShadow: serviceMode === 'THUNDER' ? '0 0 25px rgba(245,158,11,0.35)' : '0 10px 30px rgba(0,0,0,0.5)',
@@ -204,13 +201,13 @@ export default function TCCPortal() {
         </div>
 
         {/* Master Calculator Box */}
-        <div style={{ background: 'linear-gradient(145deg, rgba(15,23,42,0.85), rgba(6,10,20,0.9))', border: '1px solid rgba(6, 182, 212, 0.4)', borderRadius: '24px', padding: '28px', marginBottom: '24px', boxShadow: '0 20px 50px rgba(0,0,0,0.7)', backdropFilter: 'blur(16px)' }}>
+        <div style={{ background: 'linear-gradient(145deg, rgba(15,23,42,0.88), rgba(6,10,20,0.92))', border: '1px solid rgba(6, 182, 212, 0.45)', borderRadius: '24px', padding: '28px', marginBottom: '24px', boxShadow: '0 20px 50px rgba(0,0,0,0.7)', backdropFilter: 'blur(16px)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
             <div>
               <h2 style={{ fontSize: '18px', fontWeight: 900, color: '#fff' }}>Master B2B Freight Rate Engine</h2>
               <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>Instant contract quote calculation with integrated ESG Green Logistics contribution.</p>
             </div>
-            <span style={{ background: 'rgba(6,182,212,0.15)', border: '1px solid rgba(6,182,212,0.4)', color: '#22d3ee', fontSize: '10px', fontWeight: 800, padding: '5px 12px', borderRadius: '14px' }}>SAC 9965 Compliant</span>
+            <span style={{ background: 'rgba(6,182,212,0.18)', border: '1px solid rgba(6,182,212,0.45)', color: '#22d3ee', fontSize: '10px', fontWeight: 800, padding: '5px 12px', borderRadius: '14px' }}>SAC 9965 Compliant</span>
           </div>
 
           <div style={{ marginBottom: '18px' }}>
@@ -231,7 +228,7 @@ export default function TCCPortal() {
 
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '12px' }}>
               {[10, 25, 50, 100, 250, 500, 750].map(w => (
-                <button key={w} onClick={() => setWeight(w)} style={{ background: weight === w ? 'rgba(6,182,212,0.3)' : 'rgba(255,255,255,0.06)', border: weight === w ? '1px solid #22d3ee' : '1px solid rgba(255,255,255,0.12)', color: weight === w ? '#fff' : '#cbd5e1', fontSize: '11px', fontWeight: 800, padding: '8px 14px', borderRadius: '10px', cursor: 'pointer', transition: 'all 0.2s' }}>{w}kg</button>
+                <button key={w} onClick={() => setWeight(w)} style={{ background: weight === w ? 'rgba(6,182,212,0.35)' : 'rgba(255,255,255,0.06)', border: weight === w ? '1px solid #22d3ee' : '1px solid rgba(255,255,255,0.12)', color: weight === w ? '#fff' : '#cbd5e1', fontSize: '11px', fontWeight: 800, padding: '8px 14px', borderRadius: '10px', cursor: 'pointer', transition: 'all 0.2s' }}>{w}kg</button>
               ))}
             </div>
           </div>
@@ -267,8 +264,9 @@ export default function TCCPortal() {
 
             <button 
               onClick={() => {
-                navigator.clipboard.writeText(`[TCC QUOTE] Mode: ${serviceMode} | Corridor: ${data.name} | Weight: ${weight}kg | Quote: ₹${finalPrice}`);
-                alert('Official Quote Summary Copied!');
+                const quoteText = `TCC B2B Green Freight Quote (${serviceMode === 'THUNDER' ? '12H Thunder Service' : '24H Same-Day Express'})\nCorridor: ${data.name}\nWeight: ${weight} KG\nEst. Tariff: ₹${finalPrice.toLocaleString('en-IN')} (Incl. ₹20 ESG Green Offset)\nSAC: 9965 RCM Compliant`;
+                navigator.clipboard.writeText(quoteText);
+                alert('Official Green Freight Quote Copied Successfully!');
               }}
               style={{ width: '100%', background: 'linear-gradient(90deg, #22d3ee, #34d399)', border: 'none', color: '#020617', fontWeight: 900, fontSize: '12px', padding: '16px', borderRadius: '12px', cursor: 'pointer', textTransform: 'uppercase', marginTop: '18px', boxShadow: '0 8px 25px rgba(6,182,212,0.4)', transition: 'all 0.2s' }}
             >
@@ -279,22 +277,22 @@ export default function TCCPortal() {
 
         {/* Network Metrics Counters */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px', marginBottom: '24px' }}>
-          <div style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.85), rgba(8,14,28,0.9))', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.4)' }}>
+          <div style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.88), rgba(8,14,28,0.92))', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.4)' }}>
             <div style={{ fontSize: '24px', fontWeight: 900, color: '#fff', fontFamily: 'monospace' }}>3 <span style={{ color: '#22d3ee' }}>Primary</span></div>
             <div style={{ fontSize: '10px', fontWeight: 800, color: '#94a3b8', marginTop: '6px' }}>CONSOLIDATION TERMINALS</div>
           </div>
-          <div style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.85), rgba(8,14,28,0.9))', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.4)' }}>
+          <div style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.88), rgba(8,14,28,0.92))', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.4)' }}>
             <div style={{ fontSize: '24px', fontWeight: 900, color: '#fff', fontFamily: 'monospace' }}>175+</div>
             <div style={{ fontSize: '10px', fontWeight: 800, color: '#94a3b8', marginTop: '6px' }}>DISTRICT LOGISTICS HUBS</div>
           </div>
-          <div style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.85), rgba(8,14,28,0.9))', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.4)' }}>
+          <div style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.88), rgba(8,14,28,0.92))', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.4)' }}>
             <div style={{ fontSize: '24px', fontWeight: 900, color: '#fff', fontFamily: 'monospace' }}>355+</div>
             <div style={{ fontSize: '10px', fontWeight: 800, color: '#94a3b8', marginTop: '6px' }}>EXPRESS COLLECTION NODES</div>
           </div>
         </div>
 
         {/* CORPORATE PROFILE & WORKFORCE VANGUARD */}
-        <div style={{ background: 'linear-gradient(145deg, rgba(15,23,42,0.85), rgba(6,10,20,0.9))', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '24px', padding: '24px', marginBottom: '24px', boxShadow: '0 15px 40px rgba(0,0,0,0.5)' }}>
+        <div style={{ background: 'linear-gradient(145deg, rgba(15,23,42,0.88), rgba(6,10,20,0.92))', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '24px', padding: '24px', marginBottom: '24px', boxShadow: '0 15px 40px rgba(0,0,0,0.5)' }}>
           <h3 style={{ fontSize: '16px', fontWeight: 900, color: '#fff', marginBottom: '4px' }}>Corporate Profile & Fleet Vanguard</h3>
           <p style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '18px', fontWeight: 600 }}>Secunderabad SCR Division | High Command Guardianship</p>
 
@@ -310,15 +308,19 @@ export default function TCCPortal() {
           </div>
         </div>
 
-        {/* Footer */}
+        {/* Footer with WhatsApp & Gmail Logos */}
         <div style={{ textAlign: 'center', fontSize: '11px', color: '#94a3b8', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px', fontWeight: 500 }}>
-          📞 +91 8340085989 &nbsp;|&nbsp; ✉️ tcc.cargodesk@gmail.com &nbsp;|&nbsp; 🛡️ MSME Registered: UDYAM-TS-02-0359997
-          <div style={{ marginTop: '6px' }}>Thunder Cargo Corridor (TCC) • South India B2B Last-Mile Logistics Infrastructure Framework</div>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '8px', flexWrap: 'wrap' }}>
+            <span>💚 WhatsApp Business: +91 8340085989</span>
+            <span>✉️ Gmail: tcc.cargodesk@gmail.com</span>
+            <span>🛡️ MSME: UDYAM-TS-02-0359997</span>
+          </div>
+          <div>Thunder Cargo Corridor (TCC) • South India B2B Last-Mile Logistics Infrastructure Framework</div>
         </div>
 
       </div>
 
-      {/* ULTRA-MODERN JAW-DROPPING MODAL POPUPS */}
+      {/* MODALS */}
       {activeModal && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(2, 6, 23, 0.9)', backdropFilter: 'blur(20px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
           <div style={{ background: 'linear-gradient(145deg, #0f172a, #040711)', border: '1px solid rgba(16, 185, 129, 0.5)', borderRadius: '24px', maxWidth: '720px', width: '100%', padding: '32px', position: 'relative', boxShadow: '0 30px 80px rgba(0,0,0,0.95)' }}>
