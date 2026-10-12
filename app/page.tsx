@@ -32,21 +32,26 @@ const VIBGYOR_COLORS = [
 
 export default function TCCPortal() {
   const [clock, setClock] = useState('--:--:-- am');
+  const [currentHour, setCurrentHour] = useState(12);
   const [serviceMode, setServiceMode] = useState<'24H' | 'THUNDER'>('24H');
   const [corridor, setCorridor] = useState('REG_2A');
   const [weight, setWeight] = useState<number>(100);
   const [activeModal, setActiveModal] = useState<'TARIFF' | 'SLA' | 'ESG' | null>(null);
 
-  // Live IST Clock
+  // Live IST Clock & Hour Telemetry
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
+      setCurrentHour(now.getHours());
       setClock(now.toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' }).toLowerCase());
     }, 1000);
     return () => clearInterval(timer);
   }, []);
 
-  // Multi-Color VIBGYOR Falling Crystal Rain Canvas
+  // Determine active solar window based on IST hour (Dawn: 6 AM - 6 PM, Dusk: 6 PM - 6 AM)
+  const isDawnWindow = currentHour >= 6 && currentHour < 18;
+
+  // Biophilic Carbon-Balance Dual-Vector Canvas Background Animation
   useEffect(() => {
     const canvas = document.getElementById('particle-canvas') as HTMLCanvasElement;
     if (!canvas) return;
@@ -60,15 +65,19 @@ export default function TCCPortal() {
     window.addEventListener('resize', resize);
     resize();
 
-    const particles: { x: number; y: number; len: number; speed: number; alpha: number; color: string }[] = [];
-    for (let i = 0; i < 140; i++) {
+    // Downward Cargo Streams & Upward Eco-Pulses
+    const particles: { x: number; y: number; len: number; speed: number; alpha: number; color: string; type: 'cargo' | 'eco' }[] = [];
+    
+    for (let i = 0; i < 150; i++) {
+      const isEco = i % 3 === 0; // 33% upward eco-pulses representing carbon balance
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        len: Math.random() * 120 + 40,
-        speed: Math.random() * 3.5 + 1.5,
-        alpha: Math.random() * 0.7 + 0.3,
-        color: VIBGYOR_COLORS[Math.floor(Math.random() * VIBGYOR_COLORS.length)]
+        len: Math.random() * 90 + 30,
+        speed: isEco ? -(Math.random() * 2 + 0.8) : Math.random() * 3.5 + 1.2,
+        alpha: Math.random() * 0.6 + 0.2,
+        color: isEco ? '#10b981' : VIBGYOR_COLORS[Math.floor(Math.random() * VIBGYOR_COLORS.length)],
+        type: isEco ? 'eco' : 'cargo'
       });
     }
 
@@ -76,21 +85,26 @@ export default function TCCPortal() {
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(p => {
-        const grad = ctx.createLinearGradient(p.x, p.y, p.x, p.y + p.len);
+        const grad = ctx.createLinearGradient(p.x, p.y, p.x, p.y + (p.type === 'eco' ? -p.len : p.len));
         grad.addColorStop(0, 'rgba(0,0,0,0)');
-        grad.addColorStop(0.6, p.color);
+        grad.addColorStop(0.7, p.color);
         grad.addColorStop(1, '#ffffff');
 
         ctx.strokeStyle = grad;
-        ctx.lineWidth = 2;
+        ctx.lineWidth = p.type === 'eco' ? 2.2 : 1.6;
         ctx.beginPath();
         ctx.moveTo(p.x, p.y);
-        ctx.lineTo(p.x, p.y + p.len);
+        ctx.lineTo(p.x, p.y + (p.type === 'eco' ? -p.len : p.len));
         ctx.stroke();
 
         p.y += p.speed;
-        if (p.y > canvas.height) {
+        
+        // Loop boundaries
+        if (p.type === 'cargo' && p.y > canvas.height) {
           p.y = -p.len;
+          p.x = Math.random() * canvas.width;
+        } else if (p.type === 'eco' && p.y < -p.len) {
+          p.y = canvas.height + p.len;
           p.x = Math.random() * canvas.width;
         }
       });
@@ -104,7 +118,7 @@ export default function TCCPortal() {
     };
   }, []);
 
-  // Calculation Logic
+  // Rate Calculation Logic
   const data = TARIFFS[corridor] || TARIFFS.REG_2A;
   let basePrice = 0;
   let slabText = '';
@@ -125,7 +139,7 @@ export default function TCCPortal() {
   return (
     <main style={{ backgroundColor: '#060911', color: '#f8fafc', minHeight: '100vh', padding: '24px 16px 80px', fontFamily: 'sans-serif', position: 'relative', overflowX: 'hidden' }}>
       
-      {/* VIBGYOR Crystal Rain Canvas */}
+      {/* Biophilic Carbon-Balance Dual-Vector Canvas Background */}
       <canvas id="particle-canvas" style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0 }} />
 
       <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -148,43 +162,57 @@ export default function TCCPortal() {
           <div onClick={() => setActiveModal('ESG')} style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.25), rgba(15,23,42,0.85))', border: '1px solid #10b981', borderRadius: '12px', padding: '12px', textAlign: 'center', fontSize: '12px', fontWeight: 700, color: '#10b981', cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: '0 0 15px rgba(16,185,129,0.2)' }}>🌱 ESG & CSR Green Pledge</div>
         </div>
 
-        {/* Side-by-side Subheads */}
+        {/* OPTION B: DYNAMIC SHIFT-BADGE INTEGRATION SUBHEADS */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
+          
+          {/* Same-Day Card */}
           <div 
             onClick={() => setServiceMode('24H')}
             style={{ 
-              background: serviceMode === '24H' ? 'linear-gradient(135deg, rgba(6,182,212,0.2), rgba(15,23,42,0.95))' : 'rgba(15,23,42,0.75)', 
+              background: serviceMode === '24H' ? 'linear-gradient(135deg, rgba(6,182,212,0.22), rgba(15,23,42,0.95))' : 'rgba(15,23,42,0.75)', 
               border: serviceMode === '24H' ? '2px solid #06b6d4' : '1px solid rgba(255,255,255,0.08)', 
               borderRadius: '16px', padding: '18px', cursor: 'pointer', transition: 'all 0.3s ease',
-              boxShadow: serviceMode === '24H' ? '0 0 20px rgba(6,182,212,0.25)' : 'none',
+              boxShadow: serviceMode === '24H' ? '0 0 22px rgba(6,182,212,0.3)' : 'none',
               backdropFilter: 'blur(12px)'
             }}
           >
-            <div style={{ fontSize: '13px', fontWeight: 800, color: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-              <span>SAME-DAY DELIVERY (24 HOURS)</span>
-              <span style={{ fontSize: '10px', color: '#06b6d4', background: 'rgba(6,182,212,0.2)', padding: '2px 6px', borderRadius: '4px' }}>STANDARD</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <span style={{ fontSize: '13px', fontWeight: 900, letterSpacing: '0.5px', color: '#fff' }}>24H STANDARD EXPRESS</span>
+              <span style={{ fontSize: '10px', color: '#06b6d4', background: 'rgba(6,182,212,0.2)', padding: '2px 8px', borderRadius: '6px', fontWeight: 700 }}>STANDARD</span>
             </div>
-            <div style={{ fontSize: '12px', color: '#06b6d4', fontWeight: 700, marginBottom: '4px' }}>"Delivered by Us, Secured by Us"</div>
-            <div style={{ fontSize: '11px', color: '#94a3b8' }}>4-Hour Intra-City & 24-Hour Regional Station Evacuation</div>
+            
+            {/* Dynamic Shift Telemetry Badge */}
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', padding: '3px 8px', borderRadius: '6px', fontSize: '10px', color: '#38bdf8', fontWeight: 700, marginBottom: '8px' }}>
+              {isDawnWindow ? '☀️ Dawn-to-Dusk Active Window' : '🌙 Dusk-to-Dawn Night Corridor'}
+            </div>
+
+            <div style={{ fontSize: '11px', color: '#94a3b8', fontStyle: 'italic' }}>"Delivered by Us, Secured by Us • 4H Intra & 24H Regional Station Clearance"</div>
           </div>
 
+          {/* Thunder Service Card */}
           <div 
             onClick={() => setServiceMode('THUNDER')}
             style={{ 
-              background: serviceMode === 'THUNDER' ? 'linear-gradient(135deg, rgba(245,158,11,0.2), rgba(15,23,42,0.95))' : 'rgba(15,23,42,0.75)', 
+              background: serviceMode === 'THUNDER' ? 'linear-gradient(135deg, rgba(245,158,11,0.22), rgba(15,23,42,0.95))' : 'rgba(15,23,42,0.75)', 
               border: serviceMode === 'THUNDER' ? '2px solid #f59e0b' : '1px solid rgba(255,255,255,0.08)', 
               borderRadius: '16px', padding: '18px', cursor: 'pointer', transition: 'all 0.3s ease',
-              boxShadow: serviceMode === 'THUNDER' ? '0 0 20px rgba(245,158,11,0.25)' : 'none',
+              boxShadow: serviceMode === 'THUNDER' ? '0 0 22px rgba(245,158,11,0.3)' : 'none',
               backdropFilter: 'blur(12px)'
             }}
           >
-            <div style={{ fontSize: '13px', fontWeight: 800, color: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-              <span>⚡ THUNDER SERVICE (12 HOURS)</span>
-              <span style={{ fontSize: '10px', color: '#f59e0b', background: 'rgba(245,158,11,0.2)', padding: '2px 6px', borderRadius: '4px' }}>+25% PREMIUM</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <span style={{ fontSize: '13px', fontWeight: 900, letterSpacing: '0.5px', color: '#fff' }}>⚡ 12H THUNDER EXPRESS</span>
+              <span style={{ fontSize: '10px', color: '#f59e0b', background: 'rgba(245,158,11,0.2)', padding: '2px 8px', borderRadius: '6px', fontWeight: 700 }}>+25% PREMIUM</span>
             </div>
-            <div style={{ fontSize: '12px', color: '#f59e0b', fontWeight: 700, marginBottom: '4px' }}>"Loaded at Dawn, Landed by Dusk • Shipped by Dusk, Delivered by Dawn"</div>
-            <div style={{ fontSize: '11px', color: '#94a3b8' }}>Ultra-express 12-hour corridor dispatch with zero terminal friction.</div>
+            
+            {/* Dynamic Shift Telemetry Badge */}
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)', padding: '3px 8px', borderRadius: '6px', fontSize: '10px', color: '#fcd34d', fontWeight: 700, marginBottom: '8px' }}>
+              {isDawnWindow ? '⚡ Solar-Sync: Loaded at Dawn, Landed by Dusk' : '⚡ Lunar-Sync: Shipped by Dusk, Delivered by Dawn'}
+            </div>
+
+            <div style={{ fontSize: '11px', color: '#cbd5e1', fontStyle: 'italic' }}>"Loaded at Dawn, Landed by Dusk • Shipped by Dusk, Delivered by Dawn"</div>
           </div>
+
         </div>
 
         {/* Master Calculator Box */}
@@ -296,8 +324,8 @@ export default function TCCPortal() {
 
         {/* Footer */}
         <div style={{ textAlign: 'center', fontSize: '11px', color: '#64748b', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '20px' }}>
-          📞 +91 8340085989 &nbsp;|&nbsp; ✉️ tcc.cargodesk@gmail.com &nbsp;|&nbsp; 🛡️ MSME Registered: UDYAM-TS-02-0359997
-          <div style={{ marginTop: '6px' }}>Thunder Cargo Corridor (TCC) • South India B2B Last-Mile Logistics Infrastructure Framework</div>
+          📞 +91 8340085989 &nbsp;|&nbsp; ✉️ tcc.cargodesk@gmail.com &nbsp;|&nbsp; 🛡️ MSME Registered: UDYAM-TS-02-0359997[span_0](start_span)[span_0](end_span)
+          <div style={{ marginTop: '6px' }}>Thunder Cargo Corridor (TCC) • South India B2B Last-Mile Logistics Infrastructure Framework[span_1](start_span)[span_1](end_span)</div>
         </div>
 
       </div>
@@ -309,7 +337,7 @@ export default function TCCPortal() {
             
             <button onClick={() => setActiveModal(null)} style={{ position: 'absolute', top: '20px', right: '20px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', borderRadius: '50%', width: '36px', height: '36px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>✕</button>
 
-            {/* ESG & CSR GREEN PLEDGE - SEPARATE JAW-DROPPING CARDS WITH LOGOS */}
+            {/* ESG & CSR GREEN PLEDGE MODAL */}
             {activeModal === 'ESG' && (
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
