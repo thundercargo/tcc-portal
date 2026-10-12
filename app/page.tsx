@@ -35,9 +35,9 @@ export default function TCCPortal() {
     return () => clearInterval(timer);
   }, []);
 
-  // Solar-Dawn Ambient Wave Canvas Background
+  // Luminous Solar-Dawn Background Canvas Animation
   useEffect(() => {
-    const canvas = document.getElementById('aurora-canvas') as HTMLCanvasElement;
+    const canvas = document.getElementById('bg-canvas') as HTMLCanvasElement;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -49,38 +49,70 @@ export default function TCCPortal() {
     window.addEventListener('resize', resize);
     resize();
 
+    const particles: { x: number; y: number; r: number; speedY: number; speedX: number; color: string; alpha: number }[] = [];
+    const colors = ['#22d3ee', '#34d399', '#fbbf24', '#818cf8'];
+
+    for (let i = 0; i < 40; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2.5 + 1,
+        speedY: Math.random() * 0.8 + 0.3,
+        speedX: (Math.random() - 0.5) * 0.3,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        alpha: Math.random() * 0.6 + 0.2
+      });
+    }
+
     let step = 0;
     let animId: number;
 
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // Rich Solar-Dawn Gradient Mesh
-      const bgGrad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      bgGrad.addColorStop(0, '#040814');
-      bgGrad.addColorStop(0.5, '#08142c');
-      bgGrad.addColorStop(1, '#02060d');
-      ctx.fillStyle = bgGrad;
+
+      // Rich Luminous Background Gradient
+      const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      grad.addColorStop(0, '#040b1a');
+      grad.addColorStop(0.5, '#0a1733');
+      grad.addColorStop(1, '#020610');
+      ctx.fillStyle = grad;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Smooth Glowing Ambient Light Waves (Dawn & ESG Metaphor)
-      ctx.fillStyle = 'rgba(6, 182, 212, 0.04)';
-      ctx.beginPath();
-      ctx.moveTo(0, canvas.height * 0.3);
-      ctx.bezierCurveTo(canvas.width * 0.3, canvas.height * 0.5 + Math.sin(step) * 50, canvas.width * 0.7, canvas.height * 0.2 + Math.cos(step) * 50, canvas.width, canvas.height * 0.4);
-      ctx.lineTo(canvas.width, canvas.height);
-      ctx.lineTo(0, canvas.height);
-      ctx.fill();
+      // Glowing Ambient Aurora Orbs
+      const orb1 = ctx.createRadialGradient(canvas.width * 0.2, canvas.height * 0.3 + Math.sin(step) * 40, 10, canvas.width * 0.2, canvas.height * 0.3, canvas.width * 0.6);
+      orb1.addColorStop(0, 'rgba(6, 182, 212, 0.12)');
+      orb1.addColorStop(1, 'rgba(6, 182, 212, 0)');
+      ctx.fillStyle = orb1;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = 'rgba(16, 185, 129, 0.03)';
-      ctx.beginPath();
-      ctx.moveTo(0, canvas.height * 0.6);
-      ctx.bezierCurveTo(canvas.width * 0.4, canvas.height * 0.3 + Math.cos(step) * 60, canvas.width * 0.6, canvas.height * 0.7 + Math.sin(step) * 60, canvas.width, canvas.height * 0.5);
-      ctx.lineTo(canvas.width, canvas.height);
-      ctx.lineTo(0, canvas.height);
-      ctx.fill();
+      const orb2 = ctx.createRadialGradient(canvas.width * 0.8, canvas.height * 0.7 + Math.cos(step) * 40, 10, canvas.width * 0.8, canvas.height * 0.7, canvas.width * 0.6);
+      orb2.addColorStop(0, 'rgba(16, 185, 129, 0.1)');
+      orb2.addColorStop(1, 'rgba(16, 185, 129, 0)');
+      ctx.fillStyle = orb2;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      step += 0.008;
+      // Floating Luminous Particles
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = p.color;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.globalAlpha = 1.0;
+
+        p.y -= p.speedY;
+        p.x += p.speedX;
+
+        if (p.y < 0) {
+          p.y = canvas.height + 10;
+          p.x = Math.random() * canvas.width;
+        }
+      });
+
+      step += 0.01;
       animId = requestAnimationFrame(draw);
     }
     draw();
@@ -111,7 +143,7 @@ export default function TCCPortal() {
   return (
     <main style={{ color: '#f8fafc', minHeight: '100vh', padding: '24px 16px 80px', fontFamily: 'sans-serif', position: 'relative', overflowX: 'hidden' }}>
       
-      <canvas id="aurora-canvas" style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0 }} />
+      <canvas id="bg-canvas" style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0 }} />
 
       <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         
@@ -124,13 +156,13 @@ export default function TCCPortal() {
         </div>
 
         <h1 style={{ fontSize: '32px', fontWeight: 900, color: '#fff', letterSpacing: '-0.5px', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>THUNDER CARGO <span style={{ color: '#22d3ee' }}>CORRIDOR</span></h1>
-        <p style={{ color: '#cbd5e1', fontSize: '13px', marginTop: '4px', marginBottom: '20px', fontWeight: 500 }}>Automated Terminal Dispatch & Sustainable Freight Infrastructure</p>
+        <p style={{ color: '#cbd5e1', fontSize: '13px', marginTop: '4px', marginBottom: '20px', fontWeight: 500 }}>Automated Inward Office & Station-Gate Express Logistics Infrastructure</p>
 
         {/* Action Buttons */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '24px' }}>
-          <div onClick={() => setActiveModal('TARIFF')} style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.9), rgba(8,14,28,0.95))', border: '1px solid rgba(6,182,212,0.5)', borderRadius: '14px', padding: '14px 10px', textAlign: 'center', fontSize: '12px', fontWeight: 800, color: '#22d3ee', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>📋 Master Tariff Engine</div>
-          <div onClick={() => setActiveModal('SLA')} style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.9), rgba(8,14,28,0.95))', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '14px', padding: '14px 10px', textAlign: 'center', fontSize: '12px', fontWeight: 800, color: '#94a3b8', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>⚡ 90-Min Evacuation SLA</div>
-          <div onClick={() => setActiveModal('ESG')} style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.9), rgba(8,14,28,0.95))', border: '1px solid rgba(16,185,129,0.5)', borderRadius: '14px', padding: '14px 10px', textAlign: 'center', fontSize: '12px', fontWeight: 800, color: '#34d399', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>🌱 ESG & CSR Pledge</div>
+          <div onClick={() => setActiveModal('TARIFF')} style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.85), rgba(8,14,28,0.9))', border: '1px solid rgba(6,182,212,0.5)', borderRadius: '14px', padding: '14px 10px', textAlign: 'center', fontSize: '12px', fontWeight: 800, color: '#22d3ee', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>📋 Master Tariff Engine</div>
+          <div onClick={() => setActiveModal('SLA')} style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.85), rgba(8,14,28,0.9))', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '14px', padding: '14px 10px', textAlign: 'center', fontSize: '12px', fontWeight: 800, color: '#94a3b8', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>⚡ Gate-to-Feeder SLA</div>
+          <div onClick={() => setActiveModal('ESG')} style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.85), rgba(8,14,28,0.9))', border: '1px solid rgba(16,185,129,0.5)', borderRadius: '14px', padding: '14px 10px', textAlign: 'center', fontSize: '12px', fontWeight: 800, color: '#34d399', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>🌱 ESG & CSR Pledge</div>
         </div>
 
         {/* HIGH-END SERVICE CARDS */}
@@ -139,7 +171,7 @@ export default function TCCPortal() {
           <div 
             onClick={() => setServiceMode('24H')}
             style={{ 
-              background: serviceMode === '24H' ? 'linear-gradient(135deg, rgba(6,182,212,0.25), rgba(15,23,42,0.95))' : 'linear-gradient(135deg, rgba(15,23,42,0.8), rgba(8,14,28,0.9))', 
+              background: serviceMode === '24H' ? 'linear-gradient(135deg, rgba(6,182,212,0.25), rgba(15,23,42,0.95))' : 'linear-gradient(135deg, rgba(15,23,42,0.75), rgba(8,14,28,0.85))', 
               border: serviceMode === '24H' ? '2px solid #22d3ee' : '1px solid rgba(255,255,255,0.12)', 
               borderRadius: '18px', padding: '20px', cursor: 'pointer', transition: 'all 0.3s ease',
               boxShadow: serviceMode === '24H' ? '0 0 25px rgba(6,182,212,0.35)' : '0 10px 30px rgba(0,0,0,0.5)',
@@ -150,13 +182,13 @@ export default function TCCPortal() {
               <span style={{ fontSize: '13px', fontWeight: 900, color: '#fff', letterSpacing: '0.5px' }}>24H SAME-DAY EXPRESS</span>
               <span style={{ fontSize: '9px', color: '#22d3ee', background: 'rgba(6,182,212,0.25)', padding: '3px 8px', borderRadius: '6px', fontWeight: 800 }}>STANDARD</span>
             </div>
-            <div style={{ fontSize: '12px', color: '#cbd5e1', lineHeight: '1.5', fontWeight: 500 }}>"Delivered by Us, Secured by Us" • Complete Station Evacuation</div>
+            <div style={{ fontSize: '12px', color: '#cbd5e1', lineHeight: '1.5', fontWeight: 500 }}>"Station-Gate Intake & Immediate Feeder Dispatch"</div>
           </div>
 
           <div 
             onClick={() => setServiceMode('THUNDER')}
             style={{ 
-              background: serviceMode === 'THUNDER' ? 'linear-gradient(135deg, rgba(245,158,11,0.25), rgba(15,23,42,0.95))' : 'linear-gradient(135deg, rgba(15,23,42,0.8), rgba(8,14,28,0.9))', 
+              background: serviceMode === 'THUNDER' ? 'linear-gradient(135deg, rgba(245,158,11,0.25), rgba(15,23,42,0.95))' : 'linear-gradient(135deg, rgba(15,23,42,0.75), rgba(8,14,28,0.85))', 
               border: serviceMode === 'THUNDER' ? '2px solid #fbbf24' : '1px solid rgba(255,255,255,0.12)', 
               borderRadius: '18px', padding: '20px', cursor: 'pointer', transition: 'all 0.3s ease',
               boxShadow: serviceMode === 'THUNDER' ? '0 0 25px rgba(245,158,11,0.35)' : '0 10px 30px rgba(0,0,0,0.5)',
@@ -172,7 +204,7 @@ export default function TCCPortal() {
         </div>
 
         {/* Master Calculator Box */}
-        <div style={{ background: 'linear-gradient(145deg, rgba(15,23,42,0.9), rgba(6,10,20,0.95))', border: '1px solid rgba(6, 182, 212, 0.4)', borderRadius: '24px', padding: '28px', marginBottom: '24px', boxShadow: '0 20px 50px rgba(0,0,0,0.7)', backdropFilter: 'blur(16px)' }}>
+        <div style={{ background: 'linear-gradient(145deg, rgba(15,23,42,0.85), rgba(6,10,20,0.9))', border: '1px solid rgba(6, 182, 212, 0.4)', borderRadius: '24px', padding: '28px', marginBottom: '24px', boxShadow: '0 20px 50px rgba(0,0,0,0.7)', backdropFilter: 'blur(16px)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
             <div>
               <h2 style={{ fontSize: '18px', fontWeight: 900, color: '#fff' }}>Master B2B Freight Rate Engine</h2>
@@ -268,8 +300,8 @@ export default function TCCPortal() {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             <div style={{ background: 'rgba(4,8,16,0.7)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '16px' }}>
-              <div style={{ fontSize: '13px', fontWeight: 900, color: '#fff', marginBottom: '6px' }}>🏛️ Strategic Terminal Guardianship</div>
-              <p style={{ fontSize: '11px', color: '#cbd5e1', lineHeight: '1.5' }}>Elite last-mile integration platform clearing Secunderabad railway platform backlogs via a rigid 2-hour platform clearance SLA. SAC 9965 RCM & MSME Udyam standards.</p>
+              <div style={{ fontSize: '13px', fontWeight: 900, color: '#fff', marginBottom: '6px' }}>🏛️ Station-Gate Coordination</div>
+              <p style={{ fontSize: '11px', color: '#cbd5e1', lineHeight: '1.5' }}>Seamless cargo intake at station gates and inward offices, synchronizing with official station operations for rapid last-mile feeder dispatch. SAC 9965 RCM & MSME compliant.</p>
             </div>
             <div style={{ background: 'rgba(4,8,16,0.7)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '16px' }}>
               <div style={{ fontSize: '13px', fontWeight: 900, color: '#fff', marginBottom: '6px' }}>⚡ Fleet Vanguard & Youth Empowerment</div>
@@ -352,12 +384,12 @@ export default function TCCPortal() {
 
             {activeModal === 'SLA' && (
               <div>
-                <h3 style={{ fontSize: '20px', fontWeight: 900, color: '#fff', marginBottom: '12px' }}>90-Minute Evacuation SLA Protocol</h3>
+                <h3 style={{ fontSize: '20px', fontWeight: 900, color: '#fff', marginBottom: '12px' }}>Gate-to-Feeder SLA Protocol</h3>
                 <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6', marginBottom: '20px' }}>
-                  Cargo un-docking, barcode scanning, and direct feeder dispatch executed within 90 minutes of train arrival at Secunderabad SCR terminals.
+                  Seamless cargo intake at station gates and inward offices, synchronizing with official station operations for rapid last-mile feeder dispatch at Secunderabad SCR terminals.
                 </p>
                 <div style={{ background: '#020617', padding: '14px', borderRadius: '12px', fontSize: '12px', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.4)' }}>
-                  ✓ Zero platform bottlenecks • Express terminal dispatch.
+                  ✓ Rapid gate-to-feeder coordination • Express dispatch.
                 </div>
               </div>
             )}
