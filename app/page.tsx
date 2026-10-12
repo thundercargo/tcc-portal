@@ -20,6 +20,16 @@ const TARIFFS: Record<string, { name: string; base: number[]; excess: number }> 
   REG_6B:  { name: "REGIONAL 6B (551 – 600 KM)", base: [590, 890, 1620, 2320, 4420, 6920], excess: 13.50 }
 };
 
+const VIBGYOR_COLORS = [
+  '#8b00ff', // Violet
+  '#4b0082', // Indigo
+  '#0000ff', // Blue
+  '#00ff00', // Green
+  '#ffff00', // Yellow
+  '#ff7f00', // Orange
+  '#ff0000'  // Red
+];
+
 export default function TCCPortal() {
   const [clock, setClock] = useState('--:--:-- am');
   const [serviceMode, setServiceMode] = useState<'24H' | 'THUNDER'>('24H');
@@ -27,7 +37,7 @@ export default function TCCPortal() {
   const [weight, setWeight] = useState<number>(100);
   const [activeModal, setActiveModal] = useState<'TARIFF' | 'SLA' | 'ESG' | null>(null);
 
-  // Live IST Clock with seconds
+  // Ticking IST Clock
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
@@ -36,7 +46,7 @@ export default function TCCPortal() {
     return () => clearInterval(timer);
   }, []);
 
-  // Falling Crystal Droplets Canvas Background Animation
+  // Multi-Color VIBGYOR Falling Crystal Particles Canvas
   useEffect(() => {
     const canvas = document.getElementById('particle-canvas') as HTMLCanvasElement;
     if (!canvas) return;
@@ -50,14 +60,15 @@ export default function TCCPortal() {
     window.addEventListener('resize', resize);
     resize();
 
-    const particles: { x: number; y: number; len: number; speed: number; alpha: number }[] = [];
-    for (let i = 0; i < 45; i++) {
+    const particles: { x: number; y: number; len: number; speed: number; alpha: number; color: string }[] = [];
+    for (let i = 0; i < 120; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        len: Math.random() * 90 + 20,
-        speed: Math.random() * 2.5 + 1,
-        alpha: Math.random() * 0.4 + 0.1
+        len: Math.random() * 100 + 30,
+        speed: Math.random() * 3 + 1.2,
+        alpha: Math.random() * 0.6 + 0.2,
+        color: VIBGYOR_COLORS[Math.floor(Math.random() * VIBGYOR_COLORS.length)]
       });
     }
 
@@ -66,10 +77,12 @@ export default function TCCPortal() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(p => {
         const grad = ctx.createLinearGradient(p.x, p.y, p.x, p.y + p.len);
-        grad.addColorStop(0, 'rgba(6, 182, 212, 0)');
-        grad.addColorStop(1, `rgba(6, 182, 212, ${p.alpha})`);
+        grad.addColorStop(0, 'rgba(0, 0, 0, 0)');
+        grad.addColorStop(0.7, p.color);
+        grad.addColorStop(1, '#ffffff');
+
         ctx.strokeStyle = grad;
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 1.8;
         ctx.beginPath();
         ctx.moveTo(p.x, p.y);
         ctx.lineTo(p.x, p.y + p.len);
@@ -91,7 +104,7 @@ export default function TCCPortal() {
     };
   }, []);
 
-  // Rate Calculation Logic
+  // Calculation Logic
   const data = TARIFFS[corridor] || TARIFFS.REG_2A;
   let basePrice = 0;
   let slabText = '';
@@ -110,40 +123,41 @@ export default function TCCPortal() {
   const finalPrice = serviceMode === 'THUNDER' ? Math.round(basePrice * 1.25) : basePrice;
 
   return (
-    <main style={{ backgroundColor: '#080b12', color: '#f8fafc', minHeight: '100vh', padding: '24px 16px 80px', fontFamily: 'sans-serif', position: 'relative', overflowX: 'hidden' }}>
+    <main style={{ backgroundColor: '#060911', color: '#f8fafc', minHeight: '100vh', padding: '24px 16px 80px', fontFamily: 'sans-serif', position: 'relative', overflowX: 'hidden' }}>
       
-      <canvas id="particle-canvas" style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0, opacity: 0.6 }} />
+      {/* VIBGYOR Crystal Rain Background Canvas */}
+      <canvas id="particle-canvas" style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0 }} />
 
       <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         
-        {/* Top Header Row with Live IST Clock */}
+        {/* Top Badges Header */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', marginBottom: '14px' }}>
-          <span style={{ background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.3)', color: '#06b6d4', fontSize: '10px', fontWeight: 700, padding: '5px 12px', borderRadius: '20px' }}>ENTERPRISE B2B LOGISTICS NETWORK</span>
-          <span style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)', color: '#f59e0b', fontSize: '10px', fontWeight: 700, padding: '5px 12px', borderRadius: '20px' }}>24H SAME-DAY EXPRESS TRANSIT</span>
-          <span style={{ background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.3)', color: '#06b6d4', fontSize: '10px', fontWeight: 700, padding: '5px 12px', borderRadius: '20px' }}>UDYAM-TS-02-0359997</span>
-          <span style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981', fontSize: '12px', fontWeight: 700, padding: '5px 12px', borderRadius: '20px', marginLeft: 'auto', fontFamily: 'monospace', boxShadow: '0 0 10px rgba(16,185,129,0.2)' }}>IST • {clock}</span>
+          <span style={{ background: 'rgba(6,182,212,0.12)', border: '1px solid rgba(6,182,212,0.35)', color: '#06b6d4', fontSize: '10px', fontWeight: 700, padding: '5px 12px', borderRadius: '20px' }}>ENTERPRISE B2B LOGISTICS NETWORK</span>
+          <span style={{ background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.35)', color: '#f59e0b', fontSize: '10px', fontWeight: 700, padding: '5px 12px', borderRadius: '20px' }}>24H SAME-DAY EXPRESS TRANSIT</span>
+          <span style={{ background: 'rgba(6,182,212,0.12)', border: '1px solid rgba(6,182,212,0.35)', color: '#06b6d4', fontSize: '10px', fontWeight: 700, padding: '5px 12px', borderRadius: '20px' }}>UDYAM-TS-02-0359997</span>
+          <span style={{ background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.4)', color: '#10b981', fontSize: '12px', fontWeight: 700, padding: '5px 12px', borderRadius: '20px', marginLeft: 'auto', fontFamily: 'monospace', boxShadow: '0 0 12px rgba(16,185,129,0.25)' }}>IST • {clock}</span>
         </div>
 
-        <h1 style={{ fontSize: '30px', fontWeight: 800, color: '#fff' }}>THUNDER CARGO <span style={{ color: '#06b6d4' }}>CORRIDOR</span></h1>
+        <h1 style={{ fontSize: '32px', fontWeight: 800, color: '#fff' }}>THUNDER CARGO <span style={{ color: '#06b6d4' }}>CORRIDOR</span></h1>
         <p style={{ color: '#94a3b8', fontSize: '13px', marginTop: '4px', marginBottom: '16px' }}>Automated Terminal Dispatch & Sustainable Freight Infrastructure</p>
 
-        {/* Interactive Subhead Buttons */}
+        {/* Action Toggles */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '24px' }}>
-          <div onClick={() => setActiveModal('TARIFF')} style={{ background: 'linear-gradient(135deg, rgba(6,182,212,0.2), rgba(15,23,42,0.8))', border: '1px solid #06b6d4', borderRadius: '12px', padding: '12px', textAlign: 'center', fontSize: '12px', fontWeight: 700, color: '#06b6d4', cursor: 'pointer' }}>📋 Master Tariff Engine</div>
-          <div onClick={() => setActiveModal('SLA')} style={{ background: 'rgba(15,23,42,0.7)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '12px', textAlign: 'center', fontSize: '12px', fontWeight: 700, color: '#94a3b8', cursor: 'pointer' }}>⚡ 90-Min Evacuation SLA</div>
-          <div onClick={() => setActiveModal('ESG')} style={{ background: 'rgba(15,23,42,0.7)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '12px', textAlign: 'center', fontSize: '12px', fontWeight: 700, color: '#94a3b8', cursor: 'pointer' }}>🌱 Voluntary ESG Pledge</div>
+          <div onClick={() => setActiveModal('TARIFF')} style={{ background: 'linear-gradient(135deg, rgba(6,182,212,0.2), rgba(15,23,42,0.85))', border: '1px solid #06b6d4', borderRadius: '12px', padding: '12px', textAlign: 'center', fontSize: '12px', fontWeight: 700, color: '#06b6d4', cursor: 'pointer', backdropFilter: 'blur(10px)' }}>📋 Master Tariff Engine</div>
+          <div onClick={() => setActiveModal('SLA')} style={{ background: 'rgba(15,23,42,0.75)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '12px', textAlign: 'center', fontSize: '12px', fontWeight: 700, color: '#94a3b8', cursor: 'pointer', backdropFilter: 'blur(10px)' }}>⚡ 90-Min Evacuation SLA</div>
+          <div onClick={() => setActiveModal('ESG')} style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.2), rgba(15,23,42,0.85))', border: '1px solid #10b981', borderRadius: '12px', padding: '12px', textAlign: 'center', fontSize: '12px', fontWeight: 700, color: '#10b981', cursor: 'pointer', backdropFilter: 'blur(10px)' }}>🌱 ESG & CSR Green Pledge</div>
         </div>
 
-        {/* SIDE-BY-SIDE SUBHEADS: SAME-DAY DELIVERY (24 HOURS) vs THUNDER SERVICE (12 HOURS) */}
+        {/* Side-by-side Subheads */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
-          
           <div 
             onClick={() => setServiceMode('24H')}
             style={{ 
-              background: serviceMode === '24H' ? 'linear-gradient(135deg, rgba(6,182,212,0.2), rgba(15,23,42,0.95))' : 'rgba(15,23,42,0.7)', 
+              background: serviceMode === '24H' ? 'linear-gradient(135deg, rgba(6,182,212,0.2), rgba(15,23,42,0.95))' : 'rgba(15,23,42,0.75)', 
               border: serviceMode === '24H' ? '2px solid #06b6d4' : '1px solid rgba(255,255,255,0.08)', 
               borderRadius: '16px', padding: '18px', cursor: 'pointer', transition: 'all 0.3s ease',
-              boxShadow: serviceMode === '24H' ? '0 0 20px rgba(6,182,212,0.25)' : 'none'
+              boxShadow: serviceMode === '24H' ? '0 0 20px rgba(6,182,212,0.25)' : 'none',
+              backdropFilter: 'blur(12px)'
             }}
           >
             <div style={{ fontSize: '13px', fontWeight: 800, color: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
@@ -157,10 +171,11 @@ export default function TCCPortal() {
           <div 
             onClick={() => setServiceMode('THUNDER')}
             style={{ 
-              background: serviceMode === 'THUNDER' ? 'linear-gradient(135deg, rgba(245,158,11,0.2), rgba(15,23,42,0.95))' : 'rgba(15,23,42,0.7)', 
+              background: serviceMode === 'THUNDER' ? 'linear-gradient(135deg, rgba(245,158,11,0.2), rgba(15,23,42,0.95))' : 'rgba(15,23,42,0.75)', 
               border: serviceMode === 'THUNDER' ? '2px solid #f59e0b' : '1px solid rgba(255,255,255,0.08)', 
               borderRadius: '16px', padding: '18px', cursor: 'pointer', transition: 'all 0.3s ease',
-              boxShadow: serviceMode === 'THUNDER' ? '0 0 20px rgba(245,158,11,0.25)' : 'none'
+              boxShadow: serviceMode === 'THUNDER' ? '0 0 20px rgba(245,158,11,0.25)' : 'none',
+              backdropFilter: 'blur(12px)'
             }}
           >
             <div style={{ fontSize: '13px', fontWeight: 800, color: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
@@ -170,11 +185,10 @@ export default function TCCPortal() {
             <div style={{ fontSize: '12px', color: '#f59e0b', fontWeight: 700, marginBottom: '4px' }}>"Loaded at Dawn, Landed by Dusk • Shipped by Dusk, Delivered by Dawn"</div>
             <div style={{ fontSize: '11px', color: '#94a3b8' }}>Ultra-express 12-hour corridor dispatch with zero terminal friction.</div>
           </div>
-
         </div>
 
-        {/* Master Freight Rate Calculator Box */}
-        <div style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid rgba(6, 182, 212, 0.3)', borderRadius: '20px', padding: '24px', marginBottom: '24px' }}>
+        {/* Master Calculator Box */}
+        <div style={{ background: 'rgba(15, 23, 42, 0.8)', border: '1px solid rgba(6, 182, 212, 0.3)', borderRadius: '20px', padding: '24px', marginBottom: '24px', backdropFilter: 'blur(16px)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
             <div>
               <h2 style={{ fontSize: '16px', fontWeight: 800, color: '#fff' }}>Master B2B Freight Rate Engine</h2>
@@ -214,8 +228,8 @@ export default function TCCPortal() {
                   {serviceMode === 'THUNDER' ? '⚡ THUNDER SERVICE QUOTE (12H ULTRA-EXPRESS)' : 'EXACT TARIFF QUOTE (24H SAME-DAY)'}
                 </div>
                 <div style={{ fontSize: '38px', fontWeight: 800, fontFamily: 'monospace', color: '#fff', margin: '4px 0' }}>₹{finalPrice.toLocaleString('en-IN')}</div>
-                <div style={{ fontSize: '11px', color: serviceMode === 'THUNDER' ? '#f59e0b' : '#10b981', fontWeight: 700 }}>
-                  {serviceMode === 'THUNDER' ? '⚡ Loaded at Dawn, Landed by Dusk • Shipped by Dusk, Delivered by Dawn' : '🟢 Includes ₹20.00 Green Logistics Offset'}
+                <div style={{ fontSize: '11px', color: serviceMode === 'THUNDER' ? '#f59e0b' : '#10b981', fontWeight: 700, cursor: 'pointer' }} onClick={() => setActiveModal('ESG')}>
+                  {serviceMode === 'THUNDER' ? '⚡ Loaded at Dawn, Landed by Dusk • Shipped by Dusk, Delivered by Dawn' : '🟢 Includes ₹20.00 Green Logistics & Social Welfare Offset (Click to view)'}
                 </div>
               </div>
 
@@ -249,33 +263,33 @@ export default function TCCPortal() {
 
         {/* Network Metrics Counters */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '24px' }}>
-          <div style={{ background: 'rgba(15,23,42,0.7)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '16px' }}>
+          <div style={{ background: 'rgba(15,23,42,0.75)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '16px', backdropFilter: 'blur(10px)' }}>
             <div style={{ fontSize: '22px', fontWeight: 800, color: '#fff', fontFamily: 'monospace' }}>3 <span style={{ color: '#06b6d4' }}>Primary</span></div>
             <div style={{ fontSize: '11px', fontWeight: 700, color: '#94a3b8', marginTop: '4px' }}>CONSOLIDATION TERMINALS</div>
           </div>
-          <div style={{ background: 'rgba(15,23,42,0.7)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '16px' }}>
-            <div style={{ fontSize: '22px', fontWeight: 800, color: '#fff', fontFamily: 'monospace' }}>175+</div>
+          <div style={{ background: 'rgba(15,23,42,0.75)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '16px', backdropFilter: 'blur(10px)' }}>
+            <div style={{ fontSize: '22px', fontWeight 800, color: '#fff', fontFamily: 'monospace' }}>175+</div>
             <div style={{ fontSize: '11px', fontWeight: 700, color: '#94a3b8', marginTop: '4px' }}>DISTRICT LOGISTICS HUBS</div>
           </div>
-          <div style={{ background: 'rgba(15,23,42,0.7)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '16px' }}>
+          <div style={{ background: 'rgba(15,23,42,0.75)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '16px', backdropFilter: 'blur(10px)' }}>
             <div style={{ fontSize: '22px', fontWeight: 800, color: '#fff', fontFamily: 'monospace' }}>355+</div>
             <div style={{ fontSize: '11px', fontWeight: 700, color: '#94a3b8', marginTop: '4px' }}>EXPRESS COLLECTION NODES</div>
           </div>
         </div>
 
-        {/* CORPORATE PROFILE & FLEET VANGUARD (CAMOUFLAGED TERMINOLOGY) */}
-        <div style={{ background: 'rgba(15,23,42,0.7)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '20px', padding: '24px', marginBottom: '24px' }}>
+        {/* CORPORATE PROFILE & WORKFORCE VANGUARD */}
+        <div style={{ background: 'rgba(15,23,42,0.75)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '20px', padding: '24px', marginBottom: '24px', backdropFilter: 'blur(12px)' }}>
           <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', marginBottom: '4px' }}>Corporate Profile & Fleet Vanguard</h3>
           <p style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '16px' }}>Secunderabad SCR Division | High Command Guardianship</p>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-            <div style={{ background: 'rgba(8,11,18,0.6)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '16px' }}>
+            <div style={{ background: 'rgba(8,11,18,0.65)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '16px' }}>
               <div style={{ fontSize: '13px', fontWeight: 800, color: '#fff', marginBottom: '6px' }}>🏛️ Strategic Terminal Guardianship</div>
               <p style={{ fontSize: '11px', color: '#94a3b8', lineHeight: '1.5' }}>Elite last-mile integration platform clearing Secunderabad railway platform backlogs via a rigid 2-hour platform clearance SLA. SAC 9965 RCM & MSME Udyam standards.</p>
             </div>
-            <div style={{ background: 'rgba(8,11,18,0.6)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '16px' }}>
-              <div style={{ fontSize: '13px', fontWeight: 800, color: '#fff', marginBottom: '6px' }}>⚡ Fleet Vanguard & Workforce Integration</div>
-              <p style={{ fontSize: '11px', color: '#94a3b8', lineHeight: '1.5' }}>Empowering local unemployed youth and delivery drivers into an agile 2-hour transit force, bypassing urban bottlenecks up to 30 KM.</p>
+            <div style={{ background: 'rgba(8,11,18,0.65)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '16px' }}>
+              <div style={{ fontSize: '13px', fontWeight: 800, color: '#fff', marginBottom: '6px' }}>⚡ Fleet Vanguard & Youth Empowerment</div>
+              <p style={{ fontSize: '11px', color: '#94a3b8', lineHeight: '1.5' }}>Empowering local delivery partners, gig workforce, and micro-entrepreneurs into an agile 2-hour transit force, bypassing urban bottlenecks up to 30 KM.</p>
             </div>
           </div>
         </div>
@@ -288,47 +302,89 @@ export default function TCCPortal() {
 
       </div>
 
-      {/* INTERACTIVE MODAL POPUPS */}
+      {/* ADVANCED JAW-DROPPING MODAL POPUPS */}
       {activeModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-          <div style={{ background: '#0d1424', border: '1px solid #06b6d4', borderRadius: '20px', maxWidth: '600px', width: '100%', padding: '24px', position: 'relative' }}>
-            <button onClick={() => setActiveModal(null)} style={{ position: 'absolute', top: '16px', right: '16px', background: 'transparent', border: 'none', color: '#fff', fontSize: '18px', cursor: 'pointer' }}>✕</button>
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(3, 5, 12, 0.9)', backdropFilter: 'blur(16px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+          <div style={{ background: 'linear-gradient(145deg, #0f172a, #080b12)', border: '1px solid rgba(6, 182, 212, 0.4)', borderRadius: '24px', maxWidth: '680px', width: '100%', padding: '28px', position: 'relative', boxShadow: '0 25px 60px rgba(0,0,0,0.8)' }}>
             
+            <button onClick={() => setActiveModal(null)} style={{ position: 'absolute', top: '20px', right: '20px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '50%', width: '32px', height: '32px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>✕</button>
+
+            {/* HIGH-IMPACT ESG & CSR MODAL */}
+            {activeModal === 'ESG' && (
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                  <span style={{ fontSize: '24px' }}>🌱</span>
+                  <div>
+                    <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#fff' }}>Voluntary ESG & CSR Green Logistics Pledge</h3>
+                    <p style={{ fontSize: '11px', color: '#10b981', fontWeight: 700 }}>₹20.00 Automated Carbon & Social Impact Contribution Per Waybill</p>
+                  </div>
+                </div>
+
+                <p style={{ fontSize: '12px', color: '#94a3b8', lineHeight: '1.5', marginBottom: '20px' }}>
+                  Every dispatch processed across the Thunder Cargo Corridor automatically routes a dedicated ₹20.00 offset to support station workers, local ecology, and net-zero LAST-MILE standards.
+                </p>
+
+                {/* Visual Allocation Cards */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '20px' }}>
+                  
+                  {/* Card 1 */}
+                  <div style={{ background: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '16px', padding: '14px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '22px', marginBottom: '4px' }}>🛠️</div>
+                    <div style={{ fontSize: '18px', fontWeight: 800, color: '#10b981', fontFamily: 'monospace' }}>₹10.00</div>
+                    <div style={{ fontSize: '11px', fontWeight: 700, color: '#fff', marginTop: '4px' }}>Platform Welfare</div>
+                    <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '4px', lineHeight: '1.3' }}>Hub coolies, porter health cover & sanitation kits</div>
+                  </div>
+
+                  {/* Card 2 */}
+                  <div style={{ background: 'rgba(6, 182, 212, 0.08)', border: '1px solid rgba(6, 182, 212, 0.3)', borderRadius: '16px', padding: '14px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '22px', marginBottom: '4px' }}>🌳</div>
+                    <div style={{ fontSize: '18px', fontWeight: 800, color: '#06b6d4', fontFamily: 'monospace' }}>₹5.00</div>
+                    <div style={{ fontSize: '11px', fontWeight: 700, color: '#fff', marginTop: '4px' }}>Afforestation Belts</div>
+                    <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '4px', lineHeight: '1.3' }}>Urban afforestation along terminal rail corridors</div>
+                  </div>
+
+                  {/* Card 3 */}
+                  <div style={{ background: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: '16px', padding: '14px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '22px', marginBottom: '4px' }}>⚡</div>
+                    <div style={{ fontSize: '18px', fontWeight 800, color: '#f59e0b', fontFamily: 'monospace' }}>₹5.00</div>
+                    <div style={{ fontSize: '11px', fontWeight: 700, color: '#fff', marginTop: '4px' }}>Carbon Audit</div>
+                    <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '4px', lineHeight: '1.3' }}>Climate offset & EV last-mile fleet transition</div>
+                  </div>
+
+                </div>
+
+                <div style={{ background: 'rgba(16, 185, 129, 0.12)', border: '1px solid rgba(16, 185, 129, 0.4)', padding: '12px', borderRadius: '12px', fontSize: '11px', color: '#10b981', textAlign: 'center', fontWeight: 700 }}>
+                  ✓ Audited & Certified Net-Zero Last-Mile Logistics Infrastructure
+                </div>
+              </div>
+            )}
+
+            {/* TARIFF & DEMURRAGE MODAL */}
             {activeModal === 'TARIFF' && (
               <div>
                 <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#fff', marginBottom: '10px' }}>Master Tariff & Demurrage Schedule</h3>
                 <p style={{ fontSize: '12px', color: '#94a3b8', lineHeight: '1.6', marginBottom: '16px' }}>
-                  Compliant with SAC 9965 RCM guidelines. Standard holding grants 24 hours free clearance at primary consolidation terminals, followed by a regulated demurrage structure of ₹1.50 per KG per day beyond the grace window.
+                  SAC 9965 RCM Compliant. Free storage is granted up to 24 hours at primary hubs. Late platform evacuation incur a regulated demurrage fee of ₹1.50 per KG per 24-hour cycle.
                 </p>
-                <div style={{ background: '#080b12', padding: '12px', borderRadius: '10px', fontSize: '12px', color: '#06b6d4' }}>
-                  ✓ Instant contract rate computation across all 15 distance corridors.
+                <div style={{ background: '#080b12', padding: '12px', borderRadius: '12px', fontSize: '12px', color: '#06b6d4', border: '1px solid rgba(6, 182, 212, 0.3)' }}>
+                  ✓ Instant contract rate computation across all 15 regional corridors.
                 </div>
               </div>
             )}
 
+            {/* SLA MODAL */}
             {activeModal === 'SLA' && (
               <div>
-                <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#fff', marginBottom: '10px' }}>90-Minute Evacuation Protocol</h3>
+                <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#fff', marginBottom: '10px' }}>90-Minute Evacuation SLA Protocol</h3>
                 <p style={{ fontSize: '12px', color: '#94a3b8', lineHeight: '1.6', marginBottom: '16px' }}>
-                  Designed specifically for Secunderabad SCR terminal facilitation. Guarantees complete platform cargo clearance and immediate feeder dispatch within 90 minutes of rake arrival to prevent congestion.
+                  Secunderabad SCR station evacuation framework: Cargo is un-docked, scanned, and cleared onto last-mile feeder vehicles within 90 minutes of train arrival.
                 </p>
-                <div style={{ background: '#080b12', padding: '12px', borderRadius: '10px', fontSize: '12px', color: '#10b981' }}>
-                  ✓ Zero platform bottlenecks • Direct terminal-to-hub transfer.
+                <div style={{ background: '#080b12', padding: '12px', borderRadius: '12px', fontSize: '12px', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+                  ✓ Zero platform backlog • Direct terminal dispatch.
                 </div>
               </div>
             )}
 
-            {activeModal === 'ESG' && (
-              <div>
-                <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#fff', marginBottom: '10px' }}>Voluntary ESG Green Logistics Pledge</h3>
-                <p style={{ fontSize: '12px', color: '#94a3b8', lineHeight: '1.6', marginBottom: '16px' }}>
-                  Every dispatch incorporates an automated ₹20.00 green logistics offset directed toward micro-hub welfare, urban afforestation, and carbon auditing to ensure net-zero carbon last-mile compliance.
-                </p>
-                <div style={{ background: '#080b12', padding: '12px', borderRadius: '10px', fontSize: '12px', color: '#f59e0b' }}>
-                  ✓ 100% Carbon-neutral urban last-mile commitment.
-                </div>
-              </div>
-            )}
           </div>
         </div>
       )}
