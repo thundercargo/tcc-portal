@@ -139,30 +139,6 @@ export default function TCCPortal() {
   return (
     <main style={{ color: '#f8fafc', minHeight: '100vh', padding: '24px 16px 80px', fontFamily: 'sans-serif', position: 'relative', overflowX: 'hidden' }}>
       
-      <style>{`
-        @keyframes pulse-beacon {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.3; transform: scale(0.85); }
-        }
-        @keyframes subtle-glow {
-          0%, 100% { filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.6)); }
-          50% { filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.9)); }
-        }
-        .beacon-dot {
-          width: 8px;
-          height: 8px;
-          background-color: #34d399;
-          border-radius: 50%;
-          display: inline-block;
-          box-shadow: 0 0 8px #34d399;
-          animation: pulse-beacon 1.5s infinite ease-in-out;
-        }
-        .icon-glow {
-          animation: subtle-glow 2s infinite ease-in-out;
-          display: inline-block;
-        }
-      `}</style>
-
       <canvas id="bg-canvas" style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0 }} />
 
       <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -177,7 +153,7 @@ export default function TCCPortal() {
           <span style={{ background: 'rgba(6,182,212,0.18)', border: '1px solid rgba(6,182,212,0.45)', color: '#22d3ee', fontSize: '10px', fontWeight: 800, padding: '6px 14px', borderRadius: '20px', backdropFilter: 'blur(8px)' }}>FIRSTMILE-LASTMILE B2B</span>
           <span style={{ background: 'rgba(6,182,212,0.18)', border: '1px solid rgba(6,182,212,0.45)', color: '#22d3ee', fontSize: '10px', fontWeight: 800, padding: '6px 14px', borderRadius: '20px', backdropFilter: 'blur(8px)' }}>UDYAM-TS-02-0359997</span>
           <span style={{ background: 'rgba(16,185,129,0.22)', border: '1px solid rgba(16,185,129,0.55)', color: '#34d399', fontSize: '12px', fontWeight: 800, padding: '6px 14px', borderRadius: '20px', marginLeft: 'auto', fontFamily: 'monospace', boxShadow: '0 0 15px rgba(16,185,129,0.35)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span className="beacon-dot"></span>
+            <span style={{ width: '8px', height: '8px', backgroundColor: '#34d399', borderRadius: '50%', display: 'inline-block', boxShadow: '0 0 8px #34d399' }}></span>
             IST • {clock}
           </span>
         </div>
@@ -187,13 +163,13 @@ export default function TCCPortal() {
         {/* Action Buttons */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '24px' }}>
           <div onClick={() => setActiveModal('TARIFF')} style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.9), rgba(8,14,28,0.95))', border: '1px solid rgba(6,182,212,0.5)', borderRadius: '14px', padding: '14px 10px', textAlign: 'center', fontSize: '12px', fontWeight: 800, color: '#22d3ee', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>
-            <span className="icon-glow">📋</span> Master Tariff Engine
+            📋 Master Tariff Engine
           </div>
           <div onClick={() => setActiveModal('SLA')} style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.9), rgba(8,14,28,0.95))', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '14px', padding: '14px 10px', textAlign: 'center', fontSize: '12px', fontWeight: 800, color: '#94a3b8', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>
-            <span className="icon-glow">⚡</span> Gate-to-Feeder SLA
+            ⚡ Gate-to-Feeder SLA
           </div>
           <div onClick={() => setActiveModal('ESG')} style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.9), rgba(8,14,28,0.95))', border: '1px solid rgba(16,185,129,0.5)', borderRadius: '14px', padding: '14px 10px', textAlign: 'center', fontSize: '12px', fontWeight: 800, color: '#34d399', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>
-            <span className="icon-glow">🌱</span> ESG & CSR Pledge
+            🌱 ESG & CSR Pledge
           </div>
         </div>
 
@@ -229,7 +205,7 @@ export default function TCCPortal() {
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
               <span style={{ fontSize: '13px', fontWeight: 900, color: '#fff', letterSpacing: '0.5px' }}>
-                <span className="icon-glow">⚡</span> 12H THUNDER SERVICE
+                ⚡ 12H THUNDER SERVICE
               </span>
             </div>
             <div style={{ fontSize: '12px', color: '#fde047', lineHeight: '1.4', fontWeight: 600 }}>"Loaded at Dawn, Landed by Dusk • Shipped by Dusk, Delivered by Dawn"</div>
@@ -319,27 +295,27 @@ export default function TCCPortal() {
             <div style={{ fontSize: '10px', fontWeight: 800, color: '#94a3b8', marginTop: '6px' }}>CONSOLIDATION TERMINALS</div>
           </div>
           <div style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.88), rgba(8,14,28,0.92))', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.4)' }}>
-            <div style={{ fontSize: '24px', fontWeight 900, color: '#fff', fontFamily: 'monospace' }}>175+</div>
-            <div style={{ fontSize: '10px', fontWeight 800, color: '#94a3b8', marginTop: '6px' }}>DISTRICT LOGISTICS HUBS</div>
+            <div style={{ fontSize: '24px', fontWeight: 900, color: '#fff', fontFamily: 'monospace' }}>175+</div>
+            <div style={{ fontSize: '10px', fontWeight: 800, color: '#94a3b8', marginTop: '6px' }}>DISTRICT LOGISTICS HUBS</div>
           </div>
           <div style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.88), rgba(8,14,28,0.92))', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.4)' }}>
-            <div style={{ fontSize: '24px', fontWeight 900, color: '#fff', fontFamily: 'monospace' }}>355+</div>
-            <div style={{ fontSize: '10px', fontWeight 800, color: '#94a3b8', marginTop: '6px' }}>EXPRESS COLLECTION NODES</div>
+            <div style={{ fontSize: '24px', fontWeight: 900, color: '#fff', fontFamily: 'monospace' }}>355+</div>
+            <div style={{ fontSize: '10px', fontWeight: 800, color: '#94a3b8', marginTop: '6px' }}>EXPRESS COLLECTION NODES</div>
           </div>
         </div>
 
         {/* Corporate Profile & Fleet Vanguard */}
         <div style={{ background: 'linear-gradient(145deg, rgba(15,23,42,0.88), rgba(6,10,20,0.92))', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '24px', padding: '24px', marginBottom: '24px', boxShadow: '0 15px 40px rgba(0,0,0,0.5)' }}>
-          <h3 style={{ fontSize: '16px', fontWeight 900, color: '#fff', marginBottom: '4px' }}>Corporate Profile & Fleet Vanguard</h3>
+          <h3 style={{ fontSize: '16px', fontWeight: 900, color: '#fff', marginBottom: '4px' }}>Corporate Profile & Fleet Vanguard</h3>
           <p style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '18px', fontWeight: 600 }}>Secunderabad SCR Division | High Command Guardianship</p>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             <div style={{ background: 'rgba(4,8,16,0.7)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '16px' }}>
-              <div style={{ fontSize: '13px', fontWeight 900, color: '#fff', marginBottom: '6px' }}>🏛️ Station-Gate Coordination</div>
+              <div style={{ fontSize: '13px', fontWeight: 900, color: '#fff', marginBottom: '6px' }}>🏛️ Station-Gate Coordination</div>
               <p style={{ fontSize: '11px', color: '#cbd5e1', lineHeight: '1.5' }}>Seamless cargo intake at station gates and inward offices, synchronizing with official station operations for rapid last-mile feeder dispatch. SAC 9965 RCM & MSME compliant.</p>
             </div>
             <div style={{ background: 'rgba(4,8,16,0.7)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '16px' }}>
-              <div style={{ fontSize: '13px', fontWeight 900, color: '#fff', marginBottom: '6px' }}>⚡ Fleet Vanguard & Youth Empowerment</div>
+              <div style={{ fontSize: '13px', fontWeight: 900, color: '#fff', marginBottom: '6px' }}>⚡ Fleet Vanguard & Youth Empowerment</div>
               <p style={{ fontSize: '11px', color: '#cbd5e1', lineHeight: '1.5' }}>Empowering local delivery partners, gig workforce, and micro-entrepreneurs into an agile 2-hour transit force, bypassing urban bottlenecks up to 30 KM.</p>
             </div>
           </div>
@@ -383,21 +359,21 @@ export default function TCCPortal() {
                   <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.4)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center' }}>
                     <div style={{ fontSize: '24px', marginBottom: '8px' }}>🛡️</div>
                     <div style={{ fontSize: '22px', fontWeight: 900, color: '#34d399', fontFamily: 'monospace' }}>₹10.00</div>
-                    <div style={{ fontSize: '12px', fontWeight 900, color: '#fff', marginTop: '6px' }}>Hub Welfare Fund</div>
+                    <div style={{ fontSize: '12px', fontWeight: 900, color: '#fff', marginTop: '6px' }}>Hub Welfare Fund</div>
                     <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '6px', lineHeight: '1.4' }}>Porter health cover, safety gear & rest facilities</div>
                   </div>
 
                   <div style={{ background: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.4)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center' }}>
                     <div style={{ fontSize: '24px', marginBottom: '8px' }}>🌳</div>
-                    <div style={{ fontSize: '22px', fontWeight 900, color: '#22d3ee', fontFamily: 'monospace' }}>₹5.00</div>
-                    <div style={{ fontSize: '12px', fontWeight 900, color: '#fff', marginTop: '6px' }}>Afforestation</div>
+                    <div style={{ fontSize: '22px', fontWeight: 900, color: '#22d3ee', fontFamily: 'monospace' }}>₹5.00</div>
+                    <div style={{ fontSize: '12px', fontWeight: 900, color: '#fff', marginTop: '6px' }}>Afforestation</div>
                     <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '6px', lineHeight: '1.4' }}>Urban green belts along railway freight corridors</div>
                   </div>
 
                   <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.4)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center' }}>
                     <div style={{ fontSize: '24px', marginBottom: '8px' }}>⚡</div>
-                    <div style={{ fontSize: '22px', fontWeight 900, color: '#fbbf24', fontFamily: 'monospace' }}>₹5.00</div>
-                    <div style={{ fontSize: '12px', fontWeight 900, color: '#fff', marginTop: '6px' }}>Climate Change</div>
+                    <div style={{ fontSize: '22px', fontWeight: 900, color: '#fbbf24', fontFamily: 'monospace' }}>₹5.00</div>
+                    <div style={{ fontSize: '12px', fontWeight: 900, color: '#fff', marginTop: '6px' }}>Climate Change</div>
                     <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '6px', lineHeight: '1.4' }}>Carbon offset & EV last-mile fleet auditing</div>
                   </div>
 
