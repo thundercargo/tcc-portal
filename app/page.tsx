@@ -29,7 +29,6 @@ export default function TCCPortal() {
   const [weight, setWeight] = useState<number>(100);
   const [activeModal, setActiveModal] = useState<'TARIFF' | 'SLA' | 'ESG' | null>(null);
 
-  // Live IST Clock
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
@@ -38,7 +37,6 @@ export default function TCCPortal() {
     return () => clearInterval(timer);
   }, []);
 
-  // Smooth & Gentle Downward Droplets Background Canvas
   useEffect(() => {
     const canvas = document.getElementById('particle-canvas') as HTMLCanvasElement;
     if (!canvas) return;
@@ -52,7 +50,6 @@ export default function TCCPortal() {
     window.addEventListener('resize', resize);
     resize();
 
-    // Reduced density: 50 subtle, slow downward droplets
     const particles: { x: number; y: number; len: number; speed: number; alpha: number; color: string }[] = [];
     for (let i = 0; i < 50; i++) {
       particles.push({
@@ -96,7 +93,6 @@ export default function TCCPortal() {
     };
   }, []);
 
-  // Rate Calculation Logic
   const data = TARIFFS[corridor] || TARIFFS.REG_2A;
   let basePrice = 0;
   let slabText = '';
@@ -112,17 +108,16 @@ export default function TCCPortal() {
     slabText = 'EXCESS > 500 KG';
   }
 
+  // Thunder Service includes +25% margin automatically without frontend tags
   const finalPrice = serviceMode === 'THUNDER' ? Math.round(basePrice * 1.25) : basePrice;
 
   return (
     <main style={{ backgroundColor: '#080c16', color: '#f8fafc', minHeight: '100vh', padding: '24px 16px 80px', fontFamily: 'sans-serif', position: 'relative', overflowX: 'hidden' }}>
       
-      {/* Gentle Droplets Canvas */}
       <canvas id="particle-canvas" style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0, opacity: 0.5 }} />
 
       <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         
-        {/* Top Badges Header */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', marginBottom: '16px' }}>
           <span style={{ background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.3)', color: '#06b6d4', fontSize: '10px', fontWeight: 700, padding: '5px 12px', borderRadius: '20px' }}>ENTERPRISE B2B LOGISTICS NETWORK</span>
           <span style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)', color: '#f59e0b', fontSize: '10px', fontWeight: 700, padding: '5px 12px', borderRadius: '20px' }}>24H SAME-DAY EXPRESS TRANSIT</span>
@@ -133,17 +128,15 @@ export default function TCCPortal() {
         <h1 style={{ fontSize: '30px', fontWeight: 800, color: '#fff', letterSpacing: '-0.5px' }}>THUNDER CARGO <span style={{ color: '#06b6d4' }}>CORRIDOR</span></h1>
         <p style={{ color: '#94a3b8', fontSize: '13px', marginTop: '4px', marginBottom: '20px' }}>Automated Terminal Dispatch & Sustainable Freight Infrastructure</p>
 
-        {/* Action Buttons */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '24px' }}>
           <div onClick={() => setActiveModal('TARIFF')} style={{ background: 'rgba(15,23,42,0.85)', border: '1px solid rgba(6,182,212,0.4)', borderRadius: '12px', padding: '12px', textAlign: 'center', fontSize: '12px', fontWeight: 700, color: '#06b6d4', cursor: 'pointer' }}>📋 Master Tariff Engine</div>
           <div onClick={() => setActiveModal('SLA')} style={{ background: 'rgba(15,23,42,0.85)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '12px', textAlign: 'center', fontSize: '12px', fontWeight: 700, color: '#94a3b8', cursor: 'pointer' }}>⚡ 90-Min Evacuation SLA</div>
           <div onClick={() => setActiveModal('ESG')} style={{ background: 'rgba(15,23,42,0.85)', border: '1px solid rgba(16,185,129,0.4)', borderRadius: '12px', padding: '12px', textAlign: 'center', fontSize: '12px', fontWeight: 700, color: '#10b981', cursor: 'pointer' }}>🌱 ESG & CSR Green Pledge</div>
         </div>
 
-        {/* CLEAN, UNCLUTTERED SUBHEAD CARDS */}
+        {/* CLEAN SUBHEAD CARDS */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
           
-          {/* Same-Day Card */}
           <div 
             onClick={() => setServiceMode('24H')}
             style={{ 
@@ -154,12 +147,10 @@ export default function TCCPortal() {
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
               <span style={{ fontSize: '14px', fontWeight: 800, color: '#fff' }}>24H SAME-DAY EXPRESS</span>
-              <span style={{ fontSize: '10px', color: '#06b6d4', background: 'rgba(6,182,212,0.2)', padding: '2px 8px', borderRadius: '4px', fontWeight: 700 }}>STANDARD</span>
             </div>
             <div style={{ fontSize: '12px', color: '#94a3b8', lineHeight: '1.4' }}>"Delivered by Us, Secured by Us" • Complete Station Evacuation</div>
           </div>
 
-          {/* Thunder Service Card */}
           <div 
             onClick={() => setServiceMode('THUNDER')}
             style={{ 
@@ -170,7 +161,6 @@ export default function TCCPortal() {
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
               <span style={{ fontSize: '14px', fontWeight: 800, color: '#fff' }}>⚡ 12H THUNDER SERVICE</span>
-              <span style={{ fontSize: '10px', color: '#f59e0b', background: 'rgba(245,158,11,0.2)', padding: '2px 8px', borderRadius: '4px', fontWeight: 700 }}>+25% PREMIUM</span>
             </div>
             <div style={{ fontSize: '12px', color: '#f59e0b', lineHeight: '1.4', fontWeight: 600 }}>"Loaded at Dawn, Landed by Dusk • Shipped by Dusk, Delivered by Dawn"</div>
           </div>
@@ -255,21 +245,21 @@ export default function TCCPortal() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '24px' }}>
           <div style={{ background: 'rgba(15,23,42,0.75)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '16px' }}>
             <div style={{ fontSize: '22px', fontWeight: 800, color: '#fff', fontFamily: 'monospace' }}>3 <span style={{ color: '#06b6d4' }}>Primary</span></div>
-            <div style={{ fontSize: '11px', fontWeight 700, color: '#94a3b8', marginTop: '4px' }}>CONSOLIDATION TERMINALS</div>
+            <div style={{ fontSize: '11px', fontWeight: 700, color: '#94a3b8', marginTop: '4px' }}>CONSOLIDATION TERMINALS</div>
           </div>
           <div style={{ background: 'rgba(15,23,42,0.75)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '16px' }}>
             <div style={{ fontSize: '22px', fontWeight: 800, color: '#fff', fontFamily: 'monospace' }}>175+</div>
-            <div style={{ fontSize: '11px', fontWeight 700, color: '#94a3b8', marginTop: '4px' }}>DISTRICT LOGISTICS HUBS</div>
+            <div style={{ fontSize: '11px', fontWeight: 700, color: '#94a3b8', marginTop: '4px' }}>DISTRICT LOGISTICS HUBS</div>
           </div>
           <div style={{ background: 'rgba(15,23,42,0.75)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '16px' }}>
             <div style={{ fontSize: '22px', fontWeight: 800, color: '#fff', fontFamily: 'monospace' }}>355+</div>
-            <div style={{ fontSize: '11px', fontWeight 700, color: '#94a3b8', marginTop: '4px' }}>EXPRESS COLLECTION NODES</div>
+            <div style={{ fontSize: '11px', fontWeight: 700, color: '#94a3b8', marginTop: '4px' }}>EXPRESS COLLECTION NODES</div>
           </div>
         </div>
 
         {/* CORPORATE PROFILE & WORKFORCE VANGUARD */}
         <div style={{ background: 'rgba(15,23,42,0.75)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '20px', padding: '24px', marginBottom: '24px' }}>
-          <h3 style={{ fontSize: '16px', fontWeight 800, color: '#fff', marginBottom: '4px' }}>Corporate Profile & Fleet Vanguard</h3>
+          <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', marginBottom: '4px' }}>Corporate Profile & Fleet Vanguard</h3>
           <p style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '16px' }}>Secunderabad SCR Division | High Command Guardianship</p>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
@@ -286,8 +276,8 @@ export default function TCCPortal() {
 
         {/* Footer */}
         <div style={{ textAlign: 'center', fontSize: '11px', color: '#64748b', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '20px' }}>
-          📞 +91 8340085989 &nbsp;|&nbsp; ✉️ tcc.cargodesk@gmail.com &nbsp;|&nbsp; 🛡️ MSME Registered: UDYAM-TS-02-0359997[span_2](start_span)[span_2](end_span)
-          <div style={{ marginTop: '6px' }}>Thunder Cargo Corridor (TCC) • South India B2B Last-Mile Logistics Infrastructure Framework[span_3](start_span)[span_3](end_span)</div>
+          📞 +91 8340085989 &nbsp;|&nbsp; ✉️ tcc.cargodesk@gmail.com &nbsp;|&nbsp; 🛡️ MSME Registered: UDYAM-TS-02-0359997
+          <div style={{ marginTop: '6px' }}>Thunder Cargo Corridor (TCC) • South India B2B Last-Mile Logistics Infrastructure Framework</div>
         </div>
 
       </div>
@@ -299,7 +289,6 @@ export default function TCCPortal() {
             
             <button onClick={() => setActiveModal(null)} style={{ position: 'absolute', top: '20px', right: '20px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', borderRadius: '50%', width: '36px', height: '36px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>✕</button>
 
-            {/* ESG & CSR GREEN PLEDGE */}
             {activeModal === 'ESG' && (
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
@@ -314,10 +303,8 @@ export default function TCCPortal() {
                   Every dispatch processed across the Thunder Cargo Corridor earmarks a dedicated ₹20.00 social and environmental impact fund for station workers, local ecology, and carbon auditing.
                 </p>
 
-                {/* 3 DISTINCT BOXES WITH LOGOS */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '20px' }}>
                   
-                  {/* Box 1 */}
                   <div style={{ background: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.35)', borderRadius: '16px', padding: '16px 12px', textAlign: 'center' }}>
                     <div style={{ fontSize: '22px', marginBottom: '6px' }}>🛡️</div>
                     <div style={{ fontSize: '20px', fontWeight: 800, color: '#10b981', fontFamily: 'monospace' }}>₹10.00</div>
@@ -325,7 +312,6 @@ export default function TCCPortal() {
                     <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '4px', lineHeight: '1.3' }}>Porter health cover, safety gear & rest facilities</div>
                   </div>
 
-                  {/* Box 2 */}
                   <div style={{ background: 'rgba(6, 182, 212, 0.08)', border: '1px solid rgba(6, 182, 212, 0.35)', borderRadius: '16px', padding: '16px 12px', textAlign: 'center' }}>
                     <div style={{ fontSize: '22px', marginBottom: '6px' }}>🌳</div>
                     <div style={{ fontSize: '20px', fontWeight: 800, color: '#06b6d4', fontFamily: 'monospace' }}>₹5.00</div>
@@ -333,7 +319,6 @@ export default function TCCPortal() {
                     <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '4px', lineHeight: '1.3' }}>Urban green belts along railway freight corridors</div>
                   </div>
 
-                  {/* Box 3 */}
                   <div style={{ background: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.35)', borderRadius: '16px', padding: '16px 12px', textAlign: 'center' }}>
                     <div style={{ fontSize: '22px', marginBottom: '6px' }}>⚡</div>
                     <div style={{ fontSize: '20px', fontWeight: 800, color: '#f59e0b', fontFamily: 'monospace' }}>₹5.00</div>
@@ -349,7 +334,6 @@ export default function TCCPortal() {
               </div>
             )}
 
-            {/* TARIFF MODAL */}
             {activeModal === 'TARIFF' && (
               <div>
                 <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#fff', marginBottom: '10px' }}>Master Tariff & Demurrage Schedule</h3>
@@ -362,10 +346,9 @@ export default function TCCPortal() {
               </div>
             )}
 
-            {/* SLA MODAL */}
             {activeModal === 'SLA' && (
               <div>
-                <h3 style={{ fontSize: '18px', fontWeight 800, color: '#fff', marginBottom: '10px' }}>90-Minute Evacuation SLA Protocol</h3>
+                <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#fff', marginBottom: '10px' }}>90-Minute Evacuation SLA Protocol</h3>
                 <p style={{ fontSize: '12px', color: '#94a3b8', lineHeight: '1.5', marginBottom: '16px' }}>
                   Cargo un-docking, barcode scanning, and direct feeder dispatch executed within 90 minutes of train arrival at Secunderabad SCR terminals.
                 </p>
