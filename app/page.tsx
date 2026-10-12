@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 
+// Master Tariff Schedule Database
 const TARIFFS: Record<string, { name: string; base: number[]; excess: number }> = {
   INTRA_1: { name: "INTRA-CITY 1 (4 – 5 KM)", base: [150, 250, 380, 550, 1100, 1800], excess: 3.50 },
   INTRA_2: { name: "INTRA-CITY 2 (6 – 15 KM)", base: [200, 320, 480, 750, 1500, 2400], excess: 4.50 },
@@ -21,23 +22,23 @@ const TARIFFS: Record<string, { name: string; base: number[]; excess: number }> 
 };
 
 export default function TCCPortal() {
-  const [clock, setClock] = useState('--:--:-- IST');
-  const [mode, setMode] = useState<'24H' | '12H'>('24H');
-  const [corridor, setCorridor] = useState('REG_2A');
+  const [clock, setClock] = useState('--:--:-- am');
+  const [serviceMode, setServiceMode] = useState<'24H' | 'THUNDER'>('24H');
+  const [corridor, setCorridor] = useState('INTRA_1');
   const [weight, setWeight] = useState<number>(100);
 
-  // Live IST Clock with running seconds
+  // Live IST Ticking Clock with Seconds
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
-      setClock(now.toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' IST');
+      setClock(now.toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' }).toLowerCase());
     }, 1000);
     return () => clearInterval(timer);
   }, []);
 
-  // Animated Crystal Droplets Canvas Background
+  // Falling Crystal Droplets Canvas Background Animation
   useEffect(() => {
-    const canvas = document.getElementById('droplet-canvas') as HTMLCanvasElement;
+    const canvas = document.getElementById('particle-canvas') as HTMLCanvasElement;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -49,211 +50,236 @@ export default function TCCPortal() {
     window.addEventListener('resize', resize);
     resize();
 
-    const droplets: { x: number; y: number; len: number; speed: number; alpha: number }[] = [];
+    const particles: { x: number; y: number; len: number; speed: number; alpha: number }[] = [];
     for (let i = 0; i < 45; i++) {
-      droplets.push({
+      particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        len: Math.random() * 90 + 30,
+        len: Math.random() * 90 + 20,
         speed: Math.random() * 2.5 + 1,
         alpha: Math.random() * 0.4 + 0.1
       });
     }
 
-    let animationId: number;
-    function render() {
+    let animId: number;
+    function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      droplets.forEach(d => {
-        const grad = ctx.createLinearGradient(d.x, d.y, d.x, d.y + d.len);
+      particles.forEach(p => {
+        const grad = ctx.createLinearGradient(p.x, p.y, p.x, p.y + p.len);
         grad.addColorStop(0, 'rgba(6, 182, 212, 0)');
-        grad.addColorStop(0.8, `rgba(6, 182, 212, ${d.alpha})`);
-        grad.addColorStop(1, `rgba(245, 158, 11, ${d.alpha + 0.2})`); // Amber crystal tip
-
+        grad.addColorStop(1, `rgba(6, 182, 212, ${p.alpha})`);
         ctx.strokeStyle = grad;
-        ctx.lineWidth = 1.8;
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
-        ctx.moveTo(d.x, d.y);
-        ctx.lineTo(d.x, d.y + d.len);
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(p.x, p.y + p.len);
         ctx.stroke();
 
-        d.y += d.speed;
-        if (d.y > canvas.height) {
-          d.y = -d.len;
-          d.x = Math.random() * canvas.width;
+        p.y += p.speed;
+        if (p.y > canvas.height) {
+          p.y = -p.len;
+          p.x = Math.random() * canvas.width;
         }
       });
-      animationId = requestAnimationFrame(render);
+      animId = requestAnimationFrame(draw);
     }
-    render();
+    draw();
 
     return () => {
       window.removeEventListener('resize', resize);
-      cancelAnimationFrame(animationId);
+      cancelAnimationFrame(animId);
     };
   }, []);
 
-  // Calculation Logic
-  const item = TARIFFS[corridor] || TARIFFS.REG_2A;
-  let baseCost = 0;
-  let slabName = '';
+  // Rate Calculation Logic
+  const data = TARIFFS[corridor] || TARIFFS.INTRA_1;
+  let basePrice = 0;
+  let slabText = '';
 
-  if (weight <= 10) { baseCost = item.base[0]; slabName = '1 – 10 KG'; }
-  else if (weight <= 25) { baseCost = item.base[1]; slabName = '11 – 25 KG'; }
-  else if (weight <= 50) { baseCost = item.base[2]; slabName = '26 – 50 KG'; }
-  else if (weight <= 100) { baseCost = item.base[3]; slabName = '51 – 100 KG'; }
-  else if (weight <= 250) { baseCost = item.base[4]; slabName = '101 – 250 KG'; }
-  else if (weight <= 500) { baseCost = item.base[5]; slabName = '251 – 500 KG'; }
+  if (weight <= 10) { basePrice = data.base[0]; slabText = '1 – 10 KG'; }
+  else if (weight <= 25) { basePrice = data.base[1]; slabText = '11 – 25 KG'; }
+  else if (weight <= 50) { basePrice = data.base[2]; slabText = '26 – 50 KG'; }
+  else if (weight <= 100) { basePrice = data.base[3]; slabText = '51 – 100 KG'; }
+  else if (weight <= 250) { basePrice = data.base[4]; slabText = '101 – 250 KG'; }
+  else if (weight <= 500) { basePrice = data.base[5]; slabText = '251 – 500 KG'; }
   else {
-    baseCost = item.base[5] + ((weight - 500) * item.excess);
-    slabName = 'EXCESS > 500 KG';
+    basePrice = data.base[5] + ((weight - 500) * data.excess);
+    slabText = 'EXCESS > 500 KG';
   }
 
-  const finalCost = mode === '12H' ? Math.round(baseCost * 1.25) : baseCost;
+  // Apply Thunder Service +25% Premium surcharge
+  const finalPrice = serviceMode === 'THUNDER' ? Math.round(basePrice * 1.25) : basePrice;
 
   return (
-    <main style={{ backgroundColor: '#060911', color: '#f8fafc', minHeight: '100vh', padding: '24px 16px 80px', fontFamily: 'sans-serif', position: 'relative', overflowX: 'hidden' }}>
+    <main style={{ backgroundColor: '#080b12', color: '#f8fafc', minHeight: '100vh', padding: '24px 16px 80px', fontFamily: 'sans-serif', position: 'relative', overflowX: 'hidden' }}>
       
-      {/* Background Crystal Droplets Canvas */}
-      <canvas id="droplet-canvas" style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0 }} />
+      {/* Interactive Crystal Droplets Canvas Background */}
+      <canvas id="particle-canvas" style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0, opacity: 0.6 }} />
 
       <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         
-        {/* Top Badges & Clock */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center', marginBottom: '16px' }}>
-          <span style={{ background: 'rgba(6,182,212,0.12)', border: '1px solid rgba(6,182,212,0.35)', color: '#06b6d4', fontSize: '11px', fontWeight: 700, padding: '6px 14px', borderRadius: '20px' }}>NATIONWIDE B2B LOGISTICS</span>
-          <span style={{ background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.35)', color: '#f59e0b', fontSize: '11px', fontWeight: 700, padding: '6px 14px', borderRadius: '20px' }}>UDYAM-TS-02-0359997</span>
-          <span style={{ background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.4)', color: '#10b981', fontSize: '13px', fontWeight: 800, padding: '6px 14px', borderRadius: '20px', marginLeft: 'auto', fontFamily: 'monospace', boxShadow: '0 0 12px rgba(16,185,129,0.2)' }}>{clock}</span>
+        {/* Top Header Row with Live IST Clock */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', marginBottom: '14px' }}>
+          <span style={{ background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.3)', color: '#06b6d4', fontSize: '10px', fontWeight: 700, padding: '5px 12px', borderRadius: '20px' }}>ENTERPRISE B2B LOGISTICS NETWORK</span>
+          <span style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)', color: '#f59e0b', fontSize: '10px', fontWeight: 700, padding: '5px 12px', borderRadius: '20px' }}>24H SAME-DAY EXPRESS TRANSIT</span>
+          <span style={{ background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.3)', color: '#06b6d4', fontSize: '10px', fontWeight: 700, padding: '5px 12px', borderRadius: '20px' }}>UDYAM-TS-02-0359997</span>
+          <span style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981', fontSize: '12px', fontWeight: 700, padding: '5px 12px', borderRadius: '20px', marginLeft: 'auto', fontFamily: 'monospace', boxShadow: '0 0 10px rgba(16,185,129,0.2)' }}>IST • {clock}</span>
         </div>
 
-        <h1 style={{ fontSize: '34px', fontWeight: 800, color: '#ffffff' }}>THUNDER CARGO <span style={{ color: '#06b6d4' }}>CORRIDOR</span></h1>
-        <p style={{ color: '#94a3b8', fontSize: '14px', marginTop: '4px', marginBottom: '24px' }}>Enterprise Last-Mile Integration & Digital Terminal Dispatch Network | Secunderabad (SCR)</p>
+        <h1 style={{ fontSize: '30px', fontWeight: 800, color: '#fff' }}>THUNDER CARGO <span style={{ color: '#06b6d4' }}>CORRIDOR</span></h1>
+        <p style={{ color: '#94a3b8', fontSize: '13px', marginTop: '4px', marginBottom: '16px' }}>Automated Terminal Dispatch & Sustainable Freight Infrastructure</p>
 
-        {/* Network Counters */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '24px' }}>
-          <div style={{ background: 'rgba(10,16,30,0.7)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '18px' }}>
-            <div style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'monospace', color: '#fff' }}>3 <span style={{ color: '#06b6d4' }}>Primary</span></div>
-            <div style={{ fontSize: '12px', fontWeight: 700, color: '#94a3b8', marginTop: '4px' }}>CONSOLIDATION TERMINALS</div>
-          </div>
-          <div style={{ background: 'rgba(10,16,30,0.7)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '18px' }}>
-            <div style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'monospace', color: '#fff' }}>175+</div>
-            <div style={{ fontSize: '12px', fontWeight: 700, color: '#94a3b8', marginTop: '4px' }}>DISTRICT LOGISTICS HUBS</div>
-          </div>
-          <div style={{ background: 'rgba(10,16,30,0.7)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '18px' }}>
-            <div style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'monospace', color: '#fff' }}>355+</div>
-            <div style={{ fontSize: '12px', fontWeight: 700, color: '#94a3b8', marginTop: '4px' }}>EXPRESS COLLECTION NODES</div>
-          </div>
+        {/* Action Toggles */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '24px' }}>
+          <div style={{ background: 'linear-gradient(135deg, rgba(6,182,212,0.2), rgba(15,23,42,0.8))', border: '1px solid #06b6d4', borderRadius: '12px', padding: '12px', textAlign: 'center', fontSize: '12px', fontWeight: 700, color: '#06b6d4' }}>📋 Master Tariff Engine</div>
+          <div style={{ background: 'rgba(15,23,42,0.7)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '12px', textAlign: 'center', fontSize: '12px', fontWeight: 700, color: '#94a3b8' }}>⚡ 90-Min Evacuation SLA</div>
+          <div style={{ background: 'rgba(15,23,42,0.7)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '12px', textAlign: 'center', fontSize: '12px', fontWeight: 700, color: '#94a3b8' }}>🌱 Voluntary ESG Pledge</div>
         </div>
 
-        {/* Dual Service Subhead Headers */}
+        {/* DUAL SERVICE MODE SUBHEADS (24H vs THUNDER SERVICE WITH DAWN/DUSK MOTTOS) */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
           <div 
-            onClick={() => setMode('24H')}
+            onClick={() => setServiceMode('24H')}
             style={{ 
-              background: mode === '24H' ? 'linear-gradient(135deg, rgba(6,182,212,0.15), rgba(10,16,30,0.9))' : 'rgba(10,16,30,0.85)', 
-              border: mode === '24H' ? '2px solid #06b6d4' : '2px solid rgba(255,255,255,0.1)', 
-              borderRadius: '16px', padding: '20px', cursor: 'pointer', boxShadow: mode === '24H' ? '0 0 25px rgba(6,182,212,0.3)' : 'none' 
+              background: serviceMode === '24H' ? 'linear-gradient(135deg, rgba(6,182,212,0.15), rgba(15,23,42,0.9))' : 'rgba(15,23,42,0.7)', 
+              border: serviceMode === '24H' ? '2px solid #06b6d4' : '1px solid rgba(255,255,255,0.08)', 
+              borderRadius: '16px', padding: '16px', cursor: 'pointer', transition: 'all 0.3s ease'
             }}
           >
-            <div style={{ fontSize: '16px', fontWeight: 800, color: '#fff', display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ fontSize: '14px', fontWeight: 800, color: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span>24H SAME-DAY EXPRESS</span>
-              <span style={{ fontSize: '10px', background: 'rgba(6,182,212,0.2)', color: '#06b6d4', padding: '4px 8px', borderRadius: '4px' }}>STANDARD</span>
+              <span style={{ fontSize: '10px', color: '#06b6d4', background: 'rgba(6,182,212,0.2)', padding: '2px 6px', borderRadius: '4px' }}>STANDARD</span>
             </div>
-            <div style={{ fontSize: '12px', fontWeight: 700, color: '#06b6d4', marginTop: '6px' }}>4-Hour Intra-City SLA • 24-Hour Regional Evacuation</div>
-            <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '6px' }}>Standard B2B commercial rates for scheduled factory dispatches and bulk inventory.</div>
+            <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '4px' }}>4-Hour Intra-City & 24-Hour Regional Evacuation</div>
           </div>
 
           <div 
-            onClick={() => setMode('12H')}
+            onClick={() => setServiceMode('THUNDER')}
             style={{ 
-              background: mode === '12H' ? 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(10,16,30,0.9))' : 'rgba(10,16,30,0.85)', 
-              border: mode === '12H' ? '2px solid #f59e0b' : '2px solid rgba(255,255,255,0.1)', 
-              borderRadius: '16px', padding: '20px', cursor: 'pointer', boxShadow: mode === '12H' ? '0 0 25px rgba(245,158,11,0.3)' : 'none' 
+              background: serviceMode === 'THUNDER' ? 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(15,23,42,0.9))' : 'rgba(15,23,42,0.7)', 
+              border: serviceMode === 'THUNDER' ? '2px solid #f59e0b' : '1px solid rgba(255,255,255,0.08)', 
+              borderRadius: '16px', padding: '16px', cursor: 'pointer', transition: 'all 0.3s ease'
             }}
           >
-            <div style={{ fontSize: '16px', fontWeight: 800, color: '#fff', display: 'flex', justifyContent: 'space-between' }}>
-              <span>⚡ 12H THUNDER SERVICE</span>
-              <span style={{ fontSize: '10px', background: 'rgba(245,158,11,0.2)', color: '#f59e0b', padding: '4px 8px', borderRadius: '4px' }}>PREMIUM +25%</span>
+            <div style={{ fontSize: '14px', fontWeight: 800, color: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span>⚡ THUNDER SERVICE (12H)</span>
+              <span style={{ fontSize: '10px', color: '#f59e0b', background: 'rgba(245,158,11,0.2)', padding: '2px 6px', borderRadius: '4px' }}>+25% PREMIUM</span>
             </div>
-            <div style={{ fontSize: '12px', fontWeight: 700, color: '#f59e0b', marginTop: '6px' }}>"Loaded at Dawn, Landed by Dusk • Shipped by Dusk, Delivered by Dawn"</div>
-            <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '6px' }}>12-Hour ultra-express turnaround utilizing top-load regional express lines.</div>
+            <div style={{ fontSize: '11px', color: '#f59e0b', marginTop: '4px', fontWeight: 700 }}>"Loaded at Dawn, Landed by Dusk • Shipped by Dusk, Delivered by Dawn"</div>
           </div>
         </div>
 
-        {/* Master Calculator Panel */}
-        <div style={{ background: 'rgba(13,20,36,0.85)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '20px', padding: '24px', boxShadow: '0 20px 50px rgba(0,0,0,0.6)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <h2 style={{ fontSize: '18px', fontWeight: 800, color: '#fff' }}>Master B2B Freight Rate Engine</h2>
-            <span style={{ background: 'rgba(6,182,212,0.12)', border: '1px solid rgba(6,182,212,0.35)', color: '#06b6d4', fontSize: '11px', fontWeight: 700, padding: '6px 14px', borderRadius: '20px' }}>SAC 9965 RCM COMPLIANT</span>
+        {/* Master Freight Rate Calculator Box */}
+        <div style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid rgba(6, 182, 212, 0.3)', borderRadius: '20px', padding: '24px', marginBottom: '24px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <div>
+              <h2 style={{ fontSize: '16px', fontWeight: 800, color: '#fff' }}>Master B2B Freight Rate Engine</h2>
+              <p style={{ fontSize: '12px', color: '#94a3b8' }}>Instant contract quote calculation with integrated ESG Green Logistics contribution.</p>
+            </div>
+            <span style={{ background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.3)', color: '#06b6d4', fontSize: '10px', fontWeight: 700, padding: '4px 10px', borderRadius: '12px' }}>SAC 9965 RCM Compliant</span>
           </div>
 
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ fontSize: '12px', fontWeight: 800, color: '#06b6d4', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>Corridor / Route Matrix</label>
-            <select value={corridor} onChange={(e) => setCorridor(e.target.value)} style={{ width: '100%', background: 'rgba(6,9,17,0.9)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '12px', padding: '14px', color: '#fff', fontSize: '15px', fontWeight: 700, outline: 'none' }}>
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ fontSize: '11px', fontWeight: 800, color: '#06b6d4', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>Corridor / Route Matrix</label>
+            <select value={corridor} onChange={(e) => setCorridor(e.target.value)} style={{ width: '100%', background: '#080b12', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '12px', padding: '12px', color: '#fff', fontSize: '14px', fontWeight: 700, outline: 'none' }}>
               {Object.keys(TARIFFS).map(k => (
                 <option key={k} value={k}>{TARIFFS[k].name}</option>
               ))}
             </select>
           </div>
 
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ fontSize: '12px', fontWeight: 800, color: '#06b6d4', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>Consignment Gross Weight (KG)</label>
-            <input type="number" value={weight} min={1} onChange={(e) => setWeight(Math.max(1, parseFloat(e.target.value) || 1))} style={{ width: '100%', background: 'rgba(6,9,17,0.9)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '12px', padding: '14px', color: '#fff', fontSize: '15px', fontWeight: 700, outline: 'none' }} />
+          <div style={{ marginBottom: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+              <label style={{ fontSize: '11px', fontWeight: 800, color: '#06b6d4', textTransform: 'uppercase' }}>Consignment Gross Weight (KG)</label>
+              <span style={{ fontSize: '11px', color: '#64748b' }}>Min: 1 KG</span>
+            </div>
+            <input type="number" value={weight} min={1} onChange={(e) => setWeight(Math.max(1, parseFloat(e.target.value) || 1))} style={{ width: '100%', background: '#080b12', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '12px', padding: '12px', color: '#fff', fontSize: '15px', fontWeight: 700, outline: 'none' }} />
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '10px' }}>
+              {[10, 25, 50, 100, 250, 500, 750].map(w => (
+                <button key={w} onClick={() => setWeight(w)} style={{ background: weight === w ? 'rgba(6,182,212,0.2)' : 'rgba(255,255,255,0.05)', border: weight === w ? '1px solid #06b6d4' : '1px solid rgba(255,255,255,0.1)', color: weight === w ? '#fff' : '#94a3b8', fontSize: '11px', fontWeight: 700, padding: '6px 12px', borderRadius: '8px', cursor: 'pointer' }}>{w}kg</button>
+              ))}
+            </div>
           </div>
 
-          {/* Quote Result Box */}
-          <div style={{ background: 'linear-gradient(180deg, rgba(13,20,36,0.95), rgba(6,9,17,0.98))', border: `2px solid ${mode === '12H' ? '#f59e0b' : '#06b6d4'}`, borderRadius: '18px', padding: '24px', marginTop: '24px' }}>
-            <div style={{ fontSize: '11px', fontWeight: 800, color: mode === '12H' ? '#f59e0b' : '#06b6d4', letterSpacing: '1px' }}>
-              {mode === '12H' ? '⚡ EXACT TARIFF QUOTE (12H THUNDER SERVICE)' : 'EXACT TARIFF QUOTE (24H BASELINE)'}
-            </div>
-            <div style={{ fontSize: '46px', fontWeight: 800, fontFamily: 'monospace', color: '#fff', margin: '8px 0' }}>₹{finalCost.toLocaleString('en-IN')}</div>
-            
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: mode === '12H' ? 'rgba(245,158,11,0.15)' : 'rgba(16,185,129,0.15)', border: `1px solid ${mode === '12H' ? 'rgba(245,158,11,0.4)' : 'rgba(16,185,129,0.4'}`, color: mode === '12H' ? '#f59e0b' : '#10b981', fontSize: '12px', fontWeight: 800, padding: '6px 12px', borderRadius: '8px' }}>
-              {mode === '12H' ? '⚡ 12 TO 36 HOURS OF INDUSTRIAL DOWNTIME AVOIDED' : '🟢 GUARANTEED COMMERCIAL RATE (ALL INCLUSIVE)'}
+          {/* EXACT TARIFF QUOTE CARD */}
+          <div style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.95), rgba(8,11,18,0.98))', border: `2px solid ${serviceMode === 'THUNDER' ? '#f59e0b' : '#06b6d4'}`, borderRadius: '16px', padding: '20px', marginTop: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <div style={{ fontSize: '10px', fontWeight: 800, color: serviceMode === 'THUNDER' ? '#f59e0b' : '#06b6d4', letterSpacing: '0.5px' }}>
+                  {serviceMode === 'THUNDER' ? '⚡ THUNDER SERVICE QUOTE (12H ULTRA-EXPRESS)' : 'EXACT TARIFF QUOTE'}
+                </div>
+                <div style={{ fontSize: '38px', fontWeight: 800, fontFamily: 'monospace', color: '#fff', margin: '4px 0' }}>₹{finalPrice.toLocaleString('en-IN')}</div>
+                <div style={{ fontSize: '11px', color: serviceMode === 'THUNDER' ? '#f59e0b' : '#10b981', fontWeight: 700 }}>
+                  {serviceMode === 'THUNDER' ? '⚡ 12 to 36 Hours of Industrial Downtime Avoided' : '🟢 Includes ₹20.00 Green Logistics Offset'}
+                </div>
+              </div>
+
+              <div style={{ textAlign: 'right' }}>
+                <span style={{ fontSize: '10px', background: 'rgba(255,255,255,0.08)', padding: '4px 8px', borderRadius: '6px', color: '#94a3b8' }}>{serviceMode === 'THUNDER' ? '12H THUNDER READY' : '24H TRANSIT READY'}</span>
+              </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginToр: '18px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '14px', fontSize: '12px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '16px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '12px', fontSize: '11px' }}>
               <div>
-                <span style={{ color: '#94a3b8', display: 'block' }}>Corridor:</span>
-                <strong style={{ color: '#fff' }}>{item.name}</strong>
+                <span style={{ color: '#64748b', display: 'block' }}>Selected Corridor:</span>
+                <strong style={{ color: '#fff' }}>{data.name}</strong>
               </div>
               <div style={{ textAlign: 'right' }}>
-                <span style={{ color: '#94a3b8', display: 'block' }}>Weight Slab:</span>
-                <strong style={{ color: '#06b6d4' }}>{slabName}</strong>
+                <span style={{ color: '#64748b', display: 'block' }}>Weight Bracket:</span>
+                <strong style={{ color: '#06b6d4' }}>{slabText}</strong>
               </div>
             </div>
 
             <button 
               onClick={() => {
-                navigator.clipboard.writeText(`[TCC DISPATCH QUOTE] Mode: ${mode} | Corridor: ${item.name} | Weight: ${weight}kg | Quote: ₹${finalCost}`);
-                alert('Official Dispatch Quote Copied!');
+                navigator.clipboard.writeText(`[TCC QUOTE] Mode: ${serviceMode} | Corridor: ${data.name} | Weight: ${weight}kg | Quote: ₹${finalPrice}`);
+                alert('Official Quote Copied!');
               }}
-              style={{ width: '100%', background: 'linear-gradient(90deg, #06b6d4, #0891b2)', border: 'none', color: '#000', fontWeight: 800, fontSize: '14px', padding: '16px', borderRadius: '12px', cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '0.5px', marginTop: '18px' }}
+              style={{ width: '100%', background: 'linear-gradient(90deg, #06b6d4, #14b8a6)', border: 'none', color: '#000', fontWeight: 800, fontSize: '12px', padding: '14px', borderRadius: '10px', cursor: 'pointer', textTransform: 'uppercase', marginTop: '16px' }}
             >
-              COPY OFFICIAL DISPATCH QUOTE
+              Copy Green Quote Summary
             </button>
           </div>
         </div>
 
-        {/* Corporate Profile Section */}
-        <div style={{ marginTop: '40px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '30px' }}>
-          <div style={{ fontSize: '20px', fontWeight: 800, color: '#fff', marginBottom: '4px' }}>CORPORATE PROFILE & FLEET VANGUARD</div>
-          <div style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '20px' }}>High Command Strategic Operations Division | Secunderabad (SCR) Hub</div>
+        {/* Network Metrics Counters */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '24px' }}>
+          <div style={{ background: 'rgba(15,23,42,0.7)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '16px' }}>
+            <div style={{ fontSize: '22px', fontWeight: 800, color: '#fff', fontFamily: 'monospace' }}>3 <span style={{ color: '#06b6d4' }}>Primary</span></div>
+            <div style={{ fontSize: '11px', fontWeight: 700, color: '#94a3b8', marginTop: '4px' }}>CONSOLIDATION TERMINALS</div>
+          </div>
+          <div style={{ background: 'rgba(15,23,42,0.7)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '16px' }}>
+            <div style={{ fontSize: '22px', fontWeight: 800, color: '#fff', fontFamily: 'monospace' }}>175+</div>
+            <div style={{ fontSize: '11px', fontWeight: 700, color: '#94a3b8', marginTop: '4px' }}>DISTRICT LOGISTICS HUBS</div>
+          </div>
+          <div style={{ background: 'rgba(15,23,42,0.7)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '16px' }}>
+            <div style={{ fontSize: '22px', fontWeight: 800, color: '#fff', fontFamily: 'monospace' }}>355+</div>
+            <div style={{ fontSize: '11px', fontWeight: 700, color: '#94a3b8', marginTop: '4px' }}>EXPRESS COLLECTION NODES</div>
+          </div>
+        </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-            <div style={{ background: 'rgba(10,16,30,0.6)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '20px' }}>
-              <div style={{ fontSize: '15px', fontWeight: 800, color: '#fff', marginBottom: '8px' }}>🏛️ Strategic Terminal Guardianship</div>
-              <div style={{ fontSize: '13px', color: '#94a3b8', lineHeight: '1.6' }}>
-                Operating as an elite last-mile integration platform for Secunderabad terminal logistics, TCC clears platform backlogs via a rigid 2-hour platform clearance SLA. Compliant with SAC 9965 RCM and MSME Udyam standards.
-              </div>
+        {/* CORPORATE PROFILE & FLEET VANGUARD */}
+        <div style={{ background: 'rgba(15,23,42,0.7)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '20px', padding: '24px', marginBottom: '24px' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#fff', marginBottom: '4px' }}>Corporate Profile & Fleet Vanguard</h3>
+          <p style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '16px' }}>Secunderabad SCR Division | High Command Guardianship</p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div style={{ background: 'rgba(8,11,18,0.6)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '16px' }}>
+              <div style={{ fontSize: '13px', fontWeight: 800, color: '#fff', marginBottom: '6px' }}>🏛️ Strategic Terminal Guardianship</div>
+              <p style={{ fontSize: '11px', color: '#94a3b8', lineHeight: '1.5' }}>Elite last-mile integration platform clearing Secunderabad railway platform backlogs via a rigid 2-hour platform clearance SLA. SAC 9965 RCM & MSME Udyam standards.</p>
             </div>
-
-            <div style={{ background: 'rgba(10,16,30,0.6)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '20px' }}>
-              <div style={{ fontSize: '15px', fontWeight: 800, color: '#fff', marginBottom: '8px' }}>⚡ The Charminar Last-Mile Vanguard</div>
-              <div style={{ fontSize: '13px', color: '#94a3b8', lineHeight: '1.6' }}>
-                Partnering with the experienced auto drivers and last-mile delivery workforce of Old City (Charminar), TCC operates a hyper-agile 2-hour local transit network capable of delivering up to 30 KM without urban bottleneck delays.
-              </div>
+            <div style={{ background: 'rgba(8,11,18,0.6)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '16px' }}>
+              <div style={{ fontSize: '13px', fontWeight: 800, color: '#fff', marginBottom: '6px' }}>⚡ The Charminar Fleet Vanguard</div>
+              <p style={{ fontSize: '11px', color: '#94a3b8', lineHeight: '1.5' }}>Empowering Old City auto drivers and delivery veterans into an agile 2-hour transit force, bypassing urban bottlenecks up to 30 KM.</p>
             </div>
           </div>
+        </div>
+
+        {/* Footer */}
+        <div style={{ textAlign: 'center', fontSize: '11px', color: '#64748b', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '20px' }}>
+          📞 +91 8340085989 &nbsp;|&nbsp; ✉️ tcc.cargodesk@gmail.com &nbsp;|&nbsp; 🛡️ MSME Registered: UDYAM-TS-02-0359997[span_0](start_span)[span_0](end_span)
+          <div style={{ marginTop: '6px' }}>Thunder Cargo Corridor (TCC) • South India B2B Last-Mile Logistics Infrastructure Framework[span_1](start_span)[span_1](end_span)</div>
         </div>
 
       </div>
