@@ -25,7 +25,16 @@ export default function TCCPortal() {
   const [serviceMode, setServiceMode] = useState<'24H' | 'THUNDER'>('24H');
   const [corridor, setCorridor] = useState('REG_2A');
   const [weight, setWeight] = useState<number>(100);
-  const [activeModal, setActiveModal] = useState<'TARIFF' | 'SLA' | 'ESG' | null>(null);
+  const [activeModal, setActiveModal] = useState<'TARIFF' | 'SLA' | 'ESG' | 'BOOKING' | null>(null);
+
+  // Booking form states
+  const [senderName, setSenderName] = useState('');
+  const [senderMobile, setSenderMobile] = useState('');
+  const [receiverName, setReceiverName] = useState('');
+  const [receiverMobile, setReceiverMobile] = useState('');
+  const [destCity, setDestCity] = useState('Mumbai Central (MMCT)');
+  const [goodsDesc, setGoodsDesc] = useState('Textile Bales & Garments');
+  const [bookingSuccess, setBookingSuccess] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -161,21 +170,23 @@ export default function TCCPortal() {
         <p style={{ color: '#cbd5e1', fontSize: '13px', marginBottom: '20px', fontWeight: 500 }}>Automated Inward Office & Station-Gate Express Logistics Infrastructure</p>
 
         {/* Action Buttons */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '24px' }}>
-          <div onClick={() => setActiveModal('TARIFF')} style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.9), rgba(8,14,28,0.95))', border: '1px solid rgba(6,182,212,0.5)', borderRadius: '14px', padding: '14px 10px', textAlign: 'center', fontSize: '12px', fontWeight: 800, color: '#22d3ee', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>
-            📋 Master Tariff Engine
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', marginBottom: '24px' }}>
+          <div onClick={() => setActiveModal('TARIFF')} style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.9), rgba(8,14,28,0.95))', border: '1px solid rgba(6,182,212,0.5)', borderRadius: '14px', padding: '14px 8px', textAlign: 'center', fontSize: '11px', fontWeight: 800, color: '#22d3ee', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>
+            📋 Tariff Engine
           </div>
-          <div onClick={() => setActiveModal('SLA')} style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.9), rgba(8,14,28,0.95))', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '14px', padding: '14px 10px', textAlign: 'center', fontSize: '12px', fontWeight: 800, color: '#94a3b8', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>
-            ⚡ Gate-to-Feeder SLA
+          <div onClick={() => setActiveModal('BOOKING')} style={{ background: 'linear-gradient(135deg, rgba(6,182,212,0.35), rgba(15,23,42,0.95))', border: '1px solid #22d3ee', borderRadius: '14px', padding: '14px 8px', textAlign: 'center', fontSize: '11px', fontWeight: 800, color: '#fff', cursor: 'pointer', boxShadow: '0 0 20px rgba(6,182,212,0.4)', backdropFilter: 'blur(10px)' }}>
+            🚀 Book & UPI Pay
           </div>
-          <div onClick={() => setActiveModal('ESG')} style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.9), rgba(8,14,28,0.95))', border: '1px solid rgba(16,185,129,0.5)', borderRadius: '14px', padding: '14px 10px', textAlign: 'center', fontSize: '12px', fontWeight: 800, color: '#34d399', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>
-            🌱 ESG & CSR Pledge
+          <div onClick={() => setActiveModal('SLA')} style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.9), rgba(8,14,28,0.95))', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '14px', padding: '14px 8px', textAlign: 'center', fontSize: '11px', fontWeight: 800, color: '#94a3b8', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>
+            ⚡ Gate SLA
+          </div>
+          <div onClick={() => setActiveModal('ESG')} style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.9), rgba(8,14,28,0.95))', border: '1px solid rgba(16,185,129,0.5)', borderRadius: '14px', padding: '14px 8px', textAlign: 'center', fontSize: '11px', fontWeight: 800, color: '#34d399', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.4)', backdropFilter: 'blur(10px)' }}>
+            🌱 ESG Pledge
           </div>
         </div>
 
         {/* Service Cards */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
-          
           <div 
             onClick={() => setServiceMode('24H')}
             style={{ 
@@ -210,7 +221,6 @@ export default function TCCPortal() {
             </div>
             <div style={{ fontSize: '12px', color: '#fde047', lineHeight: '1.4', fontWeight: 600 }}>"Loaded at Dawn, Landed by Dusk • Shipped by Dusk, Delivered by Dawn"</div>
           </div>
-
         </div>
 
         {/* Master Calculator Box */}
@@ -235,7 +245,7 @@ export default function TCCPortal() {
           <div style={{ marginBottom: '20px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
               <label style={{ fontSize: '11px', fontWeight: 900, color: '#22d3ee', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Consignment Gross Weight (KG)</label>
-              <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 700 }}>Min: 1 KG</span>
+              <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 700 }}>Min: 1 KG (Sweet Spot: 50-250 KG)</span>
             </div>
             <input type="number" value={weight} min={1} onChange={(e) => setWeight(Math.max(1, parseFloat(e.target.value) || 1))} style={{ width: '100%', background: '#040711', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '14px', padding: '14px', color: '#fff', fontSize: '16px', fontWeight: 800, outline: 'none', boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.6)' }} />
 
@@ -275,16 +285,25 @@ export default function TCCPortal() {
               </div>
             </div>
 
-            <button 
-              onClick={() => {
-                const quoteText = `TCC B2B Green Freight Quote (${serviceMode === 'THUNDER' ? '12H Thunder Service' : '24H Same-Day Express'})\nCorridor: ${data.name}\nWeight: ${weight} KG\nEst. Tariff: ₹${finalPrice.toLocaleString('en-IN')} (Incl. ₹20 ESG Green Offset)\nSAC: 9965 RCM Compliant`;
-                navigator.clipboard.writeText(quoteText);
-                alert('Official Green Freight Quote Copied Successfully!');
-              }}
-              style={{ width: '100%', background: 'linear-gradient(90deg, #22d3ee, #34d399)', border: 'none', color: '#020617', fontWeight: 900, fontSize: '12px', padding: '16px', borderRadius: '12px', cursor: 'pointer', textTransform: 'uppercase', marginTop: '18px', boxShadow: '0 8px 25px rgba(6,182,212,0.4)', transition: 'all 0.2s' }}
-            >
-              Copy Green Quote Summary
-            </button>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '18px' }}>
+              <button 
+                onClick={() => {
+                  const quoteText = `TCC B2B Green Freight Quote (${serviceMode === 'THUNDER' ? '12H Thunder Service' : '24H Same-Day Express'})\nCorridor: ${data.name}\nWeight: ${weight} KG\nEst. Tariff: ₹${finalPrice.toLocaleString('en-IN')} (Incl. ₹20 ESG Green Offset)\nSAC: 9965 RCM Compliant`;
+                  navigator.clipboard.writeText(quoteText);
+                  alert('Official Green Freight Quote Copied Successfully!');
+                }}
+                style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', fontWeight: 800, fontSize: '11px', padding: '14px', borderRadius: '12px', cursor: 'pointer', textTransform: 'uppercase' }}
+              >
+                Copy Quote Summary
+              </button>
+              
+              <button 
+                onClick={() => setActiveModal('BOOKING')}
+                style={{ background: 'linear-gradient(90deg, #22d3ee, #34d399)', border: 'none', color: '#020617', fontWeight: 900, fontSize: '11px', padding: '14px', borderRadius: '12px', cursor: 'pointer', textTransform: 'uppercase', boxShadow: '0 8px 25px rgba(6,182,212,0.4)' }}
+              >
+                🚀 Book & UPI Pay Now
+              </button>
+            </div>
           </div>
         </div>
 
@@ -304,23 +323,6 @@ export default function TCCPortal() {
           </div>
         </div>
 
-        {/* Corporate Profile & Fleet Vanguard */}
-        <div style={{ background: 'linear-gradient(145deg, rgba(15,23,42,0.88), rgba(6,10,20,0.92))', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '24px', padding: '24px', marginBottom: '24px', boxShadow: '0 15px 40px rgba(0,0,0,0.5)' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: 900, color: '#fff', marginBottom: '4px' }}>Corporate Profile & Fleet Vanguard</h3>
-          <p style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '18px', fontWeight: 600 }}>Secunderabad SCR Division | High Command Guardianship</p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-            <div style={{ background: 'rgba(4,8,16,0.7)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '16px' }}>
-              <div style={{ fontSize: '13px', fontWeight: 900, color: '#fff', marginBottom: '6px' }}>🏛️ Station-Gate Coordination</div>
-              <p style={{ fontSize: '11px', color: '#cbd5e1', lineHeight: '1.5' }}>Seamless cargo intake at station gates and inward offices, synchronizing with official station operations for rapid last-mile feeder dispatch. SAC 9965 RCM & MSME compliant.</p>
-            </div>
-            <div style={{ background: 'rgba(4,8,16,0.7)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '16px' }}>
-              <div style={{ fontSize: '13px', fontWeight: 900, color: '#fff', marginBottom: '6px' }}>⚡ Fleet Vanguard & Youth Empowerment</div>
-              <p style={{ fontSize: '11px', color: '#cbd5e1', lineHeight: '1.5' }}>Empowering local delivery partners, gig workforce, and micro-entrepreneurs into an agile 2-hour transit force, bypassing urban bottlenecks up to 30 KM.</p>
-            </div>
-          </div>
-        </div>
-
         {/* Footer */}
         <div style={{ textAlign: 'center', fontSize: '11px', color: '#94a3b8', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px', fontWeight: 500 }}>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '8px', flexWrap: 'wrap' }}>
@@ -335,10 +337,99 @@ export default function TCCPortal() {
 
       {/* Modals */}
       {activeModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(2, 6, 23, 0.9)', backdropFilter: 'blur(20px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-          <div style={{ background: 'linear-gradient(145deg, #0f172a, #040711)', border: '1px solid rgba(16, 185, 129, 0.5)', borderRadius: '24px', maxWidth: '720px', width: '100%', padding: '32px', position: 'relative', boxShadow: '0 30px 80px rgba(0,0,0,0.95)' }}>
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(2, 6, 23, 0.92)', backdropFilter: 'blur(20px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', overflowY: 'auto' }}>
+          <div style={{ background: 'linear-gradient(145deg, #0f172a, #040711)', border: '1px solid rgba(6, 182, 212, 0.5)', borderRadius: '24px', maxWidth: '720px', width: '100%', padding: '32px', position: 'relative', boxShadow: '0 30px 80px rgba(0,0,0,0.95)', maxHeight: '90vh', overflowY: 'auto' }}>
             
-            <button onClick={() => setActiveModal(null)} style={{ position: 'absolute', top: '20px', right: '20px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', borderRadius: '50%', width: '38px', height: '38px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>✕</button>
+            <button onClick={() => { setActiveModal(null); setBookingSuccess(false); }} style={{ position: 'absolute', top: '20px', right: '20px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', borderRadius: '50%', width: '38px', height: '38px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', zIndex: 10 }}>✕</button>
+
+            {activeModal === 'BOOKING' && (
+              <div>
+                {!bookingSuccess ? (
+                  <div>
+                    <h3 style={{ fontSize: '20px', fontWeight: 900, color: '#fff', marginBottom: '6px' }}>⚡ TCC Express B2B Booking & Secure UPI Pay</h3>
+                    <p style={{ fontSize: '12px', color: '#22d3ee', marginBottom: '20px', fontWeight: 700 }}>Secunderabad Station Outer Gate Terminal • 50–250 KG Corridor</p>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+                      <div>
+                        <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '6px', fontWeight: 700 }}>Consignor (Sender Firm)</label>
+                        <input type="text" placeholder="e.g. Sri Venkateshwara Textiles" value={senderName} onChange={(e) => setSenderName(e.target.value)} style={{ width: '100%', background: '#020617', border: '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '10px', color: '#fff', fontSize: '13px' }} />
+                      </div>
+                      <div>
+                        <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '6px', fontWeight: 700 }}>Sender Mobile Number</label>
+                        <input type="text" placeholder="10-digit mobile" value={senderMobile} onChange={(e) => setSenderMobile(e.target.value)} style={{ width: '100%', background: '#020617', border: '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '10px', color: '#fff', fontSize: '13px' }} />
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+                      <div>
+                        <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '6px', fontWeight: 700 }}>Consignee (Receiver Firm)</label>
+                        <input type="text" placeholder="e.g. Mumbai Cargo Hub" value={receiverName} onChange={(e) => setReceiverName(e.target.value)} style={{ width: '100%', background: '#020617', border: '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '10px', color: '#fff', fontSize: '13px' }} />
+                      </div>
+                      <div>
+                        <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '6px', fontWeight: 700 }}>Destination Hub</label>
+                        <select value={destCity} onChange={(e) => setDestCity(e.target.value)} style={{ width: '100%', background: '#020617', border: '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '10px', color: '#fff', fontSize: '13px' }}>
+                          <option>Mumbai Central (MMCT)</option>
+                          <option>New Delhi (NDLS)</option>
+                          <option>Bengaluru City (SBC)</option>
+                          <option>Chennai Central (MAS)</option>
+                          <option>Howrah / Kolkata</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div style={{ marginBottom: '18px' }}>
+                      <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '6px', fontWeight: 700 }}>Cargo Description & Weight</label>
+                      <input type="text" value={`${goodsDesc} | Gross Weight: ${weight} KG | Corridor: ${data.name}`} onChange={(e) => setGoodsDesc(e.target.value)} style={{ width: '100%', background: '#020617', border: '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '10px', color: '#fff', fontSize: '13px' }} />
+                    </div>
+
+                    {/* Payment Box with Slice UPI */}
+                    <div style={{ background: 'rgba(4,8,16,0.9)', border: '1px solid rgba(6,182,212,0.4)', borderRadius: '16px', padding: '18px', textAlign: 'center', marginBottom: '18px' }}>
+                      <div style={{ fontSize: '12px', color: '#cbd5e1', marginBottom: '4px' }}>Total Freight Payable (Incl. Green ESG Offset):</div>
+                      <div style={{ fontSize: '32px', fontWeight: 900, fontFamily: 'monospace', color: '#22d3ee', marginBottom: '12px' }}>₹{finalPrice.toLocaleString('en-IN')}</div>
+                      
+                      <div style={{ background: '#fff', padding: '12px', display: 'inline-block', borderRadius: '10px', marginBottom: '10px' }}>
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=9848196716@slc&pn=Mohammed%20Mustafa%20Khan%20Amer&am=" alt="Slice UPI QR" style={{ width: '150px', height: '150px', display: 'block', margin: 'auto' }} />
+                      </div>
+
+                      <div style={{ fontSize: '12px', color: '#fff' }}>
+                        <strong>Account Holder:</strong> Mohammed Mustafa Khan Amer[span_2](start_span)[span_2](end_span)<br />
+                        <strong>UPI ID:</strong> <span style={{ color: '#22d3ee', fontFamily: 'monospace' }}>9848196716@slc</span>[span_3](start_span)[span_3](end_span)
+                      </div>
+                    </div>
+
+                    <button 
+                      onClick={() => setBookingSuccess(true)}
+                      style={{ width: '100%', background: 'linear-gradient(90deg, #22d3ee, #34d399)', border: 'none', color: '#020617', fontWeight: 900, fontSize: '13px', padding: '16px', borderRadius: '12px', cursor: 'pointer', textTransform: 'uppercase', boxShadow: '0 8px 25px rgba(6,182,212,0.4)' }}
+                    >
+                      ✓ Simulate UPI Payment & Generate Digital Challan
+                    </button>
+                  </div>
+                ) : (
+                  <div style={{ textAlign: 'center', padding: '10px 0' }}>
+                    <div style={{ fontSize: '48px', marginBottom: '10px' }}>🎉</div>
+                    <h3 style={{ fontSize: '22px', fontWeight: 900, color: '#34d399', marginBottom: '6px' }}>Consignment Booked & Verified Successfully!</h3>
+                    <p style={{ fontSize: '12px', color: '#cbd5e1', marginBottom: '20px' }}>Digital Delivery Challan & Forwarding Memo generated for Secunderabad outer gate transfer bay.</p>
+
+                    <div style={{ background: '#020617', border: '1px solid rgba(16,185,129,0.4)', borderRadius: '14px', padding: '16px', textAlign: 'left', fontSize: '12px', marginBottom: '20px', fontFamily: 'monospace' }}>
+                      <div style={{ color: '#34d399', fontWeight: 800, marginBottom: '8px' }}>LR NO: TCC/2026/SEC-{Math.floor(1000 + Math.random() * 9000)}</div>
+                      <div><strong>Sender:</strong> {senderName || 'Sri Venkateshwara Textiles'}</div>
+                      <div><strong>Receiver:</strong> {receiverName || 'Mumbai Cargo Hub'}</div>
+                      <div><strong>Destination:</strong> {destCity}</div>
+                      <div><strong>Weight:</strong> {weight} KG | <strong>Freight:</strong> ₹{finalPrice.toLocaleString('en-IN')}</div>
+                      <div><strong>Payment Status:</strong> PAID via UPI (`9848196716@slc`)[span_4](start_span)[span_4](end_span)</div>
+                      <div style={{ color: '#22d3ee', marginTop: '6px' }}>✓ SAC 9965 RCM Compliant[span_5](start_span)[span_5](end_span) | UYDAM-TS-02-0359997</div>
+                    </div>
+
+                    <button 
+                      onClick={() => { setBookingSuccess(false); setActiveModal(null); }}
+                      style={{ background: '#22d3ee', color: '#020617', border: 'none', fontWeight: 900, padding: '14px 28px', borderRadius: '10px', cursor: 'pointer' }}
+                    >
+                      Done / Close Simulation
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
 
             {activeModal === 'ESG' && (
               <div>
@@ -355,7 +446,6 @@ export default function TCCPortal() {
                 </p>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px', marginBottom: '22px' }}>
-                  
                   <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.4)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center' }}>
                     <div style={{ fontSize: '24px', marginBottom: '8px' }}>🛡️</div>
                     <div style={{ fontSize: '22px', fontWeight: 900, color: '#34d399', fontFamily: 'monospace' }}>₹10.00</div>
@@ -376,7 +466,6 @@ export default function TCCPortal() {
                     <div style={{ fontSize: '12px', fontWeight: 900, color: '#fff', marginTop: '6px' }}>Climate Change</div>
                     <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '6px', lineHeight: '1.4' }}>Carbon offset & EV last-mile fleet auditing</div>
                   </div>
-
                 </div>
 
                 <div style={{ background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.5)', padding: '14px', borderRadius: '14px', fontSize: '12px', color: '#34d399', textAlign: 'center', fontWeight: 800 }}>
