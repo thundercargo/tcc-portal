@@ -523,7 +523,7 @@ export default function TCCPortal() {
               <div>
                 <h3 style={{ fontSize: '20px', fontWeight: 900, color: '#fff', marginBottom: '12px' }}>Master Tariff & Demurrage Schedule</h3>
                 <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6', marginBottom: '20px' }}>
-                  SAC 9965 RCM Compliant contract pricing matrix. Storage is free for 24 hours at primary terminals, followed by ₹1.50 per KG per day demurrage[span_7](start_span)[span_7](end_span).
+                  SAC 9965 RCM Compliant[span_7](start_span)[span_7](end_span) contract pricing matrix. Storage is free for 24 hours at primary terminals, followed by ₹1.50 per KG per day demurrage[span_8](start_span)[span_8](end_span).
                 </p>
                 <div style={{ background: '#020617', padding: '14px', borderRadius: '12px', fontSize: '12px', color: '#22d3ee', border: '1px solid rgba(6, 182, 212, 0.4)' }}>
                   ✓ Automated calculation across all 15 regional distance corridors.
