@@ -304,4 +304,249 @@ export default function TCCPortal() {
               
               <button 
                 onClick={() => setActiveModal('BOOKING')}
-                style={{ background: 'linear-gradient(90deg, #22d3ee, #34d399)', border: 'none', color: '#020617', fontWeight: 900, fontSize: '11px', padding: '14px', borderRadius: '12px', cursor: 'pointer', textTransform:
+                style={{ background: 'linear-gradient(90deg, #22d3ee, #34d399)', border: 'none', color: '#020617', fontWeight: 900, fontSize: '11px', padding: '14px', borderRadius: '12px', cursor: 'pointer', textTransform: 'uppercase', boxShadow: '0 8px 25px rgba(6,182,212,0.4)' }}
+              >
+                🚀 Book & UPI Pay Now
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Network Metrics Counters */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px', marginBottom: '24px' }}>
+          <div style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.88), rgba(8,14,28,0.92))', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.4)' }}>
+            <div style={{ fontSize: '24px', fontWeight: 900, color: '#fff', fontFamily: 'monospace' }}>3 <span style={{ color: '#22d3ee' }}>Primary</span></div>
+            <div style={{ fontSize: '10px', fontWeight: 800, color: '#94a3b8', marginTop: '6px' }}>CONSOLIDATION TERMINALS</div>
+          </div>
+          <div style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.88), rgba(8,14,28,0.92))', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.4)' }}>
+            <div style={{ fontSize: '24px', fontWeight: 900, color: '#fff', fontFamily: 'monospace' }}>175+</div>
+            <div style={{ fontSize: '10px', fontWeight: 800, color: '#94a3b8', marginTop: '6px' }}>DISTRICT LOGISTICS HUBS</div>
+          </div>
+          <div style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.88), rgba(8,14,28,0.92))', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.4)' }}>
+            <div style={{ fontSize: '24px', fontWeight: 900, color: '#fff', fontFamily: 'monospace' }}>355+</div>
+            <div style={{ fontSize: '10px', fontWeight: 800, color: '#94a3b8', marginTop: '6px' }}>EXPRESS COLLECTION NODES</div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div style={{ textAlign: 'center', fontSize: '11px', color: '#94a3b8', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px', fontWeight: 500 }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '8px', flexWrap: 'wrap' }}>
+            <span>💚 WhatsApp Business: +91 8340085989</span>
+            <span>✉️ Gmail: tcc.cargodesk@gmail.com</span>
+            <span>🛡️ MSME: UDYAM-TS-02-0359997</span>
+          </div>
+          <div>Thunder Cargo Corridor (TCC) • South India B2B Last-Mile Logistics Infrastructure Framework</div>
+        </div>
+
+      </div>
+
+      {/* Modals */}
+      {activeModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(2, 6, 23, 0.92)', backdropFilter: 'blur(20px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', overflowY: 'auto' }}>
+          <div style={{ background: 'linear-gradient(145deg, #0f172a, #040711)', border: '1px solid rgba(6, 182, 212, 0.5)', borderRadius: '24px', maxWidth: '720px', width: '100%', padding: '32px', position: 'relative', boxShadow: '0 30px 80px rgba(0,0,0,0.95)', maxHeight: '90vh', overflowY: 'auto' }}>
+            
+            <button onClick={() => { setActiveModal(null); setBookingSuccess(false); setOperatorPin(''); setPinError(false); }} style={{ position: 'absolute', top: '20px', right: '20px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', borderRadius: '50%', width: '38px', height: '38px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', zIndex: 10 }}>✕</button>
+
+            {activeModal === 'BOOKING' && (
+              <div>
+                {!bookingSuccess ? (
+                  <div>
+                    <h3 style={{ fontSize: '20px', fontWeight: 900, color: '#fff', marginBottom: '6px' }}>⚡ TCC Express B2B Booking & Secure UPI Pay</h3>
+                    <p style={{ fontSize: '12px', color: '#22d3ee', marginBottom: '20px', fontWeight: 700 }}>Secunderabad Station Outer Gate Terminal • AP/TS Bus-Feeder Corridor</p>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+                      <div>
+                        <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '6px', fontWeight: 700 }}>Consignor (Sender Firm)</label>
+                        <input type="text" placeholder="e.g. Sri Venkateshwara Textiles" value={senderName} onChange={(e) => setSenderName(e.target.value)} style={{ width: '100%', background: '#020617', border: '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '10px', color: '#fff', fontSize: '13px' }} />
+                      </div>
+                      <div>
+                        <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '6px', fontWeight: 700 }}>Sender Mobile Number</label>
+                        <input type="text" placeholder="10-digit mobile" value={senderMobile} onChange={(e) => setSenderMobile(e.target.value)} style={{ width: '100%', background: '#020617', border: '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '10px', color: '#fff', fontSize: '13px' }} />
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+                      <div>
+                        <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '6px', fontWeight: 700 }}>Consignee (Receiver Firm)</label>
+                        <input type="text" placeholder="e.g. Warangal Hub Agents" value={receiverName} onChange={(e) => setReceiverName(e.target.value)} style={{ width: '100%', background: '#020617', border: '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '10px', color: '#fff', fontSize: '13px' }} />
+                      </div>
+                      <div>
+                        <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '6px', fontWeight: 700 }}>Destination Hub (AP / TS)</label>
+                        <input type="text" placeholder="e.g. Warangal, Vijayawada, Karimnagar" value={destCity} onChange={(e) => setDestCity(e.target.value)} style={{ width: '100%', background: '#020617', border: '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '10px', color: '#fff', fontSize: '13px' }} />
+                      </div>
+                    </div>
+
+                    <div style={{ marginBottom: '18px' }}>
+                      <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '6px', fontWeight: 700 }}>Cargo Description & Weight</label>
+                      <input type="text" value={`${goodsDesc} | Gross Weight: ${weight} KG | Corridor: ${data.name}`} onChange={(e) => setGoodsDesc(e.target.value)} style={{ width: '100%', background: '#020617', border: '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '10px', color: '#fff', fontSize: '13px' }} />
+                    </div>
+
+                    {/* Payment Box with Slice UPI */}
+                    <div style={{ background: 'rgba(4,8,16,0.9)', border: '1px solid rgba(6,182,212,0.4)', borderRadius: '16px', padding: '18px', textAlign: 'center', marginBottom: '18px' }}>
+                      <div style={{ fontSize: '12px', color: '#cbd5e1', marginBottom: '4px' }}>Total Freight Payable (Incl. Green ESG Offset):</div>
+                      <div style={{ fontSize: '32px', fontWeight: 900, fontFamily: 'monospace', color: '#22d3ee', marginBottom: '12px' }}>₹{finalPrice.toLocaleString('en-IN')}</div>
+                      
+                      <div style={{ background: '#fff', padding: '12px', display: 'inline-block', borderRadius: '10px', marginBottom: '10px' }}>
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=9848196716@slc&pn=Mohammed%20Mustafa%20Khan%20Amer&am=" alt="Slice UPI QR" style={{ width: '150px', height: '150px', display: 'block', margin: 'auto' }} />
+                      </div>
+
+                      <div style={{ fontSize: '12px', color: '#fff', marginBottom: '14px' }}>
+                        <strong>Account Holder:</strong> Mohammed Mustafa Khan Amer[span_4](start_span)[span_4](end_span)<br />
+                        <strong>UPI ID:</strong> <span style={{ color: '#22d3ee', fontFamily: 'monospace' }}>9848196716@slc</span>[span_5](start_span)[span_5](end_span)
+                      </div>
+
+                      {/* Operator Authorization PIN Gate */}
+                      <div style={{ background: 'rgba(15,23,42,0.95)', border: '1px solid rgba(245,158,11,0.5)', borderRadius: '12px', padding: '14px', textAlign: 'left' }}>
+                        <label style={{ fontSize: '11px', color: '#fbbf24', display: 'block', marginBottom: '6px', fontWeight: 800, textTransform: 'uppercase' }}>
+                          🔒 Operator Authorization PIN (Required to Generate Slip)
+                        </label>
+                        <input 
+                          type="password" 
+                          maxLength={6}
+                          placeholder="Enter Operator PIN" 
+                          value={operatorPin} 
+                          onChange={(e) => { setOperatorPin(e.target.value); setPinError(false); }} 
+                          style={{ width: '100%', background: '#020617', border: pinError ? '1px solid #ef4444' : '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '8px', color: '#fff', fontSize: '14px', fontFamily: 'monospace' }} 
+                        />
+                        {pinError && <div style={{ fontSize: '11px', color: '#ef4444', marginTop: '4px', fontWeight: 700 }}>⚠️ Incorrect Operator PIN! Verification failed.</div>}
+                      </div>
+                    </div>
+
+                    <button 
+                      onClick={() => {
+                        if (operatorPin === '7860') {
+                          const currentTimestamp = `${new Date().toLocaleDateString('en-IN')} | ${clock}`;
+                          setReceiptTimestamp(currentTimestamp);
+                          setBookingSuccess(true);
+                          setPinError(false);
+
+                          const adminMessage = `🚨 *TCC NEW BOOKING VERIFIED* 🚨%0A%0A` +
+                            `📌 *LR No:* TCC/2026/SEC-${Math.floor(1000 + Math.random() * 9000)}%0A` +
+                            `⏰ *Time:* ${currentTimestamp}%0A` +
+                            `📤 *Sender:* ${senderName || 'Sri Venkateshwara Textiles'}%0A` +
+                            `📥 *Receiver:* ${receiverName || 'Regional Hub Agent'}%0A` +
+                            `📍 *Destination:* ${destCity}%0A` +
+                            `⚖️ *Weight:* ${weight} KG%0A` +
+                            `💰 *Freight Paid:* ₹${finalPrice.toLocaleString('en-IN')}%0A` +
+                            `🔒 *Status:* Verified & Paid via UPI (9848196716@slc)`;
+
+                          window.open(`https://wa.me/918340085989?text=${adminMessage}`, '_blank');
+                        } else {
+                          setPinError(true);
+                        }
+                      }}
+                      style={{ width: '100%', background: 'linear-gradient(90deg, #f59e0b, #34d399)', border: 'none', color: '#020617', fontWeight: 900, fontSize: '13px', padding: '16px', borderRadius: '12px', cursor: 'pointer', textTransform: 'uppercase', boxShadow: '0 8px 25px rgba(245,158,11,0.4)' }}
+                    >
+                      🔐 Verify Payment & Generate Official Challan
+                    </button>
+                  </div>
+                ) : (
+                  <div style={{ textAlign: 'center', padding: '10px 0' }}>
+                    <div style={{ fontSize: '48px', marginBottom: '10px' }}>🎉</div>
+                    <h3 style={{ fontSize: '22px', fontWeight: 900, color: '#34d399', marginBottom: '6px' }}>Consignment Booked & Verified Successfully!</h3>
+                    <p style={{ fontSize: '12px', color: '#cbd5e1', marginBottom: '20px' }}>Digital Delivery Challan & Forwarding Memo generated for Secunderabad outer gate transfer bay.</p>
+
+                    <div style={{ background: '#020617', border: '1px solid rgba(16,185,129,0.4)', borderRadius: '14px', padding: '16px', textAlign: 'left', fontSize: '12px', marginBottom: '20px', fontFamily: 'monospace' }}>
+                      <div style={{ color: '#34d399', fontWeight: 800, marginBottom: '8px' }}>LR NO: TCC/2026/SEC-{Math.floor(1000 + Math.random() * 9000)}</div>
+                      <div><strong>Timestamp:</strong> {receiptTimestamp}</div>
+                      <div><strong>Sender:</strong> {senderName || 'Sri Venkateshwara Textiles'}</div>
+                      <div><strong>Receiver:</strong> {receiverName || 'Regional Hub Agent'}</div>
+                      <div><strong>Destination Hub:</strong> {destCity}</div>
+                      <div><strong>Weight:</strong> {weight} KG | <strong>Freight:</strong> ₹{finalPrice.toLocaleString('en-IN')}</div>
+                      <div><strong>Payment Status:</strong> VERIFIED & PAID via UPI (`9848196716@slc`)[span_6](start_span)[span_6](end_span)</div>
+                      <div style={{ color: '#22d3ee', marginTop: '6px' }}>✓ SAC 9965 RCM Compliant[span_7](start_span)[span_7](end_span) | UYDAM-TS-02-0359997</div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                      <button 
+                        onClick={() => window.print()}
+                        style={{ background: '#34d399', color: '#020617', border: 'none', fontWeight: 900, padding: '14px', borderRadius: '10px', cursor: 'pointer', textTransform: 'uppercase' }}
+                      >
+                        🖨️ Print / Save Challan
+                      </button>
+                      <button 
+                        onClick={() => { setBookingSuccess(false); setActiveModal(null); setOperatorPin(''); }}
+                        style={{ background: '#22d3ee', color: '#020617', border: 'none', fontWeight: 900, padding: '14px', borderRadius: '10px', cursor: 'pointer', textTransform: 'uppercase' }}
+                      >
+                        Done / Close
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeModal === 'ESG' && (
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '18px' }}>
+                  <div style={{ background: 'rgba(16,185,129,0.2)', border: '1px solid rgba(16,185,129,0.5)', borderRadius: '16px', width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px' }}>🌱</div>
+                  <div>
+                    <h3 style={{ fontSize: '20px', fontWeight: 900, color: '#fff' }}>Voluntary ESG & CSR Green Logistics Pledge</h3>
+                    <p style={{ fontSize: '12px', color: '#34d399', fontWeight: 800 }}>Mandatory ₹20.00 Automated Allocation Per Commercial Waybill</p>
+                  </div>
+                </div>
+
+                <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6', marginBottom: '22px' }}>
+                  Every dispatch processed across the Thunder Cargo Corridor earmarks a dedicated ₹20.00 social and environmental impact fund for station workers, local ecology, and carbon auditing.
+                </p>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px', marginBottom: '22px' }}>
+                  <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.4)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '24px', marginBottom: '8px' }}>🛡️</div>
+                    <div style={{ fontSize: '22px', fontWeight: 900, color: '#34d399', fontFamily: 'monospace' }}>₹10.00</div>
+                    <div style={{ fontSize: '12px', fontWeight: 900, color: '#fff', marginTop: '6px' }}>Hub Welfare Fund</div>
+                    <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '6px', lineHeight: '1.4' }}>Porter health cover, safety gear & rest facilities</div>
+                  </div>
+
+                  <div style={{ background: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.4)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '24px', marginBottom: '8px' }}>🌳</div>
+                    <div style={{ fontSize: '22px', fontWeight: 900, color: '#22d3ee', fontFamily: 'monospace' }}>₹5.00</div>
+                    <div style={{ fontSize: '12px', fontWeight: 900, color: '#fff', marginTop: '6px' }}>Afforestation</div>
+                    <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '6px', lineHeight: '1.4' }}>Urban green belts along railway freight corridors</div>
+                  </div>
+
+                  <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.4)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '24px', marginBottom: '8px' }}>⚡</div>
+                    <div style={{ fontSize: '22px', fontWeight: 900, color: '#fbbf24', fontFamily: 'monospace' }}>₹5.00</div>
+                    <div style={{ fontSize: '12px', fontWeight: 900, color: '#fff', marginTop: '6px' }}>Climate Change</div>
+                    <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '6px', lineHeight: '1.4' }}>Carbon offset & EV last-mile fleet auditing</div>
+                  </div>
+                </div>
+
+                <div style={{ background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.5)', padding: '14px', borderRadius: '14px', fontSize: '12px', color: '#34d399', textAlign: 'center', fontWeight: 800 }}>
+                  ✓ Certified Net-Zero Last-Mile Infrastructure Framework (SAC 9965 Compliant)[span_8](start_span)[span_8](end_span)
+                </div>
+              </div>
+            )}
+
+            {activeModal === 'TARIFF' && (
+              <div>
+                <h3 style={{ fontSize: '20px', fontWeight: 900, color: '#fff', marginBottom: '12px' }}>Master Tariff & Demurrage Schedule</h3>
+                <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6', marginBottom: '20px' }}>
+                  SAC 9965 RCM Compliant contract pricing matrix. Storage is free for 24 hours at primary terminals, followed by ₹1.50 per KG per day demurrage.[span_9](start_span)[span_9](end_span)
+                </p>
+                <div style={{ background: '#020617', padding: '14px', borderRadius: '12px', fontSize: '12px', color: '#22d3ee', border: '1px solid rgba(6, 182, 212, 0.4)' }}>
+                  ✓ Automated calculation across all 15 regional distance corridors.
+                </div>
+              </div>
+            )}
+
+            {activeModal === 'SLA' && (
+              <div>
+                <h3 style={{ fontSize: '20px', fontWeight: 900, color: '#fff', marginBottom: '12px' }}>Gate-to-Feeder SLA Protocol</h3>
+                <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6', marginBottom: '20px' }}>
+                  Seamless cargo intake at station gates and inward offices, synchronizing with official station operations for rapid last-mile feeder dispatch at Secunderabad SCR terminals.
+                </p>
+                <div style={{ background: '#020617', padding: '14px', borderRadius: '12px', fontSize: '12px', color: '#34d399', border: '1px solid rgba(16, 185, 129, 0.4)' }}>
+                  ✓ Rapid gate-to-feeder coordination • Express dispatch.
+                </div>
+              </div>
+            )}
+
+          </div>
+        </div>
+      )}
+
+    </main>
+  );
+}
