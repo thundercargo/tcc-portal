@@ -408,13 +408,12 @@ export default function TCCPortal() {
                           onChange={(e) => { setOperatorPin(e.target.value); setPinError(false); }} 
                           style={{ width: '100%', background: '#020617', border: pinError ? '1px solid #ef4444' : '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '8px', color: '#fff', fontSize: '14px', fontFamily: 'monospace' }} 
                         />
-                        {pinError && <div style={{ fontSize: '11px', color: '#ef4444', marginTop: '4px', fontWeight: 700 }}>⚠️ Incorrect Operator PIN! Verification failed. (Hint PIN: 7860)</div>}
+                        {pinError && <div style={{ fontSize: '11px', color: '#ef4444', marginTop: '4px', fontWeight: 700 }}>⚠️ Incorrect Operator PIN! Verification failed.</div>}
                       </div>
                     </div>
 
                     <button 
                       onClick={() => {
-                        // Secret Operator PIN verification (Set PIN to 7860)
                         if (operatorPin === '7860') {
                           setReceiptTimestamp(`${new Date().toLocaleDateString('en-IN')} | ${clock}`);
                           setBookingSuccess(true);
