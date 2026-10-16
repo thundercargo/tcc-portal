@@ -27,15 +27,19 @@ export default function TCCPortal() {
   const [weight, setWeight] = useState<number>(100);
   const [activeModal, setActiveModal] = useState<'TARIFF' | 'SLA' | 'ESG' | 'BOOKING' | null>(null);
 
-  // Booking form states (AP / TS Regional Focus)
+  // Booking form states
   const [senderName, setSenderName] = useState('');
   const [senderMobile, setSenderMobile] = useState('');
   const [receiverName, setReceiverName] = useState('');
   const [receiverMobile, setReceiverMobile] = useState('');
   const [destCity, setDestCity] = useState('Warangal (TS Bus Depot)');
   const [goodsDesc, setGoodsDesc] = useState('Textile Bales & Bulk Cartons');
+  
+  // Security & Verification States
+  const [operatorPin, setOperatorPin] = useState('');
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [receiptTimestamp, setReceiptTimestamp] = useState('');
+  const [pinError, setPinError] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -341,7 +345,7 @@ export default function TCCPortal() {
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(2, 6, 23, 0.92)', backdropFilter: 'blur(20px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', overflowY: 'auto' }}>
           <div style={{ background: 'linear-gradient(145deg, #0f172a, #040711)', border: '1px solid rgba(6, 182, 212, 0.5)', borderRadius: '24px', maxWidth: '720px', width: '100%', padding: '32px', position: 'relative', boxShadow: '0 30px 80px rgba(0,0,0,0.95)', maxHeight: '90vh', overflowY: 'auto' }}>
             
-            <button onClick={() => { setActiveModal(null); setBookingSuccess(false); }} style={{ position: 'absolute', top: '20px', right: '20px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', borderRadius: '50%', width: '38px', height: '38px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', zIndex: 10 }}>✕</button>
+            <button onClick={() => { setActiveModal(null); setBookingSuccess(false); setOperatorPin(''); setPinError(false); }} style={{ position: 'absolute', top: '20px', right: '20px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', borderRadius: '50%', width: '38px', height: '38px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', zIndex: 10 }}>✕</button>
 
             {activeModal === 'BOOKING' && (
               <div>
@@ -386,20 +390,42 @@ export default function TCCPortal() {
                         <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=9848196716@slc&pn=Mohammed%20Mustafa%20Khan%20Amer&am=" alt="Slice UPI QR" style={{ width: '150px', height: '150px', display: 'block', margin: 'auto' }} />
                       </div>
 
-                      <div style={{ fontSize: '12px', color: '#fff' }}>
+                      <div style={{ fontSize: '12px', color: '#fff', marginBottom: '14px' }}>
                         <strong>Account Holder:</strong> Mohammed Mustafa Khan Amer<br />
                         <strong>UPI ID:</strong> <span style={{ color: '#22d3ee', fontFamily: 'monospace' }}>9848196716@slc</span>
+                      </div>
+
+                      {/* Operator Authorization PIN Gate */}
+                      <div style={{ background: 'rgba(15,23,42,0.95)', border: '1px solid rgba(245,158,11,0.5)', borderRadius: '12px', padding: '14px', textAlign: 'left' }}>
+                        <label style={{ fontSize: '11px', color: '#fbbf24', display: 'block', marginBottom: '6px', fontWeight: 800, textTransform: 'uppercase' }}>
+                          🔒 Operator Authorization PIN (Required to Generate Slip)
+                        </label>
+                        <input 
+                          type="password" 
+                          maxLength={6}
+                          placeholder="Enter Operator PIN" 
+                          value={operatorPin} 
+                          onChange={(e) => { setOperatorPin(e.target.value); setPinError(false); }} 
+                          style={{ width: '100%', background: '#020617', border: pinError ? '1px solid #ef4444' : '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '8px', color: '#fff', fontSize: '14px', fontFamily: 'monospace' }} 
+                        />
+                        {pinError && <div style={{ fontSize: '11px', color: '#ef4444', marginTop: '4px', fontWeight: 700 }}>⚠️ Incorrect Operator PIN! Verification failed. (Hint PIN: 7860)</div>}
                       </div>
                     </div>
 
                     <button 
                       onClick={() => {
-                        setReceiptTimestamp(`${new Date().toLocaleDateString('en-IN')} | ${clock}`);
-                        setBookingSuccess(true);
+                        // Secret Operator PIN verification (Set PIN to 7860)
+                        if (operatorPin === '7860') {
+                          setReceiptTimestamp(`${new Date().toLocaleDateString('en-IN')} | ${clock}`);
+                          setBookingSuccess(true);
+                          setPinError(false);
+                        } else {
+                          setPinError(true);
+                        }
                       }}
-                      style={{ width: '100%', background: 'linear-gradient(90deg, #22d3ee, #34d399)', border: 'none', color: '#020617', fontWeight: 900, fontSize: '13px', padding: '16px', borderRadius: '12px', cursor: 'pointer', textTransform: 'uppercase', boxShadow: '0 8px 25px rgba(6,182,212,0.4)' }}
+                      style={{ width: '100%', background: 'linear-gradient(90deg, #f59e0b, #34d399)', border: 'none', color: '#020617', fontWeight: 900, fontSize: '13px', padding: '16px', borderRadius: '12px', cursor: 'pointer', textTransform: 'uppercase', boxShadow: '0 8px 25px rgba(245,158,11,0.4)' }}
                     >
-                      ✓ Simulate UPI Payment & Generate Digital Challan
+                      🔐 Verify Payment & Generate Official Challan
                     </button>
                   </div>
                 ) : (
@@ -415,12 +441,12 @@ export default function TCCPortal() {
                       <div><strong>Receiver:</strong> {receiverName || 'Regional Hub Agent'}</div>
                       <div><strong>Destination Hub:</strong> {destCity}</div>
                       <div><strong>Weight:</strong> {weight} KG | <strong>Freight:</strong> ₹{finalPrice.toLocaleString('en-IN')}</div>
-                      <div><strong>Payment Status:</strong> PAID via UPI (`9848196716@slc`)</div>
+                      <div><strong>Payment Status:</strong> VERIFIED & PAID via UPI (`9848196716@slc`)</div>
                       <div style={{ color: '#22d3ee', marginTop: '6px' }}>✓ SAC 9965 RCM Compliant | UYDAM-TS-02-0359997</div>
                     </div>
 
                     <button 
-                      onClick={() => { setBookingSuccess(false); setActiveModal(null); }}
+                      onClick={() => { setBookingSuccess(false); setActiveModal(null); setOperatorPin(''); }}
                       style={{ background: '#22d3ee', color: '#020617', border: 'none', fontWeight: 900, padding: '14px 28px', borderRadius: '10px', cursor: 'pointer' }}
                     >
                       Done / Close Simulation
