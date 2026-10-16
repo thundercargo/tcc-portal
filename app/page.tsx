@@ -390,10 +390,11 @@ export default function TCCPortal() {
                         <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=9848196716@slc&pn=Mohammed%20Mustafa%20Khan%20Amer&am=" alt="Slice UPI QR" style={{ width: '150px', height: '150px', display: 'block', margin: 'auto' }} />
                       </div>
 
-                      <div style={{ fontSize: '12px', color: '#fff', marginBottom: '14px' }}>
-                        <strong>Account Holder:</strong> Mohammed Mustafa Khan Amer<br />
-                        <strong>UPI ID:</strong> <span style={{ color: '#22d3ee', fontFamily: 'monospace' }}>9848196716@slc</span>
-                      </div>
+                                          <div style={{ fontSize: '12px', color: '#fff', marginBottom: '14px' }}>
+                      <strong>Account Holder:</strong> Mohammed Mustafa Khan Amer<br />
+                      <strong>UPI ID:</strong> <span style={{ color: '#22d3ee', fontFamily: 'monospace' }}>9848196716@slc</span>
+                    </div>
+
 
                       {/* Operator Authorization PIN Gate */}
                       <div style={{ background: 'rgba(15,23,42,0.95)', border: '1px solid rgba(245,158,11,0.5)', borderRadius: '12px', padding: '14px', textAlign: 'left' }}>
