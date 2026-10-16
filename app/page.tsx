@@ -3,21 +3,21 @@
 import React, { useState, useEffect } from 'react';
 
 const TARIFFS: Record<string, { name: string; base: number[]; excess: number }> = {
-  INTRA_1: { name: "INTRA-CITY 1 (4 – 5 KM)", base: [150, 250, 380, 550, 1100, 1800], excess: 3.50 },
-  INTRA_2: { name: "INTRA-CITY 2 (6 – 15 KM)", base: [200, 320, 480, 750, 1500, 2400], excess: 4.50 },
-  INTRA_3: { name: "INTRA-CITY 3 (16 – 30 KM)", base: [280, 420, 650, 1050, 2000, 3200], excess: 6.00 },
-  REG_1A:  { name: "REGIONAL 1A (31 – 50 KM)", base: [240, 340, 520, 720, 1400, 2400], excess: 4.50 },
-  REG_1B:  { name: "REGIONAL 1B (51 – 100 KM)", base: [280, 390, 600, 820, 1600, 2750], excess: 5.20 },
-  REG_2A:  { name: "REGIONAL 2A (101 – 150 KM)", base: [320, 450, 700, 980, 1900, 3100], excess: 6.00 },
-  REG_2B:  { name: "REGIONAL 2B (151 – 200 KM)", base: [350, 490, 780, 1100, 2200, 3500], excess: 6.80 },
-  REG_3A:  { name: "REGIONAL 3A (201 – 250 KM)", base: [380, 540, 880, 1280, 2480, 3750], excess: 7.30 },
-  REG_3B:  { name: "REGIONAL 3B (251 – 300 KM)", base: [410, 590, 1020, 1420, 2680, 3920], excess: 7.80 },
-  REG_4A:  { name: "REGIONAL 4A (301 – 350 KM)", base: [440, 640, 1120, 1580, 2950, 4400], excess: 8.60 },
-  REG_4B:  { name: "REGIONAL 4B (351 – 400 KM)", base: [470, 690, 1220, 1720, 3220, 4920], excess: 9.50 },
-  REG_5A:  { name: "REGIONAL 5A (401 – 450 KM)", base: [500, 740, 1320, 1880, 3550, 5400], excess: 10.50 },
-  REG_5B:  { name: "REGIONAL 5B (451 – 500 KM)", base: [530, 790, 1420, 2020, 3820, 5920], excess: 11.50 },
-  REG_6A:  { name: "REGIONAL 6A (501 – 550 KM)", base: [560, 840, 1520, 2180, 4150, 6400], excess: 12.50 },
-  REG_6B:  { name: "REGIONAL 6B (551 – 600 KM)", base: [590, 890, 1620, 2320, 4420, 6920], excess: 13.50 }
+  INTRA_1: { name: "INTRA-CITY 1 (4 – 5 KM)", base: [170, 270, 400, 570, 1120, 1820], excess: 3.50 },
+  INTRA_2: { name: "INTRA-CITY 2 (6 – 15 KM)", base: [220, 340, 500, 770, 1520, 2420], excess: 4.50 },
+  INTRA_3: { name: "INTRA-CITY 3 (16 – 30 KM)", base: [300, 440, 670, 1070, 2020, 3220], excess: 6.00 },
+  REG_1A:  { name: "REGIONAL 1A (31 – 50 KM)", base: [260, 360, 540, 740, 1420, 2420], excess: 4.50 },
+  REG_1B:  { name: "REGIONAL 1B (51 – 100 KM)", base: [300, 410, 620, 840, 1620, 2770], excess: 5.20 },
+  REG_2A:  { name: "REGIONAL 2A (101 – 150 KM)", base: [340, 470, 720, 1000, 1920, 3120], excess: 6.00 },
+  REG_2B:  { name: "REGIONAL 2B (151 – 200 KM)", base: [370, 510, 800, 1120, 2220, 3520], excess: 6.80 },
+  REG_3A:  { name: "REGIONAL 3A (201 – 250 KM)", base: [400, 560, 900, 1300, 2500, 3770], excess: 7.30 },
+  REG_3B:  { name: "REGIONAL 3B (251 – 300 KM)", base: [430, 610, 1040, 1440, 2700, 3940], excess: 7.80 },
+  REG_4A:  { name: "REGIONAL 4A (301 – 350 KM)", base: [460, 660, 1140, 1600, 2970, 4420], excess: 8.60 },
+  REG_4B:  { name: "REGIONAL 4B (351 – 400 KM)", base: [490, 710, 1240, 1740, 3240, 4940], excess: 9.50 },
+  REG_5A:  { name: "REGIONAL 5A (401 – 450 KM)", base: [520, 760, 1340, 1900, 3570, 5420], excess: 10.50 },
+  REG_5B:  { name: "REGIONAL 5B (451 – 500 KM)", base: [550, 810, 1440, 2040, 3840, 5940], excess: 11.50 },
+  REG_6A:  { name: "REGIONAL 6A (501 – 550 KM)", base: [580, 860, 1540, 2200, 4170, 6420], excess: 12.50 },
+  REG_6B:  { name: "REGIONAL 6B (551 – 600 KM)", base: [610, 910, 1640, 2340, 4440, 6940], excess: 13.50 }
 };
 
 export default function TCCPortal() {
@@ -148,7 +148,8 @@ export default function TCCPortal() {
     slabText = 'EXCESS > 500 KG';
   }
 
-  const finalPrice = serviceMode === 'THUNDER' ? Math.round(basePrice * 1.25) : basePrice;
+  // Updated to 29% premium for Thunder Service as per CFO financial model
+  const finalPrice = serviceMode === 'THUNDER' ? Math.round(basePrice * 1.29) : basePrice;
 
   return (
     <main style={{ color: '#f8fafc', minHeight: '100vh', padding: '24px 16px 80px', fontFamily: 'sans-serif', position: 'relative', overflowX: 'hidden' }}>
@@ -221,7 +222,7 @@ export default function TCCPortal() {
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
               <span style={{ fontSize: '13px', fontWeight: 900, color: '#fff', letterSpacing: '0.5px' }}>
-                ⚡ 12H THUNDER SERVICE (+25%)
+                ⚡ 12H THUNDER SERVICE (+29%)
               </span>
             </div>
             <div style={{ fontSize: '12px', color: '#fde047', lineHeight: '1.4', fontWeight: 600 }}>"Loaded at Dawn, Landed by Dusk • Shipped by Dusk, Delivered by Dawn"</div>
@@ -266,7 +267,7 @@ export default function TCCPortal() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
                 <div style={{ fontSize: '10px', fontWeight: 900, color: serviceMode === 'THUNDER' ? '#fbbf24' : '#22d3ee', letterSpacing: '0.8px' }}>
-                  {serviceMode === 'THUNDER' ? '⚡ THUNDER SERVICE QUOTE (12H ULTRA-EXPRESS +25%)' : 'EXACT TARIFF QUOTE (24H SAME-DAY)'}
+                  {serviceMode === 'THUNDER' ? '⚡ THUNDER SERVICE QUOTE (12H ULTRA-EXPRESS +29%)' : 'EXACT TARIFF QUOTE (24H SAME-DAY INCL. ₹20 ESG)'}
                 </div>
                 <div style={{ fontSize: '42px', fontWeight: 900, fontFamily: 'monospace', color: '#fff', margin: '4px 0', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>₹{finalPrice.toLocaleString('en-IN')}</div>
                 <div style={{ fontSize: '11px', color: serviceMode === 'THUNDER' ? '#fde047' : '#34d399', fontWeight: 700, cursor: 'pointer' }} onClick={() => setActiveModal('ESG')}>
@@ -293,7 +294,7 @@ export default function TCCPortal() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '18px' }}>
               <button 
                 onClick={() => {
-                  const quoteText = `TCC B2B Green Freight Quote (${serviceMode === 'THUNDER' ? '12H Thunder Service (+25%)' : '24H Same-Day Express'})\nCorridor: ${data.name}\nWeight: ${weight} KG\nEst. Tariff: ₹${finalPrice.toLocaleString('en-IN')} (Incl. ₹20 ESG Green Offset)\nSAC: 9965 RCM Compliant`;
+                  const quoteText = `TCC B2B Green Freight Quote (${serviceMode === 'THUNDER' ? '12H Thunder Service (+29%)' : '24H Same-Day Express'})\nCorridor: ${data.name}\nWeight: ${weight} KG\nEst. Tariff: ₹${finalPrice.toLocaleString('en-IN')} (Incl. ₹20 ESG Green Offset)\nSAC: 9965 RCM Compliant`;
                   navigator.clipboard.writeText(quoteText);
                   alert('Official Green Freight Quote Copied Successfully!');
                 }}
