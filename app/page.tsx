@@ -27,7 +27,7 @@ export default function TCCPortal() {
   const [weight, setWeight] = useState<number>(100);
   const [activeModal, setActiveModal] = useState<'TARIFF' | 'SLA' | 'ESG' | 'BOOKING' | null>(null);
 
-  // Booking form states
+  // Booking Form States
   const [senderName, setSenderName] = useState('');
   const [senderMobile, setSenderMobile] = useState('');
   const [receiverName, setReceiverName] = useState('');
@@ -157,10 +157,12 @@ export default function TCCPortal() {
 
       <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         
+        {/* Main Branding Header */}
         <h1 style={{ fontSize: '30px', fontWeight: 900, color: '#fff', letterSpacing: '-0.5px', textShadow: '0 2px 10px rgba(0,0,0,0.5)', marginBottom: '6px' }}>
           THUNDER CARGO <span style={{ color: '#22d3ee' }}>CORRIDOR (TCC)</span>
         </h1>
         
+        {/* Badges Header */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', marginBottom: '14px' }}>
           <span style={{ background: 'rgba(6,182,212,0.18)', border: '1px solid rgba(6,182,212,0.45)', color: '#22d3ee', fontSize: '10px', fontWeight: 800, padding: '6px 14px', borderRadius: '20px', backdropFilter: 'blur(8px)' }}>AP & TS BUS-FEEDER NETWORK</span>
           <span style={{ background: 'rgba(6,182,212,0.18)', border: '1px solid rgba(6,182,212,0.45)', color: '#22d3ee', fontSize: '10px', fontWeight: 800, padding: '6px 14px', borderRadius: '20px', backdropFilter: 'blur(8px)' }}>UDYAM-TS-02-0359997</span>
@@ -188,6 +190,44 @@ export default function TCCPortal() {
           </div>
         </div>
 
+        {/* Service Cards */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
+          <div 
+            onClick={() => setServiceMode('24H')}
+            style={{ 
+              background: serviceMode === '24H' ? 'linear-gradient(135deg, rgba(6,182,212,0.28), rgba(15,23,42,0.95))' : 'linear-gradient(135deg, rgba(15,23,42,0.78), rgba(8,14,28,0.88))', 
+              border: serviceMode === '24H' ? '2px solid #22d3ee' : '1px solid rgba(255,255,255,0.12)', 
+              borderRadius: '18px', padding: '20px', cursor: 'pointer', transition: 'all 0.3s ease',
+              boxShadow: serviceMode === '24H' ? '0 0 25px rgba(6,182,212,0.35)' : '0 10px 30px rgba(0,0,0,0.5)',
+              backdropFilter: 'blur(12px)'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+              <span style={{ fontSize: '13px', fontWeight: 900, color: '#fff', letterSpacing: '0.5px' }}>24H SAME-DAY EXPRESS</span>
+              <span style={{ fontSize: '9px', color: '#22d3ee', background: 'rgba(6,182,212,0.25)', padding: '3px 8px', borderRadius: '6px', fontWeight: 800 }}>STANDARD</span>
+            </div>
+            <div style={{ fontSize: '12px', color: '#cbd5e1', lineHeight: '1.5', fontWeight: 500 }}>"Station-Gate Intake & Immediate Feeder Dispatch"</div>
+          </div>
+
+          <div 
+            onClick={() => setServiceMode('THUNDER')}
+            style={{ 
+              background: serviceMode === 'THUNDER' ? 'linear-gradient(135deg, rgba(245,158,11,0.28), rgba(15,23,42,0.95))' : 'linear-gradient(135deg, rgba(15,23,42,0.78), rgba(8,14,28,0.88))', 
+              border: serviceMode === 'THUNDER' ? '2px solid #fbbf24' : '1px solid rgba(255,255,255,0.12)', 
+              borderRadius: '18px', padding: '20px', cursor: 'pointer', transition: 'all 0.3s ease',
+              boxShadow: serviceMode === 'THUNDER' ? '0 0 25px rgba(245,158,11,0.35)' : '0 10px 30px rgba(0,0,0,0.5)',
+              backdropFilter: 'blur(12px)'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+              <span style={{ fontSize: '13px', fontWeight: 900, color: '#fff', letterSpacing: '0.5px' }}>
+                ⚡ 12H THUNDER SERVICE (+25%)
+              </span>
+            </div>
+            <div style={{ fontSize: '12px', color: '#fde047', lineHeight: '1.4', fontWeight: 600 }}>"Loaded at Dawn, Landed by Dusk • Shipped by Dusk, Delivered by Dawn"</div>
+          </div>
+        </div>
+
         {/* Master Calculator Box */}
         <div style={{ background: 'linear-gradient(145deg, rgba(15,23,42,0.88), rgba(6,10,20,0.92))', border: '1px solid rgba(6, 182, 212, 0.45)', borderRadius: '24px', padding: '28px', marginBottom: '24px', boxShadow: '0 20px 50px rgba(0,0,0,0.7)', backdropFilter: 'blur(16px)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
@@ -200,7 +240,7 @@ export default function TCCPortal() {
 
           <div style={{ marginBottom: '18px' }}>
             <label style={{ fontSize: '11px', fontWeight: 900, color: '#22d3ee', textTransform: 'uppercase', display: 'block', marginBottom: '8px', letterSpacing: '0.5px' }}>Corridor / Route Matrix</label>
-            <select value={corridor} onChange={(e) => setCorridor(e.target.value)} style={{ width: '100%', background: '#040711', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '14px', padding: '14px', color: '#fff', fontSize: '14px', fontWeight: 700, outline: 'none' }}>
+            <select value={corridor} onChange={(e) => setCorridor(e.target.value)} style={{ width: '100%', background: '#040711', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '14px', padding: '14px', color: '#fff', fontSize: '14px', fontWeight: 700, outline: 'none', boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.6)' }}>
               {Object.keys(TARIFFS).map(k => (
                 <option key={k} value={k}>{TARIFFS[k].name}</option>
               ))}
@@ -212,203 +252,56 @@ export default function TCCPortal() {
               <label style={{ fontSize: '11px', fontWeight: 900, color: '#22d3ee', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Consignment Gross Weight (KG)</label>
               <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 700 }}>Min: 1 KG (Sweet Spot: 50-250 KG)</span>
             </div>
-            <input type="number" value={weight} min={1} onChange={(e) => setWeight(Math.max(1, parseFloat(e.target.value) || 1))} style={{ width: '100%', background: '#040711', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '14px', padding: '14px', color: '#fff', fontSize: '16px', fontWeight: 800, outline: 'none' }} />
+            <input type="number" value={weight} min={1} onChange={(e) => setWeight(Math.max(1, parseFloat(e.target.value) || 1))} style={{ width: '100%', background: '#040711', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '14px', padding: '14px', color: '#fff', fontSize: '16px', fontWeight: 800, outline: 'none', boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.6)' }} />
 
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '12px' }}>
               {[10, 25, 50, 100, 250, 500, 750].map(w => (
-                <button key={w} onClick={() => setWeight(w)} style={{ background: weight === w ? 'rgba(6,182,212,0.35)' : 'rgba(255,255,255,0.06)', border: weight === w ? '1px solid #22d3ee' : '1px solid rgba(255,255,255,0.12)', color: weight === w ? '#fff' : '#cbd5e1', fontSize: '11px', fontWeight: 800, padding: '8px 14px', borderRadius: '10px', cursor: 'pointer' }}>{w}kg</button>
+                <button key={w} onClick={() => setWeight(w)} style={{ background: weight === w ? 'rgba(6,182,212,0.35)' : 'rgba(255,255,255,0.06)', border: weight === w ? '1px solid #22d3ee' : '1px solid rgba(255,255,255,0.12)', color: weight === w ? '#fff' : '#cbd5e1', fontSize: '11px', fontWeight: 800, padding: '8px 14px', borderRadius: '10px', cursor: 'pointer', transition: 'all 0.2s' }}>{w}kg</button>
               ))}
             </div>
           </div>
 
           {/* Quote Card */}
-          <div style={{ background: 'linear-gradient(135deg, rgba(8,14,28,0.98), rgba(4,8,16,0.99))', border: `2px solid ${serviceMode === 'THUNDER' ? '#fbbf24' : '#22d3ee'}`, borderRadius: '18px', padding: '22px', marginTop: '20px' }}>
+          <div style={{ background: 'linear-gradient(135deg, rgba(8,14,28,0.98), rgba(4,8,16,0.99))', border: `2px solid ${serviceMode === 'THUNDER' ? '#fbbf24' : '#22d3ee'}`, borderRadius: '18px', padding: '22px', marginTop: '20px', boxShadow: '0 15px 40px rgba(0,0,0,0.6)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
                 <div style={{ fontSize: '10px', fontWeight: 900, color: serviceMode === 'THUNDER' ? '#fbbf24' : '#22d3ee', letterSpacing: '0.8px' }}>
-                  {serviceMode === 'THUNDER' ? '⚡ THUNDER SERVICE QUOTE (12H ULTRA-EXPRESS)' : 'EXACT TARIFF QUOTE (24H SAME-DAY)'}
+                  {serviceMode === 'THUNDER' ? '⚡ THUNDER SERVICE QUOTE (12H ULTRA-EXPRESS +25%)' : 'EXACT TARIFF QUOTE (24H SAME-DAY)'}
                 </div>
-                <div style={{ fontSize: '42px', fontWeight: 900, fontFamily: 'monospace', color: '#fff', margin: '4px 0' }}>₹{finalPrice.toLocaleString('en-IN')}</div>
+                <div style={{ fontSize: '42px', fontWeight: 900, fontFamily: 'monospace', color: '#fff', margin: '4px 0', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>₹{finalPrice.toLocaleString('en-IN')}</div>
+                <div style={{ fontSize: '11px', color: serviceMode === 'THUNDER' ? '#fde047' : '#34d399', fontWeight: 700, cursor: 'pointer' }} onClick={() => setActiveModal('ESG')}>
+                  {serviceMode === 'THUNDER' ? '⚡ Loaded at Dawn, Landed by Dusk • Shipped by Dusk, Delivered by Dawn' : '🟢 Includes ₹20.00 Green Logistics & Social Welfare Offset (Click to view)'}
+                </div>
+              </div>
+
+              <div style={{ textAlign: 'right' }}>
+                <span style={{ fontSize: '10px', background: 'rgba(255,255,255,0.08)', padding: '6px 10px', borderRadius: '8px', color: '#cbd5e1', fontWeight: 700 }}>{serviceMode === 'THUNDER' ? '12H THUNDER READY' : '24H TRANSIT READY'}</span>
               </div>
             </div>
 
-            <button 
-              onClick={() => setActiveModal('BOOKING')}
-              style={{ width: '100%', background: 'linear-gradient(90deg, #22d3ee, #34d399)', border: 'none', color: '#020617', fontWeight: 900, fontSize: '11px', padding: '14px', borderRadius: '12px', cursor: 'pointer', textTransform: 'uppercase', marginTop: '18px', boxShadow: '0 8px 25px rgba(6,182,212,0.4)' }}
-            >
-              🚀 Book & UPI Pay Now
-            </button>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div style={{ textAlign: 'center', fontSize: '11px', color: '#94a3b8', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px', fontWeight: 500 }}>
-          <div>Thunder Cargo Corridor (TCC) • South India B2B Last-Mile Logistics Infrastructure Framework</div>
-        </div>
-
-      </div>
-
-      {/* Modals */}
-      {activeModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(2, 6, 23, 0.92)', backdropFilter: 'blur(20px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', overflowY: 'auto' }}>
-          <div style={{ background: 'linear-gradient(145deg, #0f172a, #040711)', border: '1px solid rgba(6, 182, 212, 0.5)', borderRadius: '24px', maxWidth: '720px', width: '100%', padding: '32px', position: 'relative', boxShadow: '0 30px 80px rgba(0,0,0,0.95)', maxHeight: '90vh', overflowY: 'auto' }}>
-            
-            <button onClick={() => { setActiveModal(null); setBookingSuccess(false); setOperatorPin(''); setPinError(false); }} style={{ position: 'absolute', top: '20px', right: '20px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', borderRadius: '50%', width: '38px', height: '38px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', zIndex: 10 }}>✕</button>
-
-            {activeModal === 'BOOKING' && (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '18px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '14px', fontSize: '11px' }}>
               <div>
-                {!bookingSuccess ? (
-                  <div>
-                    <h3 style={{ fontSize: '20px', fontWeight: 900, color: '#fff', marginBottom: '6px' }}>⚡ TCC Express B2B Booking & Secure UPI Pay</h3>
-                    <p style={{ fontSize: '12px', color: '#22d3ee', marginBottom: '20px', fontWeight: 700 }}>Secunderabad Station Outer Gate Terminal • AP/TS Bus-Feeder Corridor</p>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
-                      <div>
-                        <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '6px', fontWeight: 700 }}>Consignor (Sender Firm)</label>
-                        <input type="text" placeholder="e.g. Sri Venkateshwara Textiles" value={senderName} onChange={(e) => setSenderName(e.target.value)} style={{ width: '100%', background: '#020617', border: '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '10px', color: '#fff', fontSize: '13px' }} />
-                      </div>
-                      <div>
-                        <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '6px', fontWeight: 700 }}>Sender Mobile Number</label>
-                        <input type="text" placeholder="10-digit mobile" value={senderMobile} onChange={(e) => setSenderMobile(e.target.value)} style={{ width: '100%', background: '#020617', border: '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '10px', color: '#fff', fontSize: '13px' }} />
-                      </div>
-                    </div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
-                      <div>
-                        <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '6px', fontWeight: 700 }}>Consignee (Receiver Firm)</label>
-                        <input type="text" placeholder="e.g. Warangal Hub Agents" value={receiverName} onChange={(e) => setReceiverName(e.target.value)} style={{ width: '100%', background: '#020617', border: '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '10px', color: '#fff', fontSize: '13px' }} />
-                      </div>
-                      <div>
-                        <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '6px', fontWeight: 700 }}>Destination Hub (AP / TS)</label>
-                        <input type="text" placeholder="e.g. Warangal, Vijayawada, Karimnagar" value={destCity} onChange={(e) => setDestCity(e.target.value)} style={{ width: '100%', background: '#020617', border: '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '10px', color: '#fff', fontSize: '13px' }} />
-                      </div>
-                    </div>
-
-                    <div style={{ marginBottom: '18px' }}>
-                      <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '6px', fontWeight: 700 }}>Cargo Description & Weight</label>
-                      <input type="text" value={`${goodsDesc} | Gross Weight: ${weight} KG | Corridor: ${data.name}`} onChange={(e) => setGoodsDesc(e.target.value)} style={{ width: '100%', background: '#020617', border: '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '10px', color: '#fff', fontSize: '13px' }} />
-                    </div>
-
-                    {/* Payment Box with Slice UPI */}
-                    <div style={{ background: 'rgba(4,8,16,0.9)', border: '1px solid rgba(6,182,212,0.4)', borderRadius: '16px', padding: '18px', textAlign: 'center', marginBottom: '18px' }}>
-                      <div style={{ fontSize: '12px', color: '#cbd5e1', marginBottom: '4px' }}>Total Freight Payable (Incl. Green ESG Offset):</div>
-                      <div style={{ fontSize: '32px', fontWeight: 900, fontFamily: 'monospace', color: '#22d3ee', marginBottom: '12px' }}>₹{finalPrice.toLocaleString('en-IN')}</div>
-                      
-                      <div style={{ background: '#fff', padding: '12px', display: 'inline-block', borderRadius: '10px', marginBottom: '10px' }}>
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=9848196716@slc&pn=Mohammed%20Mustafa%20Khan%20Amer&am=" alt="Slice UPI QR" style={{ width: '150px', height: '150px', display: 'block', margin: 'auto' }} />
-                      </div>
-
-                      <div style={{ fontSize: '12px', color: '#fff', marginBottom: '14px' }}>
-                        <strong>Account Holder:</strong> Mohammed Mustafa Khan Amer[span_0](start_span)[span_0](end_span)<br />
-                        <strong>UPI ID:</strong> <span style={{ color: '#22d3ee', fontFamily: 'monospace' }}>9848196716@slc</span>[span_1](start_span)[span_1](end_span)
-                      </div>
-
-                      {/* Operator Authorization PIN Gate */}
-                      <div style={{ background: 'rgba(15,23,42,0.95)', border: '1px solid rgba(245,158,11,0.5)', borderRadius: '12px', padding: '14px', textAlign: 'left' }}>
-                        <label style={{ fontSize: '11px', color: '#fbbf24', display: 'block', marginBottom: '6px', fontWeight: 800, textTransform: 'uppercase' }}>
-                          🔒 Operator Authorization PIN (Required to Generate Slip)
-                        </label>
-                        <input 
-                          type="password" 
-                          maxLength={6}
-                          placeholder="Enter Operator PIN" 
-                          value={operatorPin} 
-                          onChange={(e) => { setOperatorPin(e.target.value); setPinError(false); }} 
-                          style={{ width: '100%', background: '#020617', border: pinError ? '1px solid #ef4444' : '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '8px', color: '#fff', fontSize: '14px', fontFamily: 'monospace' }} 
-                        />
-                        {pinError && <div style={{ fontSize: '11px', color: '#ef4444', marginTop: '4px', fontWeight: 700 }}>⚠️ Incorrect Operator PIN! Verification failed.</div>}
-                      </div>
-                    </div>
-
-                    <button 
-                      onClick={() => {
-                        if (operatorPin === '7860') {
-                          const currentTimestamp = `${new Date().toLocaleDateString('en-IN')} | ${clock}`;
-                          setReceiptTimestamp(currentTimestamp);
-                          setBookingSuccess(true);
-                          setPinError(false);
-
-                          const adminMessage = `🚨 *TCC NEW BOOKING VERIFIED* 🚨%0A%0A` +
-                            `📌 *LR No:* TCC/2026/SEC-${Math.floor(1000 + Math.random() * 9000)}%0A` +
-                            `⏰ *Time:* ${currentTimestamp}%0A` +
-                            `📤 *Sender:* ${senderName || 'Sri Venkateshwara Textiles'}%0A` +
-                            `📥 *Receiver:* ${receiverName || 'Regional Hub Agent'}%0A` +
-                            `📍 *Destination:* ${destCity}%0A` +
-                            `⚖️ *Weight:* ${weight} KG%0A` +
-                            `💰 *Freight Paid:* ₹${finalPrice.toLocaleString('en-IN')}%0A` +
-                            `🔒 *Status:* Verified & Paid via UPI (9848196716@slc)[span_2](start_span)[span_2](end_span)`;
-
-                          window.open(`https://wa.me/918340085989?text=${adminMessage}`, '_blank');
-                        } else {
-                          setPinError(true);
-                        }
-                      }}
-                      style={{ width: '100%', background: 'linear-gradient(90deg, #f59e0b, #34d399)', border: 'none', color: '#020617', fontWeight: 900, fontSize: '13px', padding: '16px', borderRadius: '12px', cursor: 'pointer', textTransform: 'uppercase', boxShadow: '0 8px 25px rgba(245,158,11,0.4)' }}
-                    >
-                      🔐 Verify Payment & Generate Official Challan
-                    </button>
-                  </div>
-                ) : (
-                  <div style={{ textAlign: 'center', padding: '10px 0' }}>
-                    <div style={{ fontSize: '48px', marginBottom: '10px' }}>🎉</div>
-                    <h3 style={{ fontSize: '22px', fontWeight: 900, color: '#34d399', marginBottom: '6px' }}>Consignment Booked & Verified Successfully!</h3>
-                    <p style={{ fontSize: '12px', color: '#cbd5e1', marginBottom: '20px' }}>Digital Delivery Challan & Forwarding Memo generated for Secunderabad outer gate transfer bay.</p>
-
-                    <div style={{ background: '#020617', border: '1px solid rgba(16,185,129,0.4)', borderRadius: '14px', padding: '16px', textAlign: 'left', fontSize: '12px', marginBottom: '20px', fontFamily: 'monospace' }}>
-                      <div style={{ color: '#34d399', fontWeight: 800, marginBottom: '8px' }}>LR NO: TCC/2026/SEC-{Math.floor(1000 + Math.random() * 9000)}</div>
-                      <div><strong>Timestamp:</strong> {receiptTimestamp}</div>
-                      <div><strong>Sender:</strong> {senderName || 'Sri Venkateshwara Textiles'}</div>
-                      <div><strong>Receiver:</strong> {receiverName || 'Regional Hub Agent'}</div>
-                      <div><strong>Destination Hub:</strong> {destCity}</div>
-                      <div><strong>Weight:</strong> {weight} KG | <strong>Freight:</strong> ₹{finalPrice.toLocaleString('en-IN')}</div>
-                      <div><strong>Payment Status:</strong> VERIFIED & PAID via UPI (`9848196716@slc`)[span_3](start_span)[span_3](end_span)</div>
-                      <div style={{ color: '#22d3ee', marginTop: '6px' }}>✓ SAC 9965 RCM Compliant[span_4](start_span)[span_4](end_span) | UYDAM-TS-02-0359997</div>
-                    </div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                      <button 
-                        onClick={() => window.print()}
-                        style={{ background: '#34d399', color: '#020617', border: 'none', fontWeight: 900, padding: '14px', borderRadius: '10px', cursor: 'pointer', textTransform: 'uppercase' }}
-                      >
-                        🖨️ Print / Save Challan
-                      </button>
-                      <button 
-                        onClick={() => { setBookingSuccess(false); setActiveModal(null); setOperatorPin(''); }}
-                        style={{ background: '#22d3ee', color: '#020617', border: 'none', fontWeight: 900, padding: '14px', borderRadius: '10px', cursor: 'pointer', textTransform: 'uppercase' }}
-                      >
-                        Done / Close
-                      </button>
-                    </div>
-                  </div>
-                )}
+                <span style={{ color: '#94a3b8', display: 'block', fontWeight: 600 }}>Selected Corridor:</span>
+                <strong style={{ color: '#fff' }}>{data.name}</strong>
               </div>
-            )}
-
-            {activeModal === 'ESG' && (
-              <div>
-                <h3 style={{ fontSize: '20px', fontWeight: 900, color: '#fff', marginBottom: '12px' }}>Voluntary ESG & CSR Green Logistics Pledge</h3>
-                <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>Every dispatch processed earmarks a dedicated ₹20.00 social and environmental impact fund.</p>
+              <div style={{ textAlign: 'right' }}>
+                <span style={{ color: '#94a3b8', display: 'block', fontWeight: 600 }}>Weight Bracket:</span>
+                <strong style={{ color: '#22d3ee' }}>{slabText}</strong>
               </div>
-            )}
+            </div>
 
-            {activeModal === 'TARIFF' && (
-              <div>
-                <h3 style={{ fontSize: '20px', fontWeight: 900, color: '#fff', marginBottom: '12px' }}>Master Tariff & Demurrage Schedule</h3>
-                <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>SAC 9965 RCM Compliant contract pricing matrix across regional corridors[span_5](start_span)[span_5](end_span).</p>
-              </div>
-            )}
-
-            {activeModal === 'SLA' && (
-              <div>
-                <h3 style={{ fontSize: '20px', fontWeight: 900, color: '#fff', marginBottom: '12px' }}>Gate-to-Feeder SLA Protocol</h3>
-                <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>Rapid gate-to-feeder coordination and express bus-belly loading.</p>
-              </div>
-            )}
-
-          </div>
-        </div>
-      )}
-
-    </main>
-  );
-}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '18px' }}>
+              <button 
+                onClick={() => {
+                  const quoteText = `TCC B2B Green Freight Quote (${serviceMode === 'THUNDER' ? '12H Thunder Service (+25%)' : '24H Same-Day Express'})\nCorridor: ${data.name}\nWeight: ${weight} KG\nEst. Tariff: ₹${finalPrice.toLocaleString('en-IN')} (Incl. ₹20 ESG Green Offset)\nSAC: 9965 RCM Compliant`;
+                  navigator.clipboard.writeText(quoteText);
+                  alert('Official Green Freight Quote Copied Successfully!');
+                }}
+                style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', fontWeight: 800, fontSize: '11px', padding: '14px', borderRadius: '12px', cursor: 'pointer', textTransform: 'uppercase' }}
+              >
+                Copy Quote Summary
+              </button>
+              
+              <button 
+                onClick={() => setActiveModal('BOOKING')}
+                style={{ background: 'linear-gradient(90deg, #22d3ee, #34d399)', border: 'none', color: '#020617', fontWeight: 900, fontSize: '11px', padding: '14px', borderRadius: '12px', cursor: 'pointer', textTransform:
