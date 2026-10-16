@@ -143,7 +143,7 @@ export default function TCCPortal() {
   else if (weight <= 100) { basePrice = data.base[3]; slabText = '51 – 100 KG'; }
   else if (weight <= 250) { basePrice = data.base[4]; slabText = '101 – 250 KG'; }
   else if (weight <= 500) { basePrice = data.base[5]; slabText = '251 – 500 KG'; }
-  else {
+    else {
     basePrice = data.base[5] + ((weight - 500) * data.excess);
     slabText = 'EXCESS > 500 KG';
   }
@@ -152,7 +152,7 @@ export default function TCCPortal() {
 
   return (
     <main style={{ color: '#f8fafc', minHeight: '100vh', padding: '24px 16px 80px', fontFamily: 'sans-serif', position: 'relative', overflowX: 'hidden' }}>
-      
+
       <canvas id="bg-canvas" style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0 }} />
 
       <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
