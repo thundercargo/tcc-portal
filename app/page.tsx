@@ -27,14 +27,15 @@ export default function TCCPortal() {
   const [weight, setWeight] = useState<number>(100);
   const [activeModal, setActiveModal] = useState<'TARIFF' | 'SLA' | 'ESG' | 'BOOKING' | null>(null);
 
-  // Booking form states
+  // Booking form states (AP / TS Regional Focus)
   const [senderName, setSenderName] = useState('');
   const [senderMobile, setSenderMobile] = useState('');
   const [receiverName, setReceiverName] = useState('');
   const [receiverMobile, setReceiverMobile] = useState('');
-  const [destCity, setDestCity] = useState('Mumbai Central (MMCT)');
-  const [goodsDesc, setGoodsDesc] = useState('Textile Bales & Garments');
+  const [destCity, setDestCity] = useState('Warangal (TS Bus Depot)');
+  const [goodsDesc, setGoodsDesc] = useState('Textile Bales & Bulk Cartons');
   const [bookingSuccess, setBookingSuccess] = useState(false);
+  const [receiptTimestamp, setReceiptTimestamp] = useState('');
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -159,7 +160,7 @@ export default function TCCPortal() {
         
         {/* Badges Header */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', marginBottom: '14px' }}>
-          <span style={{ background: 'rgba(6,182,212,0.18)', border: '1px solid rgba(6,182,212,0.45)', color: '#22d3ee', fontSize: '10px', fontWeight: 800, padding: '6px 14px', borderRadius: '20px', backdropFilter: 'blur(8px)' }}>FIRSTMILE-LASTMILE B2B</span>
+          <span style={{ background: 'rgba(6,182,212,0.18)', border: '1px solid rgba(6,182,212,0.45)', color: '#22d3ee', fontSize: '10px', fontWeight: 800, padding: '6px 14px', borderRadius: '20px', backdropFilter: 'blur(8px)' }}>AP & TS BUS-FEEDER NETWORK</span>
           <span style={{ background: 'rgba(6,182,212,0.18)', border: '1px solid rgba(6,182,212,0.45)', color: '#22d3ee', fontSize: '10px', fontWeight: 800, padding: '6px 14px', borderRadius: '20px', backdropFilter: 'blur(8px)' }}>UDYAM-TS-02-0359997</span>
           <span style={{ background: 'rgba(16,185,129,0.22)', border: '1px solid rgba(16,185,129,0.55)', color: '#34d399', fontSize: '12px', fontWeight: 800, padding: '6px 14px', borderRadius: '20px', marginLeft: 'auto', fontFamily: 'monospace', boxShadow: '0 0 15px rgba(16,185,129,0.35)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{ width: '8px', height: '8px', backgroundColor: '#34d399', borderRadius: '50%', display: 'inline-block', boxShadow: '0 0 8px #34d399' }}></span>
@@ -347,7 +348,7 @@ export default function TCCPortal() {
                 {!bookingSuccess ? (
                   <div>
                     <h3 style={{ fontSize: '20px', fontWeight: 900, color: '#fff', marginBottom: '6px' }}>⚡ TCC Express B2B Booking & Secure UPI Pay</h3>
-                    <p style={{ fontSize: '12px', color: '#22d3ee', marginBottom: '20px', fontWeight: 700 }}>Secunderabad Station Outer Gate Terminal • 50–250 KG Corridor</p>
+                    <p style={{ fontSize: '12px', color: '#22d3ee', marginBottom: '20px', fontWeight: 700 }}>Secunderabad Station Outer Gate Terminal • AP/TS Bus-Feeder Corridor</p>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
                       <div>
@@ -363,17 +364,11 @@ export default function TCCPortal() {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
                       <div>
                         <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '6px', fontWeight: 700 }}>Consignee (Receiver Firm)</label>
-                        <input type="text" placeholder="e.g. Mumbai Cargo Hub" value={receiverName} onChange={(e) => setReceiverName(e.target.value)} style={{ width: '100%', background: '#020617', border: '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '10px', color: '#fff', fontSize: '13px' }} />
+                        <input type="text" placeholder="e.g. Warangal Hub Agents" value={receiverName} onChange={(e) => setReceiverName(e.target.value)} style={{ width: '100%', background: '#020617', border: '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '10px', color: '#fff', fontSize: '13px' }} />
                       </div>
                       <div>
-                        <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '6px', fontWeight: 700 }}>Destination Hub</label>
-                        <select value={destCity} onChange={(e) => setDestCity(e.target.value)} style={{ width: '100%', background: '#020617', border: '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '10px', color: '#fff', fontSize: '13px' }}>
-                          <option>Mumbai Central (MMCT)</option>
-                          <option>New Delhi (NDLS)</option>
-                          <option>Bengaluru City (SBC)</option>
-                          <option>Chennai Central (MAS)</option>
-                          <option>Howrah / Kolkata</option>
-                        </select>
+                        <label style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '6px', fontWeight: 700 }}>Destination Hub (AP / TS)</label>
+                        <input type="text" placeholder="e.g. Warangal, Vijayawada, Karimnagar" value={destCity} onChange={(e) => setDestCity(e.target.value)} style={{ width: '100%', background: '#020617', border: '1px solid rgba(255,255,255,0.2)', padding: '12px', borderRadius: '10px', color: '#fff', fontSize: '13px' }} />
                       </div>
                     </div>
 
@@ -392,13 +387,16 @@ export default function TCCPortal() {
                       </div>
 
                       <div style={{ fontSize: '12px', color: '#fff' }}>
-                        <strong>Account Holder:</strong> Mohammed Mustafa Khan Amer[span_2](start_span)[span_2](end_span)<br />
-                        <strong>UPI ID:</strong> <span style={{ color: '#22d3ee', fontFamily: 'monospace' }}>9848196716@slc</span>[span_3](start_span)[span_3](end_span)
+                        <strong>Account Holder:</strong> Mohammed Mustafa Khan Amer<br />
+                        <strong>UPI ID:</strong> <span style={{ color: '#22d3ee', fontFamily: 'monospace' }}>9848196716@slc</span>
                       </div>
                     </div>
 
                     <button 
-                      onClick={() => setBookingSuccess(true)}
+                      onClick={() => {
+                        setReceiptTimestamp(`${new Date().toLocaleDateString('en-IN')} | ${clock}`);
+                        setBookingSuccess(true);
+                      }}
                       style={{ width: '100%', background: 'linear-gradient(90deg, #22d3ee, #34d399)', border: 'none', color: '#020617', fontWeight: 900, fontSize: '13px', padding: '16px', borderRadius: '12px', cursor: 'pointer', textTransform: 'uppercase', boxShadow: '0 8px 25px rgba(6,182,212,0.4)' }}
                     >
                       ✓ Simulate UPI Payment & Generate Digital Challan
@@ -412,12 +410,13 @@ export default function TCCPortal() {
 
                     <div style={{ background: '#020617', border: '1px solid rgba(16,185,129,0.4)', borderRadius: '14px', padding: '16px', textAlign: 'left', fontSize: '12px', marginBottom: '20px', fontFamily: 'monospace' }}>
                       <div style={{ color: '#34d399', fontWeight: 800, marginBottom: '8px' }}>LR NO: TCC/2026/SEC-{Math.floor(1000 + Math.random() * 9000)}</div>
+                      <div><strong>Timestamp:</strong> {receiptTimestamp}</div>
                       <div><strong>Sender:</strong> {senderName || 'Sri Venkateshwara Textiles'}</div>
-                      <div><strong>Receiver:</strong> {receiverName || 'Mumbai Cargo Hub'}</div>
-                      <div><strong>Destination:</strong> {destCity}</div>
+                      <div><strong>Receiver:</strong> {receiverName || 'Regional Hub Agent'}</div>
+                      <div><strong>Destination Hub:</strong> {destCity}</div>
                       <div><strong>Weight:</strong> {weight} KG | <strong>Freight:</strong> ₹{finalPrice.toLocaleString('en-IN')}</div>
-                      <div><strong>Payment Status:</strong> PAID via UPI (`9848196716@slc`)[span_4](start_span)[span_4](end_span)</div>
-                      <div style={{ color: '#22d3ee', marginTop: '6px' }}>✓ SAC 9965 RCM Compliant[span_5](start_span)[span_5](end_span) | UYDAM-TS-02-0359997</div>
+                      <div><strong>Payment Status:</strong> PAID via UPI (`9848196716@slc`)</div>
+                      <div style={{ color: '#22d3ee', marginTop: '6px' }}>✓ SAC 9965 RCM Compliant | UYDAM-TS-02-0359997</div>
                     </div>
 
                     <button 
