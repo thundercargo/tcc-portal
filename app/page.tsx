@@ -148,7 +148,6 @@ export default function TCCPortal() {
     slabText = 'EXCESS > 500 KG';
   }
 
-  // Multiplier intact behind the scenes (+29%)
   const finalPrice = serviceMode === 'THUNDER' ? Math.round(basePrice * 1.29) : basePrice;
 
   return (
@@ -321,11 +320,11 @@ export default function TCCPortal() {
           </div>
           <div style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.88), rgba(8,14,28,0.92))', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.4)' }}>
             <div style={{ fontSize: '24px', fontWeight: 900, color: '#fff', fontFamily: 'monospace' }}>175+</div>
-            <div style={{ fontSize: '10px', fontWeight 800, color: '#94a3b8', marginTop: '6px' }}>DISTRICT LOGISTICS HUBS</div>
+            <div style={{ fontSize: '10px', fontWeight: 800, color: '#94a3b8', marginTop: '6px' }}>DISTRICT LOGISTICS HUBS</div>
           </div>
           <div style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.88), rgba(8,14,28,0.92))', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.4)' }}>
-            <div style={{ fontSize: '24px', fontWeight 900, color: '#fff', fontFamily: 'monospace' }}>355+</div>
-            <div style={{ fontSize: '10px', fontWeight 800, color: '#94a3b8', marginTop: '6px' }}>EXPRESS COLLECTION NODES</div>
+            <div style={{ fontSize: '24px', fontWeight: 900, color: '#fff', fontFamily: 'monospace' }}>355+</div>
+            <div style={{ fontSize: '10px', fontWeight: 800, color: '#94a3b8', marginTop: '6px' }}>EXPRESS COLLECTION NODES</div>
           </div>
         </div>
 
@@ -392,8 +391,8 @@ export default function TCCPortal() {
                       </div>
 
                       <div style={{ fontSize: '12px', color: '#fff', marginBottom: '14px' }}>
-                        <strong>Account Holder:</strong> Mohammed Mustafa Khan Amer[span_2](start_span)[span_2](end_span)<br />
-                        <strong>UPI ID:</strong> <span style={{ color: '#22d3ee', fontFamily: 'monospace' }}>9848196716@slc</span>[span_3](start_span)[span_3](end_span)
+                        <strong>Account Holder:</strong> Mohammed Mustafa Khan Amer<br />
+                        <strong>UPI ID:</strong> <span style={{ color: '#22d3ee', fontFamily: 'monospace' }}>9848196716@slc</span>
                       </div>
 
                       {/* Operator Authorization PIN Gate */}
@@ -454,8 +453,8 @@ export default function TCCPortal() {
                       <div><strong>Receiver:</strong> {receiverName || 'Regional Hub Agent'}</div>
                       <div><strong>Destination Hub:</strong> {destCity}</div>
                       <div><strong>Weight:</strong> {weight} KG | <strong>Freight:</strong> ₹{finalPrice.toLocaleString('en-IN')}</div>
-                      <div><strong>Payment Status:</strong> VERIFIED & PAID via UPI (`9848196716@slc`)[span_4](start_span)[span_4](end_span)</div>
-                      <div style={{ color: '#22d3ee', marginTop: '6px' }}>✓ SAC 9965 RCM Compliant[span_5](start_span)[span_5](end_span) | UYDAM-TS-02-0359997</div>
+                      <div><strong>Payment Status:</strong> VERIFIED & PAID via UPI (`9848196716@slc`)</div>
+                      <div style={{ color: '#22d3ee', marginTop: '6px' }}>✓ SAC 9965 RCM Compliant | UYDAM-TS-02-0359997</div>
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
@@ -501,30 +500,30 @@ export default function TCCPortal() {
 
                   <div style={{ background: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.4)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center' }}>
                     <div style={{ fontSize: '24px', marginBottom: '8px' }}>🌳</div>
-                    <div style={{ fontSize: '22px', fontWeight 900, color: '#22d3ee', fontFamily: 'monospace' }}>₹5.00</div>
-                    <div style={{ fontSize: '12px', fontWeight 900, color: '#fff', marginTop: '6px' }}>Afforestation</div>
+                    <div style={{ fontSize: '22px', fontWeight: 900, color: '#22d3ee', fontFamily: 'monospace' }}>₹5.00</div>
+                    <div style={{ fontSize: '12px', fontWeight: 900, color: '#fff', marginTop: '6px' }}>Afforestation</div>
                     <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '6px', lineHeight: '1.4' }}>Urban green belts along railway freight corridors</div>
                   </div>
 
                   <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.4)', borderRadius: '18px', padding: '18px 12px', textAlign: 'center' }}>
                     <div style={{ fontSize: '24px', marginBottom: '8px' }}>⚡</div>
-                    <div style={{ fontSize: '22px', fontWeight 900, color: '#fbbf24', fontFamily: 'monospace' }}>₹5.00</div>
-                    <div style={{ fontSize: '12px', fontWeight 900, color: '#fff', marginTop: '6px' }}>Climate Change</div>
+                    <div style={{ fontSize: '22px', fontWeight: 900, color: '#fbbf24', fontFamily: 'monospace' }}>₹5.00</div>
+                    <div style={{ fontSize: '12px', fontWeight: 900, color: '#fff', marginTop: '6px' }}>Climate Change</div>
                     <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '6px', lineHeight: '1.4' }}>Carbon offset & EV last-mile fleet auditing</div>
                   </div>
                 </div>
 
                 <div style={{ background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.5)', padding: '14px', borderRadius: '14px', fontSize: '12px', color: '#34d399', textAlign: 'center', fontWeight: 800 }}>
-                  ✓ Certified Net-Zero Last-Mile Infrastructure Framework (SAC 9965 Compliant)[span_6](start_span)[span_6](end_span)
+                  ✓ Certified Net-Zero Last-Mile Infrastructure Framework (SAC 9965 Compliant)
                 </div>
               </div>
             )}
 
             {activeModal === 'TARIFF' && (
               <div>
-                <h3 style={{ fontSize: '20px', fontWeight 900, color: '#fff', marginBottom: '12px' }}>Master Tariff & Demurrage Schedule</h3>
+                <h3 style={{ fontSize: '20px', fontWeight: 900, color: '#fff', marginBottom: '12px' }}>Master Tariff & Demurrage Schedule</h3>
                 <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6', marginBottom: '20px' }}>
-                  SAC 9965 RCM Compliant contract pricing matrix. Storage is free for 24 hours at primary terminals, followed by ₹1.50 per KG per day demurrage.[span_7](start_span)[span_7](end_span)
+                  SAC 9965 RCM Compliant contract pricing matrix. Storage is free for 24 hours at primary terminals, followed by ₹1.50 per KG per day demurrage.
                 </p>
                 <div style={{ background: '#020617', padding: '14px', borderRadius: '12px', fontSize: '12px', color: '#22d3ee', border: '1px solid rgba(6, 182, 212, 0.4)' }}>
                   ✓ Automated calculation across all 15 regional distance corridors.
@@ -534,7 +533,7 @@ export default function TCCPortal() {
 
             {activeModal === 'SLA' && (
               <div>
-                <h3 style={{ fontSize: '20px', fontWeight 900, color: '#fff', marginBottom: '12px' }}>Gate-to-Feeder SLA Protocol</h3>
+                <h3 style={{ fontSize: '20px', fontWeight: 900, color: '#fff', marginBottom: '12px' }}>Gate-to-Feeder SLA Protocol</h3>
                 <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6', marginBottom: '20px' }}>
                   Seamless cargo intake at station gates and inward offices, synchronizing with official station operations for rapid last-mile feeder dispatch at Secunderabad SCR terminals.
                 </p>
