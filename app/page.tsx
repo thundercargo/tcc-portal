@@ -391,8 +391,8 @@ export default function TCCPortal() {
                       </div>
 
                       <div style={{ fontSize: '12px', color: '#fff', marginBottom: '14px' }}>
-                        <strong>Account Holder:</strong> Mohammed Mustafa Khan Amer[span_2](start_span)[span_2](end_span)<br />
-                        <strong>UPI ID:</strong> <span style={{ color: '#22d3ee', fontFamily: 'monospace' }}>9848196716@slc</span>[span_3](start_span)[span_3](end_span)
+                        <strong>Account Holder:</strong> Mohammed Mustafa Khan Amer[span_1](start_span)[span_1](end_span)<br />
+                        <strong>UPI ID:</strong> <span style={{ color: '#22d3ee', fontFamily: 'monospace' }}>9848196716@slc</span>[span_2](start_span)[span_2](end_span)
                       </div>
 
                       {/* Operator Authorization PIN Gate */}
@@ -453,8 +453,8 @@ export default function TCCPortal() {
                       <div><strong>Receiver:</strong> {receiverName || 'Regional Hub Agent'}</div>
                       <div><strong>Destination Hub:</strong> {destCity}</div>
                       <div><strong>Weight:</strong> {weight} KG | <strong>Freight:</strong> ₹{finalPrice.toLocaleString('en-IN')}</div>
-                      <div><strong>Payment Status:</strong> VERIFIED & PAID via UPI (`9848196716@slc`)[span_4](start_span)[span_4](end_span)</div>
-                      <div style={{ color: '#22d3ee', marginTop: '6px' }}>✓ SAC 9965 RCM Compliant[span_5](start_span)[span_5](end_span) | UYDAM-TS-02-0359997</div>
+                      <div><strong>Payment Status:</strong> VERIFIED & PAID via UPI (`9848196716@slc`)[span_3](start_span)[span_3](end_span)</div>
+                      <div style={{ color: '#22d3ee', marginTop: '6px' }}>✓ SAC 9965 RCM Compliant[span_4](start_span)[span_4](end_span) | UYDAM-TS-02-0359997</div>
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
@@ -514,7 +514,7 @@ export default function TCCPortal() {
                 </div>
 
                 <div style={{ background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.5)', padding: '14px', borderRadius: '14px', fontSize: '12px', color: '#34d399', textAlign: 'center', fontWeight: 800 }}>
-                  ✓ Certified Net-Zero Last-Mile Infrastructure Framework[span_6](start_span)[span_6](end_span) (SAC 9965 Compliant[span_7](start_span)[span_7](end_span))
+                  ✓ Certified Net-Zero Last-Mile Infrastructure Framework[span_5](start_span)[span_5](end_span) (SAC 9965 Compliant[span_6](start_span)[span_6](end_span))
                 </div>
               </div>
             )}
@@ -523,7 +523,7 @@ export default function TCCPortal() {
               <div>
                 <h3 style={{ fontSize: '20px', fontWeight: 900, color: '#fff', marginBottom: '12px' }}>Master Tariff & Demurrage Schedule</h3>
                 <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6', marginBottom: '20px' }}>
-                  SAC 9965 RCM Compliant[span_8](start_span)[span_8](end_span) contract pricing matrix. Storage is free for 24 hours at primary terminals, followed by ₹1.50 per KG per day demurrage[span_9](start_span)[span_9](end_span).
+                  SAC 9965 RCM Compliant contract pricing matrix. Storage is free for 24 hours at primary terminals, followed by ₹1.50 per KG per day demurrage[span_7](start_span)[span_7](end_span).
                 </p>
                 <div style={{ background: '#020617', padding: '14px', borderRadius: '12px', fontSize: '12px', color: '#22d3ee', border: '1px solid rgba(6, 182, 212, 0.4)' }}>
                   ✓ Automated calculation across all 15 regional distance corridors.
