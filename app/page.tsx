@@ -148,7 +148,6 @@ export default function TCCPortal() {
     slabText = 'EXCESS > 500 KG';
   }
 
-  // Multiplier intact behind the scenes
   const finalPrice = serviceMode === 'THUNDER' ? Math.round(basePrice * 1.29) : basePrice;
 
   return (
